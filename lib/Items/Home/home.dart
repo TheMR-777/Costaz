@@ -54,7 +54,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                   subtitle: "Class $index Description"
               ),
             ),
-            separatorBuilder: (context, index) => const SizedBox(height: 10),
+            separatorBuilder: (context, index) => const SizedBox(height: 15),
           ),
         ),         // Class List
       ],
