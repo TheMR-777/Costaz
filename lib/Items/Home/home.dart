@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+const factor = 15.0;
 
 class TheSweetHome extends StatefulWidget {
   const TheSweetHome({Key? key}) : super(key: key);
@@ -8,9 +9,10 @@ class TheSweetHome extends StatefulWidget {
 }
 
 class _TheSweetHomeState extends State<TheSweetHome> {
+
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(35),
+    padding: const EdgeInsets.all(factor + 20),
     child: Column(
       children: [
         Row(
@@ -24,12 +26,15 @@ class _TheSweetHomeState extends State<TheSweetHome> {
               ),
             ),  // "Classes"
             Padding(
-              padding: const EdgeInsets.only(right: 15),
+              padding: const EdgeInsets.only(right: factor),
               child: Button(
                 onPressed: () {},
                 style: ButtonStyle(
-                  padding: ButtonState.all(const EdgeInsets.symmetric(vertical: 20, horizontal: 47)),
-                  iconSize: ButtonState.all(30),
+                  padding: ButtonState.all(const EdgeInsets.symmetric(
+                      vertical: factor + 5,
+                      horizontal: factor * 2
+                  )),
+                  iconSize: ButtonState.all(factor * 2),
                 ),
                 child: const Icon(FluentIcons.add),
               ),
@@ -37,24 +42,29 @@ class _TheSweetHomeState extends State<TheSweetHome> {
           ],
         ),              // Classes +
         const SizedBox(
-            height: 35
+            height: factor + 20
         ),   // Some Space
         Expanded(
           child: ListView.separated(
-            padding: const EdgeInsets.only(top: 10, bottom: 10, right: 15),
-            itemCount: 3,
-            itemBuilder: (context, index) => Button(
-              onPressed: () {},
-              style: ButtonStyle(
-                padding: ButtonState.all(const EdgeInsets.all(15)),
-                iconSize: ButtonState.all(18),
-              ),
-              child: TheClassTile(
+            padding: const EdgeInsets.only(top: 10, bottom: 10, right: factor),
+            itemCount: 5,
+            itemBuilder: (context, index) => GestureDetector(
+              onSecondaryTap: () => print("Secondary Tap"),
+              child: Button(
+                onPressed: () => print("Primary Pressed"),
+                style: ButtonStyle(
+                  padding: ButtonState.all(const EdgeInsets.symmetric(
+                    horizontal: factor * 2,
+                    vertical: factor + 5,
+                  )),
+                ),
+                child: TheClassTile(
                   title: "Class $index",
                   subtitle: "Class $index Description"
+                ),
               ),
             ),
-            separatorBuilder: (context, index) => const SizedBox(height: 15),
+            separatorBuilder: (context, index) => const SizedBox(height: factor),
           ),
         ),         // Class List
       ],
@@ -72,18 +82,33 @@ class TheClassTile extends StatelessWidget {
   final String title, subtitle;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    leading: const Padding(
-      padding: EdgeInsets.only(
-          top: 5, bottom: 5, right: 20
-      ),
-      child: Icon(FluentIcons.bookmark_report, size: 27),
-    ),
-    title: Text(title),
-    subtitle: Text(subtitle),
-    trailing: const Padding(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      child: Icon(FluentIcons.chevron_right),
-    ),
+  Widget build(BuildContext context) => Row(
+    children: [
+      const Icon(
+        FluentIcons.bookmark_report,
+        size: 27,
+      ),      // Icon
+      const SizedBox(
+        width: factor + 20,
+      ),  // Some Space
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16),
+          ),    // Class Name
+          Text(
+            subtitle,
+            style: const TextStyle(fontSize: 12),
+          ),    // Description
+        ],
+      ),          // Introduction
+      const Spacer(),       // Max Space
+      const Icon(
+        FluentIcons.chevron_right,
+        size: factor + 3,
+      ),      // Icon
+    ],
   );
 }
