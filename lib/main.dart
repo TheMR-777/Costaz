@@ -1,9 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'AppBar/app_bar.dart';
-import 'Items/Home/home.dart';
-import 'Items/Home/students.dart';
-import 'Items/settings.dart';
+import 'Section/01_home.dart';
+import 'Section/02_students.dart';
+import 'Section/98_settings.dart';
 
 void main() => runApp(const Costaz());
 
