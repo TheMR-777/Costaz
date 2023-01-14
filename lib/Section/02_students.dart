@@ -24,26 +24,28 @@ class DearStudents extends StatefulWidget {
 }
 
 class _DearStudentsState extends State<DearStudents> {
+  void update() => setState(() {});
+
   @override
   Widget build(BuildContext context) => ListView(
     children: [
       Expander(
         initiallyExpanded: true,
-
-        // trailing: contains the absent as well as the count of the present students
         trailing: Text(
-          "Present: ${API.is_present.where((element) => element).length}",
-        ),
-        leading: const Icon(FluentIcons.people),
+          "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
+        ),          // Present Count
+        leading: const Icon(FluentIcons.people),     // People Icon
         header: const Text("Section B"),      // Worksheet Name
-        content: const TheTable(),    // Student Fields
+        content: TheTable(update),    // Student Fields
       ),    // DropDown
     ],
   );
 }
 
 class TheTable extends StatefulWidget {
-  const TheTable({Key? key}) : super(key: key);
+  const TheTable(this.updateCount, {super.key});
+
+  final VoidCallback updateCount;
 
   @override
   State<TheTable> createState() => _TheTableState();
@@ -63,7 +65,10 @@ class _TheTableState extends State<TheTable> {
           Checkbox(
             autofocus: true,
             checked: API.is_present[index],
-            onChanged: (bool? value) => setState(() => API.is_present[index] = value as bool),
+            onChanged: (bool? value) => setState(() {
+              API.is_present[index] = value!;
+              widget.updateCount();
+            }),
           ),
         ],
       )
