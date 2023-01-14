@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:fluent_ui/fluent_ui.dart';
 const factor = 15.0;
 
@@ -33,6 +35,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
       context: context,
       builder: (context) {
         Class newClass = Class("N/A", "N/A");
+        void returnClass() => Navigator.pop(context, newClass);
 
         return ContentDialog(
           title: const Text("Add a New Class"),
@@ -40,7 +43,10 @@ class _TheSweetHomeState extends State<TheSweetHome> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextBox(
+                autofocus: true,
                 onChanged: (val) => newClass.name = val,
+                // Shift the focus to the next field when the user presses the Enter key
+                // onSubmitted: (val) => FocusScope.of(context).nextFocus(),
                 placeholder: "Name",
               ),    // Ask Name
               const SizedBox(
@@ -48,15 +54,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
               ),
               TextBox(
                 onChanged: (val) => newClass.description = val,
+                onSubmitted: (val) => returnClass(),
                 placeholder: "Description",
               ),    // Ask Description
             ],
           ),
           actions: [
             FilledButton(
-              onPressed: () {
-                Navigator.pop(context, newClass);
-              },
+              onPressed: returnClass,
               child: const Text("Add"),
             ),  // Add Button
             Button(
@@ -67,7 +72,27 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         );
       },
     );
-    if (result != null) setState(() => classes.add(result));
+    if (result != null) {
+      setState(() => classes.add(result));
+      displayInfoBar(
+        context,
+        builder: (context, close) => const InfoBar(
+          title: Text("Success!"),
+          content: Text("Class Added Successfully!"),
+          severity: InfoBarSeverity.success,
+        )
+      );
+    }
+    else {
+      displayInfoBar(
+        context,
+        builder: (context, close) => const InfoBar(
+          title: Text("Cancelled!"),
+          content: Text("Class Addition Cancelled!"),
+          severity: InfoBarSeverity.warning,
+        )
+      );
+    }
   }
 
   @override
