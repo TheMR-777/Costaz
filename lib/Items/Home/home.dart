@@ -1,6 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 const factor = 15.0;
 
+class Class {
+  Class(this.name, this.description);
+
+  String name = "N/A";
+  String description = "N/A";
+}
+
 class TheSweetHome extends StatefulWidget {
   const TheSweetHome({Key? key}) : super(key: key);
 
@@ -9,6 +16,59 @@ class TheSweetHome extends StatefulWidget {
 }
 
 class _TheSweetHomeState extends State<TheSweetHome> {
+
+  static List<Class> classes = [
+    Class("Programming Fundamentals", "1st Semester"),
+    Class("Physics", "2nd Semester"),
+    Class("Mathematics", "3rd Semester"),
+    Class("Object Oriented Programming", "4th Semester"),
+    Class("Data Structures", "5th Semester"),
+    Class("Algorithms", "6th Semester"),
+    Class("Calculus", "7th Semester"),
+    Class("Algebra", "8th Semester"),
+  ];
+
+  addClassDialogue(BuildContext context) async {
+    final result = await showDialog<Class>(
+      context: context,
+      builder: (context) {
+        Class newClass = Class("N/A", "N/A");
+
+        return ContentDialog(
+          title: const Text("Add a New Class"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextBox(
+                onChanged: (val) => newClass.name = val,
+                placeholder: "Name",
+              ),    // Ask Name
+              const SizedBox(
+                height: factor,
+              ),
+              TextBox(
+                onChanged: (val) => newClass.description = val,
+                placeholder: "Description",
+              ),    // Ask Description
+            ],
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context, newClass);
+              },
+              child: const Text("Add"),
+            ),  // Add Button
+            Button(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+          ),        // Cancel Button
+          ],
+        );
+      },
+    );
+    if (result != null) setState(() => classes.add(result));
+  }
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -28,7 +88,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
             Padding(
               padding: const EdgeInsets.only(right: factor),
               child: Button(
-                onPressed: () {},
+                onPressed: () => addClassDialogue(context),
                 style: ButtonStyle(
                   padding: ButtonState.all(const EdgeInsets.symmetric(
                       vertical: factor + 5,
@@ -40,14 +100,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
               ),
             ),     // Add Button
           ],
-        ),              // Classes +
+        ),              // Classes ++
         const SizedBox(
             height: factor + 20
         ),   // Some Space
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: factor),
-            itemCount: 5,
+            itemCount: classes.length,
             itemBuilder: (context, index) => GestureDetector(
               onSecondaryTap: () => print("Secondary Tap"),
               child: Button(
@@ -59,8 +119,8 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                   )),
                 ),
                 child: TheClassTile(
-                  title: "Class $index",
-                  subtitle: "Class $index Description"
+                  title: classes[index].name,
+                  subtitle: classes[index].description,
                 ),
               ),
             ),

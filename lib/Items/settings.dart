@@ -27,4 +27,3 @@ class TheSettings extends StatelessWidget {
     ),
   );
 }
-
