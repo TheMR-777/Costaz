@@ -26,11 +26,17 @@ class DearStudents extends StatefulWidget {
 class _DearStudentsState extends State<DearStudents> {
   @override
   Widget build(BuildContext context) => ListView(
-    children: const [
+    children: [
       Expander(
         initiallyExpanded: true,
-        header: Text("Section B"),
-        content: TheTable(),
+
+        // trailing: contains the absent as well as the count of the present students
+        trailing: Text(
+          "Present: ${API.is_present.where((element) => element).length}",
+        ),
+        leading: const Icon(FluentIcons.people),
+        header: const Text("Section B"),      // Worksheet Name
+        content: const TheTable(),    // Student Fields
       ),    // DropDown
     ],
   );
