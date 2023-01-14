@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'AppBar/app_bar.dart';
 import 'Items/Home/home.dart';
+import 'Items/Home/students.dart';
 import 'Items/settings.dart';
 
 void main() => runApp(const Costaz());
@@ -36,6 +37,11 @@ class _CostazState extends State<Costaz> {
                 title: const Text("Home"),
                 body: const TheSweetHome(),
               ),    // Home Page
+              PaneItem(
+                icon: const Icon(FluentIcons.people),
+                title: const Text("Students"),
+                body: const DearStudents(),
+              )
             ],
             footerItems: [
               PaneItem(
