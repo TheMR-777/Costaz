@@ -1,16 +1,12 @@
-# my_desktop_project
+# Costaz Desktop
 
-Fluent UI Playground
+A Decentralized Teacher's Assistant, utilizing the power and reliability of Google Services.
 
-## Getting Started
+## Prominent Features
 
-This project is a starting point for a Flutter application.
+- Google Authentication
+- User's Google Sheets as Database
+- User's Google Drive for Storage
+- Eleminating the need of a Central Database :)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Just wish me Luck!
