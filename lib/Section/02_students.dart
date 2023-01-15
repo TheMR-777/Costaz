@@ -29,62 +29,57 @@ class _DearStudentsState extends State<DearStudents> {
   @override
   Widget build(BuildContext context) => ListView(
     children: [
-      Expander(
-        initiallyExpanded: true,
-        trailing: Text(
-          "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
-        ),          // Present Count
-        leading: const Icon(FluentIcons.people),     // People Icon
-        header: const Text("Section B"),      // Worksheet Name
-        content: TheTable(update),    // Student Fields
-      ),    // DropDown
+      TheDropDown(),
     ],
   );
 }
 
-class TheTable extends StatefulWidget {
-  const TheTable(this.updateCount, {super.key});
-
-  final VoidCallback updateCount;
+class TheDropDown extends StatefulWidget {
+  const TheDropDown({Key? key}) : super(key: key);
 
   @override
-  State<TheTable> createState() => _TheTableState();
+  State<TheDropDown> createState() => _TheDropDownState();
 }
 
-class _TheTableState extends State<TheTable> {
+class _TheDropDownState extends State<TheDropDown> {
   makeTableEntry(final int index) => material.DataRow(cells: [
-      material.DataCell(Text(API.roll_no[index])),
-      material.DataCell(Text(API.names[index])),
-      material.DataCell(Text(API.cgpa_s[index])),
-      material.DataCell(Row(
-        children: [
-          const Text("Present"),
-          const SizedBox(
-            width: 10,
-          ),
-          Checkbox(
-            autofocus: true,
-            checked: API.is_present[index],
-            onChanged: (bool? value) => setState(() {
-              API.is_present[index] = value!;
-              widget.updateCount();
-            }),
-          ),
-        ],
-      )
+    material.DataCell(Text(API.roll_no[index])),
+    material.DataCell(Text(API.names[index])),
+    material.DataCell(Text(API.cgpa_s[index])),
+    material.DataCell(Row(
+      children: [
+        const Text("Present"),
+        const SizedBox(
+          width: 10,
+        ),
+        Checkbox(
+          autofocus: true,
+          checked: API.is_present[index],
+          onChanged: (bool? value) => setState(() => API.is_present[index] = value!),
+        ),
+      ],
+    )
     ),
   ]);
 
   @override
-  Widget build(BuildContext context) => material.DataTable(
-    columns: const [
-      material.DataColumn(label: Text("Roll Number")),
-      material.DataColumn(label: Text("Name")),
-      material.DataColumn(label: Text("CGPA")),
-      material.DataColumn(label: Text("Attendance")),
-    ],        // Headers
-    rows: List.generate(
-      API.names.length, (index) => makeTableEntry(index),
-    ),    // Rows (Elem)
+  Widget build(BuildContext context) => Expander(
+    initiallyExpanded: true,
+    trailing: Text(
+      "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
+    ),          // Present Count
+    leading: const Icon(FluentIcons.people),     // People Icon
+    header: const Text("Section B"),      // Worksheet Name
+    content: material.DataTable(
+      columns: const [
+        material.DataColumn(label: Text("Roll Number")),
+        material.DataColumn(label: Text("Name")),
+        material.DataColumn(label: Text("CGPA")),
+        material.DataColumn(label: Text("Attendance")),
+      ],        // Headers
+      rows: List.generate(
+        API.names.length, (index) => makeTableEntry(index),
+      ),    // Rows (Elem)
+    ),    // Student Fields
   );
 }
