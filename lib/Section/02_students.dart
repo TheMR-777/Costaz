@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' as material;
 
 class API {
   static const names = [
-    "TheMR", "John Wick", "The Doctor", "The Master", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angels",
+    "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
   ];
   static const roll_no = [
     "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
@@ -44,17 +44,28 @@ class TheDropDown extends StatefulWidget {
 }
 
 class _TheDropDownState extends State<TheDropDown> {
-  makeTableEntry(final int index) => material.DataRow(cells: [
-    material.DataCell(Text(API.roll_no[index])),
-    material.DataCell(Text(API.names[index])),
-    material.DataCell(Text(API.cgpa_s[index])),
-    material.DataCell(Checkbox(
-      onChanged: (bool? value) => setState(() => API.is_present[index] = value!),
-      autofocus: true,
-      checked: API.is_present[index],
-      content: Text("  ${API.is_present[index] ? "Present" : "Absent"}"),
-    )),
-  ]);
+  void toggleAttendance(int index) => setState(() => API.is_present[index] = !API.is_present[index]);
+  void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
+
+  material.DataRow makeTableEntry(final int index) {
+    material.DataCell canToggleAttendance({required final List<String> from}) =>
+        material.DataCell(GestureDetector(
+      onTap: () => toggleAttendance(index),
+      child: Text(from[index]),
+    ));
+
+    return material.DataRow(cells: [
+      canToggleAttendance(from: API.roll_no),
+      canToggleAttendance(from: API.names),
+      canToggleAttendance(from: API.cgpa_s),
+      material.DataCell(Checkbox(
+        onChanged: (value) => updateAttendance(index, value!),
+        autofocus: true,
+        checked: API.is_present[index],
+        content: Text("  ${API.is_present[index] ? "Present" : "Absent"}"),
+      )),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) => Expander(
