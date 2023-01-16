@@ -28,7 +28,7 @@ class _DearStudentsState extends State<DearStudents> {
 
   @override
   Widget build(BuildContext context) => ListView(
-    children: [
+    children: const [
       TheDropDown(),
     ],
   );
@@ -36,6 +36,8 @@ class _DearStudentsState extends State<DearStudents> {
 
 class TheDropDown extends StatefulWidget {
   const TheDropDown({Key? key}) : super(key: key);
+
+  final String title = "Morning";
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();
@@ -46,20 +48,12 @@ class _TheDropDownState extends State<TheDropDown> {
     material.DataCell(Text(API.roll_no[index])),
     material.DataCell(Text(API.names[index])),
     material.DataCell(Text(API.cgpa_s[index])),
-    material.DataCell(Row(
-      children: [
-        const Text("Present"),
-        const SizedBox(
-          width: 10,
-        ),
-        Checkbox(
-          autofocus: true,
-          checked: API.is_present[index],
-          onChanged: (bool? value) => setState(() => API.is_present[index] = value!),
-        ),
-      ],
-    )
-    ),
+    material.DataCell(Checkbox(
+      onChanged: (bool? value) => setState(() => API.is_present[index] = value!),
+      autofocus: true,
+      checked: API.is_present[index],
+      content: Text("  ${API.is_present[index] ? "Present" : "Absent"}"),
+    )),
   ]);
 
   @override
@@ -69,7 +63,7 @@ class _TheDropDownState extends State<TheDropDown> {
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: const Text("Section B"),      // Worksheet Name
+    header: Text(widget.title),   // Worksheet Name
     content: material.DataTable(
       columns: const [
         material.DataColumn(label: Text("Roll Number")),
