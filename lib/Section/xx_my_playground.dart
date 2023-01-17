@@ -5,6 +5,7 @@ class ThePlayground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldPage.withPadding(
+    padding: const EdgeInsets.all(20),
     content: Container(),
   );
 }
