@@ -3,6 +3,10 @@ import 'package:flutter/material.dart' as material;
 import 'package:my_desktop_project/Section/01_home.dart';
 
 class API {
+  static var sections = [
+    "Morning", "Afternoon"
+  ];
+
   static var names = [
     "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
   ];
@@ -25,20 +29,27 @@ class DearStudents extends StatefulWidget {
 }
 
 class _DearStudentsState extends State<DearStudents> {
-  void update() => setState(() {});
+  final int expanded_menu = 0;
 
   @override
-  Widget build(BuildContext context) => ListView(
-    children: const [
-      TheDropDown(),
-    ],
+  Widget build(BuildContext context) => ListView.builder(
+    itemCount: API.sections.length,
+    itemBuilder: (context, index) => TheDropDown(
+      title: API.sections[index],
+      expand: index == expanded_menu,
+    ),
   );
 }
 
 class TheDropDown extends StatefulWidget {
-  const TheDropDown({Key? key}) : super(key: key);
+  const TheDropDown({
+    required this.title,
+    this.expand = false,
+    super.key
+  });
 
-  final String title = "Morning";
+  final bool expand;
+  final String title;
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();
@@ -108,7 +119,7 @@ class _TheDropDownState extends State<TheDropDown> {
               onPressed: () => setState(() => returnClass()),
               style: button_pad,
               child: const Text("Update"),
-            ),
+            ),  // Update Button
             Button(
               onPressed: () {
                 displayInfoBar(
@@ -123,7 +134,7 @@ class _TheDropDownState extends State<TheDropDown> {
               },
               style: button_pad,
               child: const Text("Cancel"),
-            ),
+            ),        // Cancel Button
           ],
         );
       },
@@ -152,12 +163,12 @@ class _TheDropDownState extends State<TheDropDown> {
 
   @override
   Widget build(BuildContext context) => Expander(
-    initiallyExpanded: true,
+    initiallyExpanded: widget.expand,
     trailing: Text(
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: Text(widget.title),   // Worksheet Name
+    header: Text(widget.title),            // Worksheet Name
     content: material.DataTable(
       columns: const [
         material.DataColumn(label: Text("Roll Number")),
