@@ -80,7 +80,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
       displayInfoBar(
         context,
         builder: (context, close) => const InfoBar(
-          title: Text("Success!"),
+          title: Text("Success"),
           content: Text("Class Added Successfully!"),
           severity: InfoBarSeverity.success,
         )
@@ -90,8 +90,8 @@ class _TheSweetHomeState extends State<TheSweetHome> {
       displayInfoBar(
         context,
         builder: (context, close) => const InfoBar(
-          title: Text("Cancelled!"),
-          content: Text("Class Addition Cancelled!"),
+          title: Text("Cancelled"),
+          content: Text("No changes are made!"),
           severity: InfoBarSeverity.warning,
         )
       );

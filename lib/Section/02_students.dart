@@ -85,6 +85,17 @@ class _TheDropDownState extends State<TheDropDown> {
           ],
         ));
         }
+        void cancelClass() {
+          displayInfoBar(
+            context,
+            builder: (context, close) => const InfoBar(
+              title: Text("Cancelled"),
+              content: Text("All changes are discarded!"),
+              severity: InfoBarSeverity.warning,
+            ),
+          );
+          Navigator.pop(context);
+        }
 
         return ContentDialog(
           title: const Text("Update Details"),
@@ -121,17 +132,7 @@ class _TheDropDownState extends State<TheDropDown> {
               child: const Text("Update"),
             ),  // Update Button
             Button(
-              onPressed: () {
-                displayInfoBar(
-                  context,
-                  builder: (context, close) => const InfoBar(
-                    title: Text("Cancelled"),
-                    content: Text("No changes were made."),
-                    severity: InfoBarSeverity.info,
-                  ),
-                );
-                Navigator.pop(context);
-              },
+              onPressed: cancelClass,
               style: button_pad,
               child: const Text("Cancel"),
             ),        // Cancel Button
