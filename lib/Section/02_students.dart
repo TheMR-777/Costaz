@@ -55,9 +55,9 @@ class _TheDropDownState extends State<TheDropDown> {
         void returnClass() {
           displayInfoBar(
             context,
-            builder: (context, reason) => InfoBar(
-              title: const Text("Updated"),
-              content: Text("Details of ${API.names[index]} have been updated."),
+            builder: (context, reason) => const InfoBar(
+              title: Text("Updated"),
+              content: Text("Details Updated."),
               severity: InfoBarSeverity.success,
             ),
           );
