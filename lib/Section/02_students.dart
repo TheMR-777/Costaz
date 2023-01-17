@@ -1,14 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:my_desktop_project/Section/01_home.dart';
 
 class API {
-  static const names = [
+  static var names = [
     "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
   ];
-  static const roll_no = [
+  static var roll_no = [
     "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
   ];
-  static const cgpa_s = [
+  static var cgpa_s = [
     "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
   ];
   static var is_present = [
@@ -47,11 +48,95 @@ class _TheDropDownState extends State<TheDropDown> {
   void toggleAttendance(int index) => setState(() => API.is_present[index] = !API.is_present[index]);
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
-  material.DataRow makeTableEntry(final int index) {
+  void updateDetails(BuildContext context, int index) => showDialog<material.DataRow>(
+      context: context,
+      builder: (context) {
+        bool is_present = API.is_present[index];
+        void returnClass() {
+          displayInfoBar(
+            context,
+            builder: (context, reason) => InfoBar(
+              title: const Text("Updated"),
+              content: Text("Details of ${API.names[index]} have been updated."),
+              severity: InfoBarSeverity.success,
+            ),
+          );
+          Navigator.pop(context, material.DataRow(
+          cells: [
+            material.DataCell(Text(API.names[index])),
+            material.DataCell(Text(API.roll_no[index])),
+            material.DataCell(Text(API.cgpa_s[index])),
+            material.DataCell(Checkbox(
+              checked: is_present,
+              onChanged: (val) => updateAttendance(index, val!),
+            )),
+          ],
+        ));
+        }
+
+        return ContentDialog(
+          title: const Text("Update Details"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextBox(
+                autofocus: true,
+                onChanged: (val) => API.names[index] = val,
+                placeholder: "Name",
+                initialValue: API.names[index],
+              ),    // Ask Name
+              const SizedBox(
+                height: 15.0,
+              ),
+              TextBox(
+                onChanged: (val) => API.roll_no[index] = val,
+                onSubmitted: (val) => returnClass(),
+                placeholder: "Roll No",
+                initialValue: API.roll_no[index],
+              ),    // Ask Roll No
+              const SizedBox(
+                height: 15.0,
+              ),
+              TextBox(
+                onChanged: (val) => API.cgpa_s[index] = val,
+                onSubmitted: (val) => returnClass(),
+                placeholder: "CGPA",
+                initialValue: API.cgpa_s[index],
+              ),    // Ask CGPA
+            ],
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => setState(() => returnClass()),
+              style: button_pad,
+              child: const Text("Update"),
+            ),
+            Button(
+              onPressed: () {
+                displayInfoBar(
+                  context,
+                  builder: (context, close) => const InfoBar(
+                    title: Text("Cancelled"),
+                    content: Text("No changes were made."),
+                    severity: InfoBarSeverity.info,
+                  ),
+                );
+                Navigator.pop(context);
+              },
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+
+  material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
         material.DataCell(GestureDetector(
-      onTap: () => toggleAttendance(index),
-      child: Text(from[index]),
+          onTap: () => toggleAttendance(index),
+          onSecondaryTap: () => updateDetails(context, index),
+          child: Text(from[index]),
     ));
 
     return material.DataRow(cells: [
@@ -83,7 +168,7 @@ class _TheDropDownState extends State<TheDropDown> {
         material.DataColumn(label: Text("Attendance")),
       ],        // Headers
       rows: List.generate(
-        API.names.length, (index) => makeTableEntry(index),
+        API.names.length, (index) => makeTableEntry(context, index),
       ),    // Rows (Elem)
     ),    // Student Fields
   );

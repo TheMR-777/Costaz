@@ -2,6 +2,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 const factor = 15.0;
+final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
 
 class Class {
   Class(this.name, this.description);
@@ -62,10 +63,12 @@ class _TheSweetHomeState extends State<TheSweetHome> {
           actions: [
             FilledButton(
               onPressed: returnClass,
+              style: button_pad,
               child: const Text("Add"),
             ),  // Add Button
             Button(
               onPressed: () => Navigator.pop(context),
+              style: button_pad,
               child: const Text("Cancel"),
           ),        // Cancel Button
           ],
