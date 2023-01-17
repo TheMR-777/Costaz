@@ -4,6 +4,7 @@ import 'AppBar/app_bar.dart';
 import 'Section/01_home.dart';
 import 'Section/02_students.dart';
 import 'Section/98_settings.dart';
+import 'Section/xx_my_playground.dart';
 
 void main() => runApp(const Costaz());
 
@@ -44,6 +45,11 @@ class _CostazState extends State<Costaz> {
               )
             ],
             footerItems: [
+              PaneItem(
+                icon: const Icon(FluentIcons.play),
+                title: const Text("Playground"),
+                body: const ThePlayground(),
+              ),
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
                 title: const Text("Settings"),
