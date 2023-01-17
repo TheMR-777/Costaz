@@ -51,6 +51,7 @@ class _TheDropDownState extends State<TheDropDown> {
   void updateDetails(BuildContext context, int index) => showDialog<material.DataRow>(
       context: context,
       builder: (context) {
+        const my_spacing = SizedBox(height: factor);
         bool is_present = API.is_present[index];
         void returnClass() {
           displayInfoBar(
@@ -79,24 +80,21 @@ class _TheDropDownState extends State<TheDropDown> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              my_spacing,
               TextBox(
                 autofocus: true,
                 onChanged: (val) => API.names[index] = val,
                 placeholder: "Name",
                 initialValue: API.names[index],
               ),    // Ask Name
-              const SizedBox(
-                height: 15.0,
-              ),
+              my_spacing,
               TextBox(
                 onChanged: (val) => API.roll_no[index] = val,
                 onSubmitted: (val) => returnClass(),
                 placeholder: "Roll No",
                 initialValue: API.roll_no[index],
               ),    // Ask Roll No
-              const SizedBox(
-                height: 15.0,
-              ),
+              my_spacing,
               TextBox(
                 onChanged: (val) => API.cgpa_s[index] = val,
                 onSubmitted: (val) => returnClass(),

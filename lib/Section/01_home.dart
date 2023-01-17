@@ -35,6 +35,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     final result = await showDialog<Class>(
       context: context,
       builder: (context) {
+        const my_spacing = SizedBox(height: factor);
         Class newClass = Class("N/A", "N/A");
         void returnClass() => Navigator.pop(context, newClass);
 
@@ -43,6 +44,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              my_spacing,
               TextBox(
                 autofocus: true,
                 onChanged: (val) => newClass.name = val,
@@ -50,9 +52,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                 // onSubmitted: (val) => FocusScope.of(context).nextFocus(),
                 placeholder: "Name",
               ),    // Ask Name
-              const SizedBox(
-                height: factor,
-              ),
+              my_spacing,
               TextBox(
                 onChanged: (val) => newClass.description = val,
                 onSubmitted: (val) => returnClass(),
