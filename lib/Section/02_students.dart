@@ -58,13 +58,13 @@ class TheDropDown extends StatefulWidget {
 }
 
 class _TheDropDownState extends State<TheDropDown> {
+  static const my_spacing = SizedBox(height: factor);
   void toggleAttendance(int index) => setState(() => API.is_present[index] = !API.is_present[index]);
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
-  void dialogBox4UpdatingDetails(BuildContext context, int index) => showDialog<material.DataRow>(
+  void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(
       context: context,
       builder: (context) {
-        const my_spacing = SizedBox(height: factor);
         bool is_present = API.is_present[index];
         void returnClass() {
           showInfoBar(
@@ -137,43 +137,62 @@ class _TheDropDownState extends State<TheDropDown> {
         );
       },
     );
-
-  void contextMenuEdit({required final int of}) {
-    Navigator.pop(context);
-    dialogBox4UpdatingDetails(context, of);
-  }
-  void contextMenuDelete({required final int of}) {
-    Navigator.pop(context);
+  void dialogBox4AddingDetails() {
+    final TextEditingController name = TextEditingController();
+    final TextEditingController roll_no = TextEditingController();
+    final TextEditingController cgpa = TextEditingController();
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text("Delete Student"),
-        content: const Text("Are you sure you want to delete this student?"),
+        title: const Text("Add Student"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            my_spacing,
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => name.text = val,
+              placeholder: "Name",
+            ),    // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => roll_no.text = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Roll Number",
+            ),    // Ask Roll No
+            my_spacing,
+            TextBox(
+              onChanged: (val) => cgpa.text = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "CGPA",
+            ),    // Ask CGPA
+          ],
+        ),
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: button_pad,
-            child: const Text("Delete"),
-          ),
+            child: const Text("Add"),
+          ),  // Add Button
           Button(
             onPressed: () => Navigator.pop(context, false),
             style: button_pad,
             child: const Text("Cancel"),
-          ),
+          ),        // Cancel Button
         ],
       ),
     ).then((value) {
-      if (value!) {
+      if (value! && name.text.isNotEmpty && roll_no.text.isNotEmpty && cgpa.text.isNotEmpty) {
         setState(() {
-          API.names.removeAt(of);
-          API.roll_no.removeAt(of);
-          API.cgpa_s.removeAt(of);
-          API.is_present.removeAt(of);
+          API.names.add(name.text);
+          API.roll_no.add(roll_no.text);
+          API.cgpa_s.add(cgpa.text);
+          API.is_present.add(false);
         });
         showInfoBar(
           context,
-          title: "Deleted",
-          detail: "Student deleted!",
+          title: "Added",
+          detail: "Student added!",
         );
       }
       else {
@@ -181,11 +200,62 @@ class _TheDropDownState extends State<TheDropDown> {
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
-          detail: "Deletion cancelled!",
+          detail: "Addition cancelled!",
         );
       }
     });
   }
+  void dialogBox4DeletingDetails(int index) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text("Delete Student"),
+      content: const Text("Are you sure you want to delete this student?"),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: button_pad,
+          child: const Text("Delete"),
+        ),
+        Button(
+          onPressed: () => Navigator.pop(context, false),
+          style: button_pad,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ),
+  ).then((value) {
+    if (value!) {
+      setState(() {
+        API.names.removeAt(index);
+        API.roll_no.removeAt(index);
+        API.cgpa_s.removeAt(index);
+        API.is_present.removeAt(index);
+      });
+      showInfoBar(
+        context,
+        title: "Deleted",
+        detail: "Student deleted!",
+      );
+    }
+    else {
+      showInfoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "Deletion cancelled!",
+      );
+    }
+  });
+
+  void contextMenuEdit({required final int of}) {
+    Navigator.pop(context);
+    dialogBox4UpdatingDetails(of);
+  }
+  void contextMenuDelete({required final int of}) {
+    Navigator.pop(context);
+    dialogBox4DeletingDetails(of);
+  }
+
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
         material.DataCell(GestureDetector(
@@ -198,12 +268,12 @@ class _TheDropDownState extends State<TheDropDown> {
                 onPressed: () => contextMenuEdit(of: index),
                 leading: const Icon(FluentIcons.edit, size: factor + 7),
                 title: const Text("Edit"),
-              ),
+              ),  // Edit
               ListTile(
                 onPressed: () => contextMenuDelete(of: index),
                 leading: const Icon(FluentIcons.delete, size: factor + 7),
                 title: const Text("Delete"),
-              )
+              ),  // Delete
             ],
             7.0, 200.0
           ),
@@ -231,16 +301,29 @@ class _TheDropDownState extends State<TheDropDown> {
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
     header: Text(widget.title),            // Worksheet Name
-    content: material.DataTable(
-      columns: const [
-        material.DataColumn(label: Text("Roll Number")),
-        material.DataColumn(label: Text("Name")),
-        material.DataColumn(label: Text("CGPA")),
-        material.DataColumn(label: Text("Attendance")),
-      ],        // Headers
-      rows: List.generate(
-        API.names.length, (index) => makeTableEntry(context, index),
-      ),    // Rows (Elem)
-    ),    // Student Fields
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        material.DataTable(
+          columns: const [
+            material.DataColumn(label: Text("Roll Number")),
+            material.DataColumn(label: Text("Name")),
+            material.DataColumn(label: Text("CGPA")),
+            material.DataColumn(label: Text("Attendance")),
+          ],        // Headers
+          rows: List.generate(
+            API.names.length, (index) => makeTableEntry(context, index),
+          ),    // Rows (Elem)
+        ),
+        my_spacing,                    // Spacing
+        Button(
+          onPressed: () => dialogBox4AddingDetails(),
+          style: button_pad,
+          child: const Text("Add Student"),
+        ),                   // Add Student Button
+        const SizedBox(height: 5.0),   // Spacing
+      ],
+    ),         // Student Fields
   );
 }
