@@ -10,6 +10,7 @@ dependencies:
     sdk: flutter
   fluent_ui: ^4.1.4
   google_fonts: any
+  contextmenu: ^3.0.0
 
 dev_dependencies:
   flutter_test:

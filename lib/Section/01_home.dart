@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:my_desktop_project/Section/src/commons.dart';
 const factor = 15.0;
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
 
@@ -77,23 +78,18 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     );
     if (result != null) {
       setState(() => classes.add(result));
-      displayInfoBar(
+      showInfoBar(
         context,
-        builder: (context, close) => const InfoBar(
-          title: Text("Success"),
-          content: Text("Class Added Successfully!"),
-          severity: InfoBarSeverity.success,
-        )
+        title: "Success",
+        detail: "Class added!",
       );
     }
     else {
-      displayInfoBar(
+      showInfoBar(
         context,
-        builder: (context, close) => const InfoBar(
-          title: Text("Cancelled"),
-          content: Text("No changes are made!"),
-          severity: InfoBarSeverity.warning,
-        )
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "No changes made!",
       );
     }
   }

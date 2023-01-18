@@ -39,7 +39,7 @@ class _CostazState extends State<Costaz> {
                 body: const TheSweetHome(),
               ),    // Home Page
               PaneItem(
-                icon: const Icon(FluentIcons.people),
+                icon: const Icon(FluentIcons.education),
                 title: const Text("Students"),
                 body: const DearStudents(),
               )

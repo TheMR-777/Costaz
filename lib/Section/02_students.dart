@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:my_desktop_project/Section/01_home.dart';
+import 'package:contextmenu/contextmenu.dart';
+import 'src/commons.dart';
+import '01_home.dart';
 
 class API {
   static var sections = [
@@ -59,19 +61,16 @@ class _TheDropDownState extends State<TheDropDown> {
   void toggleAttendance(int index) => setState(() => API.is_present[index] = !API.is_present[index]);
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
-  void updateDetails(BuildContext context, int index) => showDialog<material.DataRow>(
+  void dialogBox4UpdatingDetails(BuildContext context, int index) => showDialog<material.DataRow>(
       context: context,
       builder: (context) {
         const my_spacing = SizedBox(height: factor);
         bool is_present = API.is_present[index];
         void returnClass() {
-          displayInfoBar(
+          showInfoBar(
             context,
-            builder: (context, reason) => const InfoBar(
-              title: Text("Updated"),
-              content: Text("Details Updated."),
-              severity: InfoBarSeverity.success,
-            ),
+            title: "Updated",
+            detail: "New details applied!",
           );
           Navigator.pop(context, material.DataRow(
           cells: [
@@ -86,13 +85,11 @@ class _TheDropDownState extends State<TheDropDown> {
         ));
         }
         void cancelClass() {
-          displayInfoBar(
+          showInfoBar(
             context,
-            builder: (context, close) => const InfoBar(
-              title: Text("Cancelled"),
-              content: Text("All changes are discarded!"),
-              severity: InfoBarSeverity.warning,
-            ),
+            type: InfoBarSeverity.warning,
+            title: "Cancelled",
+            detail: "All changes discarded!",
           );
           Navigator.pop(context);
         }
@@ -141,11 +138,40 @@ class _TheDropDownState extends State<TheDropDown> {
       },
     );
 
+  void contextMenuEdit({required final int of}) {
+    Navigator.pop(context);
+    dialogBox4UpdatingDetails(context, of);
+  }
+  void contextMenuDelete({required final int of}) {
+    Navigator.pop(context);
+    showInfoBar(
+      context,
+      type: InfoBarSeverity.warning,
+      title: "Deleted",
+      detail: "Entry removed",
+    );
+  }
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
         material.DataCell(GestureDetector(
           onTap: () => toggleAttendance(index),
-          onSecondaryTap: () => updateDetails(context, index),
+          onSecondaryTapUp: (details) => showContextMenu(
+            details.globalPosition,
+            context,
+            (context) => [
+              ListTile(
+                onPressed: () => contextMenuEdit(of: index),
+                leading: const Icon(FluentIcons.edit, size: factor + 7),
+                title: const Text("Edit"),
+              ),
+              ListTile(
+                onPressed: () => contextMenuDelete(of: index),
+                leading: const Icon(FluentIcons.delete, size: factor + 7),
+                title: const Text("Delete"),
+              )
+            ],
+            7.0, 200.0
+          ),
           child: Text(from[index]),
     ));
 
