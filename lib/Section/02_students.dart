@@ -144,18 +144,47 @@ class _TheDropDownState extends State<TheDropDown> {
   }
   void contextMenuDelete({required final int of}) {
     Navigator.pop(context);
-    setState(() {
-      API.names.removeAt(of);
-      API.roll_no.removeAt(of);
-      API.cgpa_s.removeAt(of);
-      API.is_present.removeAt(of);
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Delete Student"),
+        content: const Text("Are you sure you want to delete this student?"),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Delete"),
+          ),
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value!) {
+        setState(() {
+          API.names.removeAt(of);
+          API.roll_no.removeAt(of);
+          API.cgpa_s.removeAt(of);
+          API.is_present.removeAt(of);
+        });
+        showInfoBar(
+          context,
+          title: "Deleted",
+          detail: "Student deleted!",
+        );
+      }
+      else {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Deletion cancelled!",
+        );
+      }
     });
-    showInfoBar(
-      context,
-      type: InfoBarSeverity.warning,
-      title: "Deleted",
-      detail: "Student removed from the list!",
-    );
   }
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
