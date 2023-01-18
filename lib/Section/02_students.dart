@@ -144,11 +144,17 @@ class _TheDropDownState extends State<TheDropDown> {
   }
   void contextMenuDelete({required final int of}) {
     Navigator.pop(context);
+    setState(() {
+      API.names.removeAt(of);
+      API.roll_no.removeAt(of);
+      API.cgpa_s.removeAt(of);
+      API.is_present.removeAt(of);
+    });
     showInfoBar(
       context,
       type: InfoBarSeverity.warning,
       title: "Deleted",
-      detail: "Entry removed",
+      detail: "Student removed from the list!",
     );
   }
   material.DataRow makeTableEntry(BuildContext context, final int index) {
