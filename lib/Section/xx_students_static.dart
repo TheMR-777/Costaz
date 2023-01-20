@@ -9,9 +9,6 @@ class API {
     "Morning", "Afternoon"
   ];
 
-  static var top_row = [
-    "Roll Number", "Name", "CGPA", "Attendance"
-  ];
   static var names = [
     "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
   ];
@@ -66,16 +63,16 @@ class _TheDropDownState extends State<TheDropDown> {
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
   void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(
-      context: context,
-      builder: (context) {
-        bool is_present = API.is_present[index];
-        void returnClass() {
-          showInfoBar(
-            context,
-            title: "Updated",
-            detail: "New details applied!",
-          );
-          Navigator.pop(context, material.DataRow(
+    context: context,
+    builder: (context) {
+      bool is_present = API.is_present[index];
+      void returnClass() {
+        showInfoBar(
+          context,
+          title: "Updated",
+          detail: "New details applied!",
+        );
+        Navigator.pop(context, material.DataRow(
           cells: [
             material.DataCell(Text(API.names[index])),
             material.DataCell(Text(API.roll_no[index])),
@@ -86,60 +83,60 @@ class _TheDropDownState extends State<TheDropDown> {
             )),
           ],
         ));
-        }
-        void cancelClass() {
-          showInfoBar(
-            context,
-            type: InfoBarSeverity.warning,
-            title: "Cancelled",
-            detail: "All changes discarded!",
-          );
-          Navigator.pop(context);
-        }
-
-        return ContentDialog(
-          title: const Text("Update Details"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              my_spacing,
-              TextBox(
-                autofocus: true,
-                onChanged: (val) => API.names[index] = val,
-                placeholder: "Name",
-                initialValue: API.names[index],
-              ),    // Ask Name
-              my_spacing,
-              TextBox(
-                onChanged: (val) => API.roll_no[index] = val,
-                onSubmitted: (val) => returnClass(),
-                placeholder: "Roll No",
-                initialValue: API.roll_no[index],
-              ),    // Ask Roll No
-              my_spacing,
-              TextBox(
-                onChanged: (val) => API.cgpa_s[index] = val,
-                onSubmitted: (val) => returnClass(),
-                placeholder: "CGPA",
-                initialValue: API.cgpa_s[index],
-              ),    // Ask CGPA
-            ],
-          ),
-          actions: [
-            FilledButton(
-              onPressed: () => setState(() => returnClass()),
-              style: button_pad,
-              child: const Text("Update"),
-            ),  // Update Button
-            Button(
-              onPressed: cancelClass,
-              style: button_pad,
-              child: const Text("Cancel"),
-            ),        // Cancel Button
-          ],
+      }
+      void cancelClass() {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "All changes discarded!",
         );
-      },
-    );
+        Navigator.pop(context);
+      }
+
+      return ContentDialog(
+        title: const Text("Update Details"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            my_spacing,
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => API.names[index] = val,
+              placeholder: "Name",
+              initialValue: API.names[index],
+            ),    // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => API.roll_no[index] = val,
+              onSubmitted: (val) => returnClass(),
+              placeholder: "Roll No",
+              initialValue: API.roll_no[index],
+            ),    // Ask Roll No
+            my_spacing,
+            TextBox(
+              onChanged: (val) => API.cgpa_s[index] = val,
+              onSubmitted: (val) => returnClass(),
+              placeholder: "CGPA",
+              initialValue: API.cgpa_s[index],
+            ),    // Ask CGPA
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => setState(() => returnClass()),
+            style: button_pad,
+            child: const Text("Update"),
+          ),  // Update Button
+          Button(
+            onPressed: cancelClass,
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),        // Cancel Button
+        ],
+      );
+    },
+  );
   void dialogBox4AddingDetails() {
     final TextEditingController name = TextEditingController();
     final TextEditingController roll_no = TextEditingController();
@@ -264,24 +261,24 @@ class _TheDropDownState extends State<TheDropDown> {
         material.DataCell(GestureDetector(
           onTap: () => toggleAttendance(index),
           onSecondaryTapUp: (details) => showContextMenu(
-            details.globalPosition,
-            context,
-            (context) => [
-              ListTile(
-                onPressed: () => contextMenuEdit(of: index),
-                leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
-                title: const Text("Edit"),
-              ),  // Edit
-              ListTile(
-                onPressed: () => contextMenuDelete(of: index),
-                leading: const Icon(FluentIcons.delete, size: factor + 7),
-                title: const Text("Delete"),
-              ),  // Delete
-            ],
-            7.0, 200.0
+              details.globalPosition,
+              context,
+                  (context) => [
+                ListTile(
+                  onPressed: () => contextMenuEdit(of: index),
+                  leading: const Icon(FluentIcons.edit, size: factor + 7),
+                  title: const Text("Edit"),
+                ),  // Edit
+                ListTile(
+                  onPressed: () => contextMenuDelete(of: index),
+                  leading: const Icon(FluentIcons.delete, size: factor + 7),
+                  title: const Text("Delete"),
+                ),  // Delete
+              ],
+              7.0, 200.0
           ),
           child: Text(from[index]),
-    ));
+        ));
 
     return material.DataRow(cells: [
       canToggleAttendance(from: API.roll_no),
@@ -291,7 +288,7 @@ class _TheDropDownState extends State<TheDropDown> {
         onChanged: (value) => updateAttendance(index, value!),
         autofocus: true,
         checked: API.is_present[index],
-        content: Text("  ${API.is_present[index] ? "Pre" : "Ab"}sent  "),
+        content: Text("  ${API.is_present[index] ? "Present" : "Absent"}"),
       )),
     ]);
   }
@@ -309,10 +306,12 @@ class _TheDropDownState extends State<TheDropDown> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         material.DataTable(
-          columns: List.generate(
-            API.top_row.length,
-            (index) => material.DataColumn(label: Text(API.top_row[index])),
-          ), // Headers
+          columns: const [
+            material.DataColumn(label: Text("Roll Number")),
+            material.DataColumn(label: Text("Name")),
+            material.DataColumn(label: Text("CGPA")),
+            material.DataColumn(label: Text("Attendance")),
+          ],        // Headers
           rows: List.generate(
             API.names.length, (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)

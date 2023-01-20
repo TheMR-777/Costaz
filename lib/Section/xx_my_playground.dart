@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:contextmenu/contextmenu.dart';
+import 'package:flutter/material.dart' as mat;
+import 'src/vertebrae.dart' as back;
 
 class ThePlayground extends StatelessWidget {
   const ThePlayground({Key? key}) : super(key: key);
@@ -7,22 +9,20 @@ class ThePlayground extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ScaffoldPage.withPadding(
     padding: const EdgeInsets.all(20),
-    content: Container(
-      alignment: Alignment.centerLeft,
-      color: Colors.grey,
-      child: ContextMenuArea(
-        child: Container(
-          width: 50, height: 50,
-          color: Colors.black,
-        ),
-        builder: (context) => [
-          ListTile(
-            onPressed: () => Navigator.pop(context),
-            leading: const Icon(FluentIcons.check_mark),
-            title: const Text("Nice it is"),
-            trailing: const Icon(FluentIcons.education),
-          )
-        ],
+    content: Center(
+      child: FutureBuilder<List<Widget>>(
+        future: back.getRow(1),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+              scrollDirection: Axis.horizontal,
+              children: snapshot.data!,
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const ProgressBar();
+        },
       ),
     ),
   );
