@@ -28,37 +28,95 @@ class API {
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
+  static int expanded_menu = 0;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
 }
 
 class _DearStudentsState extends State<DearStudents> {
-  final int expanded_menu = 0;
+  void addSection(BuildContext context) => showDialog(
+    context: context,
+    builder: (context) {
+      const my_spacing = SizedBox(height: factor);
+      String newSection = "";
+      void cancelSection() {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Section was not added",
+        );
+        Navigator.pop(context);
+      }
+      void returnSection() {
+        if (newSection.isNotEmpty) {
+          showInfoBar(
+            context,
+            title: "Added",
+            detail: "New section added!",
+          );
+          setState(() => API.dropdown_sections.add(newSection));
+          Navigator.pop(context);
+        }
+        else {
+          cancelSection();
+        }
+      }
+
+      return ContentDialog(
+        title: const Text("Add a New Section"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            my_spacing,
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => newSection = val,
+              onSubmitted: (val) => returnSection(),
+              placeholder: "Section Name",
+            ),    // Ask Name
+          ],
+        ),
+        actions: [
+          FilledButton(
+            style: button_pad,
+            onPressed: returnSection,
+            child: const Text("Add"),
+          ),
+          Button(
+            style: button_pad,
+            onPressed: cancelSection,
+            child: const Text("Cancel"),
+          ),
+        ],
+      );
+    },
+  );
 
   @override
   Widget build(BuildContext context) => ScaffoldPage(
-    header: PageHeader(
-      title: const Text("Students"),
-      commandBar: CommandBar(
-        mainAxisAlignment: MainAxisAlignment.end,
-        primaryItems: [
-          CommandBarButton(
-            icon: const Icon(FluentIcons.add),
-            label: const Text("Add Section"),
-            onPressed: () {},
-          )
-        ],
+      header: PageHeader(
+        title: const Text("Students"),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.add),
+              label: const Text("Add Section"),
+              onPressed: () => addSection(context),
+            )
+          ],
+        ),
       ),
-    ),
-    content: ListView.builder(
-      itemCount: API.dropdown_sections.length,
-      itemBuilder: (context, index) => TheDropDown(
-        index,
-        expand: index == expanded_menu,
+      content: ListView.builder(
+        itemCount: API.dropdown_sections.length,
+        itemBuilder: (context, index) => TheDropDown(
+          index,
+          expand: index == DearStudents.expanded_menu,
+        ),
       ),
-    ),
-  );
+    );
 }
 
 class TheDropDown extends StatefulWidget {
@@ -312,6 +370,7 @@ class _TheDropDownState extends State<TheDropDown> {
 
   @override
   Widget build(BuildContext context) => Expander(
+    onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.expand,
     trailing: Text(
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
@@ -334,12 +393,13 @@ class _TheDropDownState extends State<TheDropDown> {
         my_spacing,                    // Spacing
         Button(
           onPressed: () => dialogBox4AddingDetails(),
-          style: button_pad.copyWith(
+          style: ButtonStyle(
+            padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             backgroundColor: ButtonState.all(Colors.transparent),
-            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).cardColor)),
+            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
           ),
           child: const Text("Add Student"),
-        ),                   // Add Student Button
+        ),                   // Add Student
         const SizedBox(height: 5.0),   // Spacing
       ],
     ),         // Student Fields
