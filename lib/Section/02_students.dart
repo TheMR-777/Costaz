@@ -46,7 +46,64 @@ class _DearStudentsState extends State<DearStudents> {
           CommandBarButton(
             icon: const Icon(FluentIcons.add),
             label: const Text("Add Section"),
-            onPressed: () {},
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) {
+                const my_spacing = SizedBox(height: factor);
+                String newSection = "";
+                void cancelSection() {
+                  showInfoBar(
+                    context,
+                    type: InfoBarSeverity.warning,
+                    title: "Cancelled",
+                    detail: "Section was not added",
+                  );
+                  Navigator.pop(context);
+                }
+                void returnSection() {
+                  if (newSection.isNotEmpty) {
+                    showInfoBar(
+                      context,
+                      title: "Added",
+                      detail: "New section added!",
+                    );
+                    setState(() => API.dropdown_sections.add(newSection));
+                    Navigator.pop(context);
+                  }
+                  else {
+                    cancelSection();
+                  }
+                }
+
+                return ContentDialog(
+                  title: const Text("Add a New Section"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      my_spacing,
+                      TextBox(
+                        autofocus: true,
+                        onChanged: (val) => newSection = val,
+                        onSubmitted: (val) => returnSection(),
+                        placeholder: "Section Name",
+                      ),    // Ask Name
+                    ],
+                  ),
+                  actions: [
+                    FilledButton(
+                      style: button_pad,
+                      onPressed: returnSection,
+                      child: const Text("Add"),
+                    ),
+                    Button(
+                      style: button_pad,
+                      onPressed: cancelSection,
+                      child: const Text("Cancel"),
+                    ),
+                  ],
+                );
+              },
+            ),
           )
         ],
       ),
