@@ -21,7 +21,7 @@ class src {
   static const def_sheet_ID = "1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI";
   static final gsheet_handle = GSheets(src.credentials);
   static final default_sheet = gsheet_handle.spreadsheet(src.def_sheet_ID);
-  static final default_works = default_sheet.then((value) => value.worksheetById(0));
+  static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
 }
 
 Future<List<Text>> getRow(int row) async {

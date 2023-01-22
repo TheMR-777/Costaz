@@ -4,3 +4,4 @@ linter:
     constant_identifier_names: false
     non_constant_identifier_names: false
     camel_case_types: false
+    use_build_context_synchronously: false

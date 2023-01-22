@@ -5,7 +5,7 @@ import 'src/commons.dart';
 import '01_home.dart';
 
 class API {
-  static var sections = [
+  static var dropdown_sections = [
     "Morning", "Afternoon"
   ];
 
@@ -37,24 +37,38 @@ class _DearStudentsState extends State<DearStudents> {
   final int expanded_menu = 0;
 
   @override
-  Widget build(BuildContext context) => ListView.builder(
-    itemCount: API.sections.length,
-    itemBuilder: (context, index) => TheDropDown(
-      title: API.sections[index],
-      expand: index == expanded_menu,
+  Widget build(BuildContext context) => ScaffoldPage(
+    header: PageHeader(
+      title: const Text("Students"),
+      commandBar: CommandBar(
+        mainAxisAlignment: MainAxisAlignment.end,
+        primaryItems: [
+          CommandBarButton(
+            icon: const Icon(FluentIcons.add),
+            label: const Text("Add Section"),
+            onPressed: () {},
+          )
+        ],
+      ),
+    ),
+    content: ListView.builder(
+      itemCount: API.dropdown_sections.length,
+      itemBuilder: (context, index) => TheDropDown(
+        index,
+        expand: index == expanded_menu,
+      ),
     ),
   );
 }
 
 class TheDropDown extends StatefulWidget {
-  const TheDropDown({
-    required this.title,
+  const TheDropDown(this.number, {
     this.expand = false,
     super.key
   });
 
+  final int number;
   final bool expand;
-  final String title;
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();
@@ -303,7 +317,7 @@ class _TheDropDownState extends State<TheDropDown> {
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: Text(widget.title),            // Worksheet Name
+    header: Text(API.dropdown_sections[widget.number]),            // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -320,7 +334,10 @@ class _TheDropDownState extends State<TheDropDown> {
         my_spacing,                    // Spacing
         Button(
           onPressed: () => dialogBox4AddingDetails(),
-          style: button_pad,
+          style: button_pad.copyWith(
+            backgroundColor: ButtonState.all(Colors.transparent),
+            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).cardColor)),
+          ),
           child: const Text("Add Student"),
         ),                   // Add Student Button
         const SizedBox(height: 5.0),   // Spacing

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:my_desktop_project/Section/src/commons.dart';
 const factor = 15.0;
