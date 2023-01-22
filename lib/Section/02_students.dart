@@ -35,10 +35,10 @@ class DearStudents extends StatefulWidget {
 }
 
 class _DearStudentsState extends State<DearStudents> {
+  void update() => setState(() {});
   void addSection(BuildContext context) => showDialog(
     context: context,
     builder: (context) {
-      const my_spacing = SizedBox(height: factor);
       String newSection = "";
       void cancelSection() {
         showInfoBar(
@@ -66,17 +66,11 @@ class _DearStudentsState extends State<DearStudents> {
 
       return ContentDialog(
         title: const Text("Add a New Section"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            my_spacing,
-            TextBox(
-              autofocus: true,
-              onChanged: (val) => newSection = val,
-              onSubmitted: (val) => returnSection(),
-              placeholder: "Section Name",
-            ),    // Ask Name
-          ],
+        content: TextBox(
+          autofocus: true,
+          onChanged: (val) => newSection = val,
+          onSubmitted: (val) => returnSection(),
+          placeholder: "Section Name",
         ),
         actions: [
           FilledButton(
@@ -112,21 +106,22 @@ class _DearStudentsState extends State<DearStudents> {
       content: ListView.builder(
         itemCount: API.dropdown_sections.length,
         itemBuilder: (context, index) => TheDropDown(
-          index,
-          expand: index == DearStudents.expanded_menu,
+          update, index,
+          is_expand: index == DearStudents.expanded_menu,
         ),
       ),
     );
 }
 
 class TheDropDown extends StatefulWidget {
-  const TheDropDown(this.number, {
-    this.expand = false,
+  const TheDropDown(this.update, this.number, {
+    this.is_expand = false,
     super.key
   });
 
   final int number;
-  final bool expand;
+  final bool is_expand;
+  final VoidCallback update;
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();
@@ -292,6 +287,7 @@ class _TheDropDownState extends State<TheDropDown> {
           child: const Text("Delete"),
         ),
         Button(
+          autofocus: true,
           onPressed: () => Navigator.pop(context, false),
           style: button_pad,
           child: const Text("Cancel"),
@@ -322,13 +318,104 @@ class _TheDropDownState extends State<TheDropDown> {
     }
   });
 
-  void contextMenuEdit({required final int of}) {
+  void contextMenuEditEntry({required final int of}) {
     Navigator.pop(context);
     dialogBox4UpdatingDetails(of);
   }
-  void contextMenuDelete({required final int of}) {
+  void contextMenuDeleteEntry({required final int of}) {
     Navigator.pop(context);
     dialogBox4DeletingDetails(of);
+  }
+
+  void contextMenuEditMenu(BuildContext context_2) {
+    String name = API.dropdown_sections[widget.number];
+    Navigator.pop(context_2);
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ContentDialog(
+          title: const Text("Edit Section"),
+          content: TextBox(
+            autofocus: true,
+            onChanged: (value) => name = value,
+            initialValue: name,
+            placeholder: "Section Name",
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: button_pad,
+              child: const Text("Edit"),
+            ),
+            Button(
+              onPressed: () => Navigator.pop(context, false),
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value!) {
+        setState(() {
+          API.dropdown_sections[widget.number] = name;
+        });
+        showInfoBar(
+          context,
+          title: "Edited",
+          detail: "Worksheet name edited!",
+        );
+      }
+      else {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Editing cancelled!",
+        );
+      }
+    });
+  }
+  void contextMenuDeleteMenu(BuildContext context_2) {
+    Navigator.pop(context_2);
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Delete Section"),
+        content: const Text("Are you sure you want to delete this section?"),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Delete"),
+          ),
+          Button(
+            autofocus: true,
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value!) {
+        API.dropdown_sections.removeAt(widget.number);
+        widget.update();
+        showInfoBar(
+          context,
+          title: "Deleted",
+          detail: "Worksheet deleted!",
+        );
+      }
+      else {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Deletion cancelled!",
+        );
+      }
+    });
   }
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
@@ -340,12 +427,12 @@ class _TheDropDownState extends State<TheDropDown> {
             context,
             (context) => [
               ListTile(
-                onPressed: () => contextMenuEdit(of: index),
+                onPressed: () => contextMenuEditEntry(of: index),
                 leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
                 title: const Text("Edit"),
               ),  // Edit
               ListTile(
-                onPressed: () => contextMenuDelete(of: index),
+                onPressed: () => contextMenuDeleteEntry(of: index),
                 leading: const Icon(FluentIcons.delete, size: factor + 7),
                 title: const Text("Delete"),
               ),  // Delete
@@ -371,12 +458,30 @@ class _TheDropDownState extends State<TheDropDown> {
   @override
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
-    initiallyExpanded: widget.expand,
+    initiallyExpanded: widget.is_expand,
     trailing: Text(
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: Text(API.dropdown_sections[widget.number]),            // Worksheet Name
+    header: GestureDetector(
+        onSecondaryTapUp: (details) => showContextMenu(
+          details.globalPosition, context,
+          (context_2) => [
+            ListTile(
+              onPressed: () => contextMenuEditMenu(context_2),
+              leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
+              title: const Text("Edit"),
+            ),  // Edit
+            ListTile(
+              onPressed: () => contextMenuDeleteMenu(context_2),
+              leading: const Icon(FluentIcons.delete, size: factor + 7),
+              title: const Text("Delete"),
+            ),  // Delete
+          ],
+          7.0, 200.0
+        ),
+        child: Text(API.dropdown_sections[widget.number])
+    ), // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -400,7 +505,7 @@ class _TheDropDownState extends State<TheDropDown> {
           ),
           child: const Text("Add Student"),
         ),                   // Add Student
-        const SizedBox(height: 5.0),   // Spacing
+        my_spacing,                    // Spacing
       ],
     ),         // Student Fields
   );
