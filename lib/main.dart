@@ -1,4 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:system_theme/system_theme.dart';
 
 import 'AppBar/app_bar.dart';
 import 'Section/01_home.dart';
@@ -6,10 +8,29 @@ import 'Section/02_students.dart';
 import 'Section/98_settings.dart';
 import 'Section/xx_my_playground.dart';
 
-void main() => runApp(const Costaz());
+void main() {
+  SystemTheme.accentColor.load().then((_) {
+    if ((defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.android) &&
+        !kIsWeb) {
+      Costaz.my_accent = AccentColor.swatch({
+        'darkest': SystemTheme.accentColor.darkest,
+        'darker': SystemTheme.accentColor.darker,
+        'dark': SystemTheme.accentColor.dark,
+        'normal': SystemTheme.accentColor.accent,
+        'light': SystemTheme.accentColor.light,
+        'lighter': SystemTheme.accentColor.lighter,
+        'lightest': SystemTheme.accentColor.lightest,
+      });
+    }
+  });
+  Costaz.is_dark = SystemTheme.isDarkMode;
+  runApp(const Costaz());
+}
 
 class Costaz extends StatefulWidget {
   const Costaz({Key? key}) : super(key: key);
+  static AccentColor my_accent = Colors.blue;
   static var my_page = 0;
   static var is_dark = true;
 
@@ -23,7 +44,9 @@ class _CostazState extends State<Costaz> {
   @override
   Widget build(BuildContext context) => FluentApp(
       debugShowCheckedModeBanner: false,
-      theme: Costaz.is_dark ? ThemeData.dark() : ThemeData.light(),
+      theme: (Costaz.is_dark ? ThemeData.dark() : ThemeData.light()).copyWith(
+        accentColor: Costaz.my_accent,
+      ),
       home: NavigationView(
         appBar: const NavigationAppBar(
           title: TheAppBar(),

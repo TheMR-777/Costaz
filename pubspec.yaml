@@ -12,6 +12,7 @@ dependencies:
   google_fonts: any
   contextmenu: ^3.0.0
   gsheets: ^0.4.2
+  system_theme: ^2.1.0
 
 dev_dependencies:
   flutter_test:
