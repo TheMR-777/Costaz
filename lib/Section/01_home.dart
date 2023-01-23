@@ -94,7 +94,11 @@ class _TheSweetHomeState extends State<TheSweetHome> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(factor + 20),
+    padding: const EdgeInsets.only(
+        top: factor + 20,
+        left: factor + 20,
+        right: factor + 20,
+    ),
     child: Column(
       children: [
         Row(

@@ -23,9 +23,9 @@ void main() {
         'lightest': SystemTheme.accentColor.lightest,
       });
     }
-  });
-  Costaz.is_dark = SystemTheme.isDarkMode;
-  runApp(const Costaz());
+  });   // Accent Color
+  Costaz.is_dark = SystemTheme.isDarkMode;          // Dark Mode
+  runApp(const Costaz());                           // Run App
 }
 
 class Costaz extends StatefulWidget {
