@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import 'AppBar/app_bar.dart';
 import 'Section/01_home.dart';
@@ -28,8 +29,23 @@ void main() {
   });   // Accent Color
   Costaz.is_dark = SystemTheme.isDarkMode;          // Dark Mode
   Window.initialize().then((_) async {
-    await Window.setEffect(effect: WindowEffect.mica);
-  });        // Set Title
+    Future<WindowEffect> adaptiveEffect() async {
+      var info = await DeviceInfoPlugin().windowsInfo;
+
+      // High than 22523 is Windows 11 22H2 -> tabbed
+      // Less than 22523 is Windows 11 22H1 -> mica
+      // Less than 22000 is Windows 10 any  -> acrylic
+      // Less than 10240 is Deprecated      -> solid
+      return info.buildNumber > 22523
+          ? WindowEffect.tabbed
+          : info.buildNumber >= 22000
+          ? WindowEffect.mica
+          : info.buildNumber >= 10240
+          ? WindowEffect.acrylic
+          : WindowEffect.solid;
+    }
+    await Window.setEffect(effect: await adaptiveEffect());
+  });        // Set Window Effect
   runApp(const Costaz());                           // Run App
 }
 
