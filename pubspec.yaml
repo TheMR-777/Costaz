@@ -13,6 +13,7 @@ dependencies:
   contextmenu: ^3.0.0
   gsheets: ^0.4.2
   system_theme: ^2.1.0
+  flutter_acrylic: ^1.1.0+1
 
 dev_dependencies:
   flutter_test:

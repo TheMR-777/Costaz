@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 import 'AppBar/app_bar.dart';
 import 'Section/01_home.dart';
@@ -9,6 +10,7 @@ import 'Section/98_settings.dart';
 import 'Section/xx_my_playground.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();        // Initialize
   SystemTheme.accentColor.load().then((_) {
     if ((defaultTargetPlatform == TargetPlatform.windows ||
         defaultTargetPlatform == TargetPlatform.android) &&
@@ -25,6 +27,9 @@ void main() {
     }
   });   // Accent Color
   Costaz.is_dark = SystemTheme.isDarkMode;          // Dark Mode
+  Window.initialize().then((_) async {
+    await Window.setEffect(effect: WindowEffect.mica);
+  });        // Set Title
   runApp(const Costaz());                           // Run App
 }
 
@@ -46,6 +51,11 @@ class _CostazState extends State<Costaz> {
       debugShowCheckedModeBanner: false,
       theme: (Costaz.is_dark ? ThemeData.dark() : ThemeData.light()).copyWith(
         accentColor: Costaz.my_accent,
+        navigationPaneTheme: NavigationPaneThemeData(
+          backgroundColor: Costaz.is_dark
+              ? Colors.transparent
+              : null,
+        )
       ),
       home: NavigationView(
         appBar: const NavigationAppBar(
