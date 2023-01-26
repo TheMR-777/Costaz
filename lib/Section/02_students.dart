@@ -1,30 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:contextmenu/contextmenu.dart';
+import 'package:my_desktop_project/Section/src/vertebrae.dart';
 import 'src/commons.dart';
 import '01_home.dart';
-
-class API {
-  static var dropdown_sections = [
-    "Morning", "Afternoon"
-  ];
-
-  static var top_row = [
-    "Roll Number", "Name", "CGPA", "Attendance"
-  ];
-  static var names = [
-    "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
-  ];
-  static var roll_no = [
-    "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
-  ];
-  static var cgpa_s = [
-    "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
-  ];
-  static var is_present = [
-    true, true, false, true, false, true, false, true, false,
-  ];
-}
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
@@ -103,12 +82,19 @@ class _DearStudentsState extends State<DearStudents> {
           ],
         ),
       ),
-      content: ListView.builder(
-        itemCount: API.dropdown_sections.length,
-        itemBuilder: (context, index) => TheDropDown(
-          update, index,
-          is_expand: index == DearStudents.expanded_menu,
-        ),
+      content: FutureBuilder<bool>(
+        future: fillAPIs(),
+        builder: (context_2, snapshot) => snapshot.hasData
+          ? ListView.builder(
+              itemCount: API.dropdown_sections.length,
+              itemBuilder: (context_2, index) => TheDropDown(
+                update, index,
+                is_expand: index == DearStudents.expanded_menu,
+              ),
+            )
+          : snapshot.hasError
+            ? Text("${snapshot.error}")
+            : const Center(child: ProgressRing()),
       ),
     );
 }
@@ -129,7 +115,9 @@ class TheDropDown extends StatefulWidget {
 
 class _TheDropDownState extends State<TheDropDown> {
   static const my_spacing = SizedBox(height: factor);
-  void toggleAttendance(int index) => setState(() => API.is_present[index] = !API.is_present[index]);
+  void toggleAttendance(int index) {
+    setState(() => API.is_present[index] = !API.is_present[index]);
+  }
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
   void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(

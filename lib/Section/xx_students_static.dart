@@ -5,10 +5,13 @@ import 'src/commons.dart';
 import '01_home.dart';
 
 class API {
-  static var sections = [
+  static var dropdown_sections = [
     "Morning", "Afternoon"
   ];
 
+  static var top_row = [
+    "Roll Number", "Name", "CGPA", "Attendance"
+  ];
   static var names = [
     "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
   ];
@@ -25,33 +28,100 @@ class API {
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
+  static int expanded_menu = 0;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
 }
 
 class _DearStudentsState extends State<DearStudents> {
-  final int expanded_menu = 0;
+  void update() => setState(() {});
+  void addSection(BuildContext context) => showDialog(
+    context: context,
+    builder: (context) {
+      String newSection = "";
+      void cancelSection() {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Section was not added",
+        );
+        Navigator.pop(context);
+      }
+      void returnSection() {
+        if (newSection.isNotEmpty) {
+          showInfoBar(
+            context,
+            title: "Added",
+            detail: "New section added!",
+          );
+          setState(() => API.dropdown_sections.add(newSection));
+          Navigator.pop(context);
+        }
+        else {
+          cancelSection();
+        }
+      }
+
+      return ContentDialog(
+        title: const Text("Add a New Section"),
+        content: TextBox(
+          autofocus: true,
+          onChanged: (val) => newSection = val,
+          onSubmitted: (val) => returnSection(),
+          placeholder: "Section Name",
+        ),
+        actions: [
+          FilledButton(
+            style: button_pad,
+            onPressed: returnSection,
+            child: const Text("Add"),
+          ),
+          Button(
+            style: button_pad,
+            onPressed: cancelSection,
+            child: const Text("Cancel"),
+          ),
+        ],
+      );
+    },
+  );
 
   @override
-  Widget build(BuildContext context) => ListView.builder(
-    itemCount: API.sections.length,
-    itemBuilder: (context, index) => TheDropDown(
-      title: API.sections[index],
-      expand: index == expanded_menu,
-    ),
-  );
+  Widget build(BuildContext context) => ScaffoldPage(
+      header: PageHeader(
+        title: const Text("Students"),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.add),
+              label: const Text("Add Section"),
+              onPressed: () => addSection(context),
+            )
+          ],
+        ),
+      ),
+      content: ListView.builder(
+        itemCount: API.dropdown_sections.length,
+        itemBuilder: (context, index) => TheDropDown(
+          update, index,
+          is_expand: index == DearStudents.expanded_menu,
+        ),
+      ),
+    );
 }
 
 class TheDropDown extends StatefulWidget {
-  const TheDropDown({
-    required this.title,
-    this.expand = false,
+  const TheDropDown(this.update, this.number, {
+    this.is_expand = false,
     super.key
   });
 
-  final bool expand;
-  final String title;
+  final int number;
+  final bool is_expand;
+  final VoidCallback update;
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();
@@ -63,16 +133,16 @@ class _TheDropDownState extends State<TheDropDown> {
   void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
 
   void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(
-    context: context,
-    builder: (context) {
-      bool is_present = API.is_present[index];
-      void returnClass() {
-        showInfoBar(
-          context,
-          title: "Updated",
-          detail: "New details applied!",
-        );
-        Navigator.pop(context, material.DataRow(
+      context: context,
+      builder: (context) {
+        bool is_present = API.is_present[index];
+        void returnClass() {
+          showInfoBar(
+            context,
+            title: "Updated",
+            detail: "New details applied!",
+          );
+          Navigator.pop(context, material.DataRow(
           cells: [
             material.DataCell(Text(API.names[index])),
             material.DataCell(Text(API.roll_no[index])),
@@ -83,60 +153,60 @@ class _TheDropDownState extends State<TheDropDown> {
             )),
           ],
         ));
-      }
-      void cancelClass() {
-        showInfoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "All changes discarded!",
-        );
-        Navigator.pop(context);
-      }
+        }
+        void cancelClass() {
+          showInfoBar(
+            context,
+            type: InfoBarSeverity.warning,
+            title: "Cancelled",
+            detail: "All changes discarded!",
+          );
+          Navigator.pop(context);
+        }
 
-      return ContentDialog(
-        title: const Text("Update Details"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            my_spacing,
-            TextBox(
-              autofocus: true,
-              onChanged: (val) => API.names[index] = val,
-              placeholder: "Name",
-              initialValue: API.names[index],
-            ),    // Ask Name
-            my_spacing,
-            TextBox(
-              onChanged: (val) => API.roll_no[index] = val,
-              onSubmitted: (val) => returnClass(),
-              placeholder: "Roll No",
-              initialValue: API.roll_no[index],
-            ),    // Ask Roll No
-            my_spacing,
-            TextBox(
-              onChanged: (val) => API.cgpa_s[index] = val,
-              onSubmitted: (val) => returnClass(),
-              placeholder: "CGPA",
-              initialValue: API.cgpa_s[index],
-            ),    // Ask CGPA
+        return ContentDialog(
+          title: const Text("Update Details"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              my_spacing,
+              TextBox(
+                autofocus: true,
+                onChanged: (val) => API.names[index] = val,
+                placeholder: "Name",
+                initialValue: API.names[index],
+              ),    // Ask Name
+              my_spacing,
+              TextBox(
+                onChanged: (val) => API.roll_no[index] = val,
+                onSubmitted: (val) => returnClass(),
+                placeholder: "Roll No",
+                initialValue: API.roll_no[index],
+              ),    // Ask Roll No
+              my_spacing,
+              TextBox(
+                onChanged: (val) => API.cgpa_s[index] = val,
+                onSubmitted: (val) => returnClass(),
+                placeholder: "CGPA",
+                initialValue: API.cgpa_s[index],
+              ),    // Ask CGPA
+            ],
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => setState(() => returnClass()),
+              style: button_pad,
+              child: const Text("Update"),
+            ),  // Update Button
+            Button(
+              onPressed: cancelClass,
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),        // Cancel Button
           ],
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => setState(() => returnClass()),
-            style: button_pad,
-            child: const Text("Update"),
-          ),  // Update Button
-          Button(
-            onPressed: cancelClass,
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),        // Cancel Button
-        ],
-      );
-    },
-  );
+        );
+      },
+    );
   void dialogBox4AddingDetails() {
     final TextEditingController name = TextEditingController();
     final TextEditingController roll_no = TextEditingController();
@@ -217,6 +287,7 @@ class _TheDropDownState extends State<TheDropDown> {
           child: const Text("Delete"),
         ),
         Button(
+          autofocus: true,
           onPressed: () => Navigator.pop(context, false),
           style: button_pad,
           child: const Text("Cancel"),
@@ -247,13 +318,104 @@ class _TheDropDownState extends State<TheDropDown> {
     }
   });
 
-  void contextMenuEdit({required final int of}) {
+  void contextMenuEditEntry({required final int of}) {
     Navigator.pop(context);
     dialogBox4UpdatingDetails(of);
   }
-  void contextMenuDelete({required final int of}) {
+  void contextMenuDeleteEntry({required final int of}) {
     Navigator.pop(context);
     dialogBox4DeletingDetails(of);
+  }
+
+  void contextMenuEditMenu(BuildContext context_2) {
+    String name = API.dropdown_sections[widget.number];
+    Navigator.pop(context_2);
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ContentDialog(
+          title: const Text("Edit Section"),
+          content: TextBox(
+            autofocus: true,
+            onChanged: (value) => name = value,
+            initialValue: name,
+            placeholder: "Section Name",
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: button_pad,
+              child: const Text("Edit"),
+            ),
+            Button(
+              onPressed: () => Navigator.pop(context, false),
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value!) {
+        setState(() {
+          API.dropdown_sections[widget.number] = name;
+        });
+        showInfoBar(
+          context,
+          title: "Edited",
+          detail: "Worksheet name edited!",
+        );
+      }
+      else {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Editing cancelled!",
+        );
+      }
+    });
+  }
+  void contextMenuDeleteMenu(BuildContext context_2) {
+    Navigator.pop(context_2);
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Delete Section"),
+        content: const Text("Are you sure you want to delete this section?"),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Delete"),
+          ),
+          Button(
+            autofocus: true,
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value!) {
+        API.dropdown_sections.removeAt(widget.number);
+        widget.update();
+        showInfoBar(
+          context,
+          title: "Deleted",
+          detail: "Worksheet deleted!",
+        );
+      }
+      else {
+        showInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Deletion cancelled!",
+        );
+      }
+    });
   }
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
@@ -261,24 +423,24 @@ class _TheDropDownState extends State<TheDropDown> {
         material.DataCell(GestureDetector(
           onTap: () => toggleAttendance(index),
           onSecondaryTapUp: (details) => showContextMenu(
-              details.globalPosition,
-              context,
-                  (context) => [
-                ListTile(
-                  onPressed: () => contextMenuEdit(of: index),
-                  leading: const Icon(FluentIcons.edit, size: factor + 7),
-                  title: const Text("Edit"),
-                ),  // Edit
-                ListTile(
-                  onPressed: () => contextMenuDelete(of: index),
-                  leading: const Icon(FluentIcons.delete, size: factor + 7),
-                  title: const Text("Delete"),
-                ),  // Delete
-              ],
-              7.0, 200.0
+            details.globalPosition,
+            context,
+            (context) => [
+              ListTile(
+                onPressed: () => contextMenuEditEntry(of: index),
+                leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
+                title: const Text("Edit"),
+              ),  // Edit
+              ListTile(
+                onPressed: () => contextMenuDeleteEntry(of: index),
+                leading: const Icon(FluentIcons.delete, size: factor + 7),
+                title: const Text("Delete"),
+              ),  // Delete
+            ],
+            7.0, 200.0
           ),
           child: Text(from[index]),
-        ));
+    ));
 
     return material.DataRow(cells: [
       canToggleAttendance(from: API.roll_no),
@@ -288,30 +450,47 @@ class _TheDropDownState extends State<TheDropDown> {
         onChanged: (value) => updateAttendance(index, value!),
         autofocus: true,
         checked: API.is_present[index],
-        content: Text("  ${API.is_present[index] ? "Present" : "Absent"}"),
+        content: Text("  ${API.is_present[index] ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
 
   @override
   Widget build(BuildContext context) => Expander(
-    initiallyExpanded: widget.expand,
+    onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
+    initiallyExpanded: widget.is_expand,
     trailing: Text(
       "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: Text(widget.title),            // Worksheet Name
+    header: GestureDetector(
+        onSecondaryTapUp: (details) => showContextMenu(
+          details.globalPosition, context,
+          (context_2) => [
+            ListTile(
+              onPressed: () => contextMenuEditMenu(context_2),
+              leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
+              title: const Text("Edit"),
+            ),  // Edit
+            ListTile(
+              onPressed: () => contextMenuDeleteMenu(context_2),
+              leading: const Icon(FluentIcons.delete, size: factor + 7),
+              title: const Text("Delete"),
+            ),  // Delete
+          ],
+          7.0, 200.0
+        ),
+        child: Text(API.dropdown_sections[widget.number])
+    ), // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         material.DataTable(
-          columns: const [
-            material.DataColumn(label: Text("Roll Number")),
-            material.DataColumn(label: Text("Name")),
-            material.DataColumn(label: Text("CGPA")),
-            material.DataColumn(label: Text("Attendance")),
-          ],        // Headers
+          columns: List.generate(
+            API.top_row.length,
+            (index) => material.DataColumn(label: Text(API.top_row[index])),
+          ), // Headers
           rows: List.generate(
             API.names.length, (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
@@ -319,10 +498,14 @@ class _TheDropDownState extends State<TheDropDown> {
         my_spacing,                    // Spacing
         Button(
           onPressed: () => dialogBox4AddingDetails(),
-          style: button_pad,
+          style: ButtonStyle(
+            padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
+            backgroundColor: ButtonState.all(Colors.transparent),
+            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+          ),
           child: const Text("Add Student"),
-        ),                   // Add Student Button
-        const SizedBox(height: 5.0),   // Spacing
+        ),                   // Add Student
+        my_spacing,                    // Spacing
       ],
     ),         // Student Fields
   );

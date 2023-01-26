@@ -1,7 +1,6 @@
-// ignore_for_file: camel_case_types
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gsheets/gsheets.dart';
+import 'commons.dart';
 
 class src {
   static const credentials = r'''
@@ -22,6 +21,15 @@ class src {
   static final gsheet_handle = GSheets(src.credentials);
   static final default_sheet = gsheet_handle.spreadsheet(src.def_sheet_ID);
   static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
+}
+
+Future<bool> fillAPIs() async {
+  final my_sheet = await src.default_sheet;
+
+  // API.dropdown_sections should be the titles of the worksheets, skipping the last one
+  API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
+
+  return true;
 }
 
 Future<List<Text>> getRow(int row) async {
