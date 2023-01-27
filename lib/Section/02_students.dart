@@ -133,7 +133,7 @@ class _TheDropDownState extends State<TheDropDown> {
           Navigator.pop(context, material.DataRow(
           cells: [
             material.DataCell(Text(API.names[index])),
-            material.DataCell(Text(API.roll_no[index])),
+            material.DataCell(Text(API.roll_no[widget.number][index])),
             material.DataCell(Text(API.cgpa_s[index])),
             material.DataCell(Checkbox(
               checked: is_present,
@@ -166,10 +166,10 @@ class _TheDropDownState extends State<TheDropDown> {
               ),    // Ask Name
               my_spacing,
               TextBox(
-                onChanged: (val) => API.roll_no[index] = val,
+                onChanged: (val) => API.roll_no[widget.number][index] = val,
                 onSubmitted: (val) => returnClass(),
                 placeholder: "Roll No",
-                initialValue: API.roll_no[index],
+                initialValue: API.roll_no[widget.number][index],
               ),    // Ask Roll No
               my_spacing,
               TextBox(
@@ -243,7 +243,7 @@ class _TheDropDownState extends State<TheDropDown> {
       if (value! && name.text.isNotEmpty && roll_no.text.isNotEmpty && cgpa.text.isNotEmpty) {
         setState(() {
           API.names.add(name.text);
-          API.roll_no.add(roll_no.text);
+          API.roll_no[widget.number].add(roll_no.text);
           API.cgpa_s.add(cgpa.text);
           API.is_present.add(false);
         });
@@ -431,7 +431,7 @@ class _TheDropDownState extends State<TheDropDown> {
     ));
 
     return material.DataRow(cells: [
-      canToggleAttendance(from: API.roll_no),
+      canToggleAttendance(from: API.roll_no[widget.number]),
       canToggleAttendance(from: API.names),
       canToggleAttendance(from: API.cgpa_s),
       material.DataCell(Checkbox(

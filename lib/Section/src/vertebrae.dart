@@ -30,11 +30,16 @@ class API {
   static var top_row = [
     "Roll Number", "Name", "CGPA", "Attendance"
   ];
+  static var roll_no = [
+    [
+      "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
+    ],
+    [
+      "BSCS_F19_A_63", "BSCS_F19_A_64", "BSCS_F19_A_65", "BSCS_F19_A_66", "BSCS_F19_A_67", "BSCS_F19_A_68", "BSCS_F19_A_69", "BSCS_F19_A_70", "BSCS_F19_A_71",
+    ],
+  ];
   static var names = [
     "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
-  ];
-  static var roll_no = [
-    "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
   ];
   static var cgpa_s = [
     "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
@@ -46,8 +51,17 @@ class API {
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
 
-    // API.dropdown_sections should be the titles of the worksheets, skipping the last one
+    // Dropdowns: Skipping the last one
     API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
+
+    // Top Row: Located in the last sheet, 1st row
+    API.top_row = await my_sheet.sheets.last.values.row(1);
+
+    // Roll No: 1st column of all sheets, except the last one, and skipping the first row
+    API.roll_no = [];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      API.roll_no.add(await my_sheet.sheets[i].values.column(1, fromRow: 2));
+    }
 
     return true;
   }
