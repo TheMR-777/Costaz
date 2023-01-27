@@ -169,10 +169,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_fonts
-      sha256: "8f099045e2f2a30e4d4d0a35f40c6bc941a8f2ca0e10ad9d214ee9edd3f37483"
+      sha256: "72e09da804e76dab934db4cb62ff59d688c542d2cd6570699b63bd06fcf4a0ed"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.0.0"
   googleapis:
     dependency: transitive
     description:
@@ -241,10 +241,10 @@ packages:
     dependency: transitive
     description:
       name: macos_window_utils
-      sha256: "0ff6c40c67e2dd93f696b2333dfc04f830a8c4b93edabc841bd1d87e3ac48935"
+      sha256: ece6315199f84931d7e32869aa3d8d4d2a82e6f4416ed292f9cf9345b0105feb
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   matcher:
     dependency: transitive
     description:
@@ -468,4 +468,4 @@ packages:
     version: "0.2.0+3"
 sdks:
   dart: ">=2.18.5 <4.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.7.0"
