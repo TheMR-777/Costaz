@@ -116,14 +116,14 @@ class TheDropDown extends StatefulWidget {
 class _TheDropDownState extends State<TheDropDown> {
   static const my_spacing = SizedBox(height: factor);
   void toggleAttendance(int index) {
-    setState(() => API.is_present[index] = !API.is_present[index]);
+    setState(() => API.is_present[widget.number][index] = !API.is_present[widget.number][index]);
   }
-  void updateAttendance(int index, bool value) => setState(() => API.is_present[index] = value);
+  void updateAttendance(int index, bool value) => setState(() => API.is_present[widget.number][index] = value);
 
   void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(
       context: context,
       builder: (context) {
-        bool is_present = API.is_present[index];
+        bool is_present = API.is_present[widget.number][index];
         void returnClass() {
           showInfoBar(
             context,
@@ -132,9 +132,9 @@ class _TheDropDownState extends State<TheDropDown> {
           );
           Navigator.pop(context, material.DataRow(
           cells: [
-            material.DataCell(Text(API.names[index])),
+            material.DataCell(Text(API.names[widget.number][index])),
             material.DataCell(Text(API.roll_no[widget.number][index])),
-            material.DataCell(Text(API.cgpa_s[index])),
+            material.DataCell(Text(API.cgpa_s[widget.number][index])),
             material.DataCell(Checkbox(
               checked: is_present,
               onChanged: (val) => updateAttendance(index, val!),
@@ -160,9 +160,9 @@ class _TheDropDownState extends State<TheDropDown> {
               my_spacing,
               TextBox(
                 autofocus: true,
-                onChanged: (val) => API.names[index] = val,
+                onChanged: (val) => API.names[widget.number][index] = val,
                 placeholder: "Name",
-                initialValue: API.names[index],
+                initialValue: API.names[widget.number][index],
               ),    // Ask Name
               my_spacing,
               TextBox(
@@ -173,10 +173,10 @@ class _TheDropDownState extends State<TheDropDown> {
               ),    // Ask Roll No
               my_spacing,
               TextBox(
-                onChanged: (val) => API.cgpa_s[index] = val,
+                onChanged: (val) => API.cgpa_s[widget.number][index] = val,
                 onSubmitted: (val) => returnClass(),
                 placeholder: "CGPA",
-                initialValue: API.cgpa_s[index],
+                initialValue: API.cgpa_s[widget.number][index],
               ),    // Ask CGPA
             ],
           ),
@@ -242,10 +242,10 @@ class _TheDropDownState extends State<TheDropDown> {
     ).then((value) {
       if (value! && name.text.isNotEmpty && roll_no.text.isNotEmpty && cgpa.text.isNotEmpty) {
         setState(() {
-          API.names.add(name.text);
+          API.names[widget.number].add(name.text);
           API.roll_no[widget.number].add(roll_no.text);
-          API.cgpa_s.add(cgpa.text);
-          API.is_present.add(false);
+          API.cgpa_s[widget.number].add(cgpa.text);
+          API.is_present[widget.number].add(false);
         });
         showInfoBar(
           context,
@@ -287,8 +287,8 @@ class _TheDropDownState extends State<TheDropDown> {
       setState(() {
         API.names.removeAt(index);
         API.roll_no.removeAt(index);
-        API.cgpa_s.removeAt(index);
-        API.is_present.removeAt(index);
+        API.cgpa_s[widget.number].removeAt(index);
+        API.is_present[widget.number].removeAt(index);
       });
       showInfoBar(
         context,
@@ -432,13 +432,13 @@ class _TheDropDownState extends State<TheDropDown> {
 
     return material.DataRow(cells: [
       canToggleAttendance(from: API.roll_no[widget.number]),
-      canToggleAttendance(from: API.names),
-      canToggleAttendance(from: API.cgpa_s),
+      canToggleAttendance(from: API.names[widget.number]),
+      canToggleAttendance(from: API.cgpa_s[widget.number]),
       material.DataCell(Checkbox(
         onChanged: (value) => updateAttendance(index, value!),
         autofocus: true,
-        checked: API.is_present[index],
-        content: Text("  ${API.is_present[index] ? "Pre" : "Ab"}sent  "),
+        checked: API.is_present[widget.number][index],
+        content: Text("  ${API.is_present[widget.number][index] ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
@@ -448,7 +448,7 @@ class _TheDropDownState extends State<TheDropDown> {
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
     trailing: Text(
-      "Present: ${API.is_present.where((element) => element).length} / ${API.is_present.length}",
+      "Present: ${API.is_present[widget.number].where((element) => element).length} / ${API.is_present[widget.number].length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
     header: GestureDetector(
@@ -480,7 +480,7 @@ class _TheDropDownState extends State<TheDropDown> {
             (index) => material.DataColumn(label: Text(API.top_row[index])),
           ), // Headers
           rows: List.generate(
-            API.names.length, (index) => makeTableEntry(context, index),
+            API.roll_no[widget.number].length, (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
         ),
         my_spacing,                    // Spacing

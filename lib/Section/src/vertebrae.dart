@@ -26,7 +26,6 @@ class API {
   static var dropdown_sections = [
     "Morning", "Afternoon"
   ];
-
   static var top_row = [
     "Roll Number", "Name", "CGPA", "Attendance"
   ];
@@ -39,13 +38,29 @@ class API {
     ],
   ];
   static var names = [
-    "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
+    [
+      "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
+    ],
+    [
+      "The Doctor", "The Master", "The Rani", "The Valeyard", "The Brigadier", "Cool Man", "The Cybermen", "The Daleks", "The Sontarans"
+    ],
   ];
   static var cgpa_s = [
-    "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
+    [
+      "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
+    ],
+    // Randomly generate values: 1..4
+    [
+      "1.45", "3.23", "2.54", "3.67", "2.34", "3.45", "2.34", "1.33", "2.77",
+    ]
   ];
   static var is_present = [
-    true, true, false, true, false, true, false, true, false,
+    [
+      true, true, false, true, false, true, false, true, false,
+    ],
+    [
+      false, false, true, false, true, false, true, false, true,
+    ]
   ];
 
   static Future<bool> load() async {
@@ -61,6 +76,27 @@ class API {
     API.roll_no = [];
     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
       API.roll_no.add(await my_sheet.sheets[i].values.column(1, fromRow: 2));
+    }
+
+    // Names: 2nd column of all sheets, except the last one, and skipping the first row
+    API.names = [];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      API.names.add(await my_sheet.sheets[i].values.column(2, fromRow: 2));
+    }
+
+    // CGPA: 3rd column of all sheets, except the last one, and skipping the first row
+    API.cgpa_s = [];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      API.cgpa_s.add(await my_sheet.sheets[i].values.column(3, fromRow: 2));
+    }
+
+    // Attendance: 4th column of all sheets,
+    // except the last one, and skipping the first row
+    // mark true if there is any value in the cell
+    // mark false if the cell is empty
+    API.is_present = [];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      API.is_present.add(await my_sheet.sheets[i].values.column(4, fromRow: 2).then((value) => value.map((e) => e != "").toList()));
     }
 
     return true;
