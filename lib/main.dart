@@ -12,21 +12,6 @@ import 'Section/xx_my_playground.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();        // Initialize
-  SystemTheme.accentColor.load().then((_) {
-    if ((defaultTargetPlatform == TargetPlatform.windows ||
-        defaultTargetPlatform == TargetPlatform.android) &&
-        !kIsWeb) {
-      Costaz.my_accent = AccentColor.swatch({
-        'darkest': SystemTheme.accentColor.darkest,
-        'darker': SystemTheme.accentColor.darker,
-        'dark': SystemTheme.accentColor.dark,
-        'normal': SystemTheme.accentColor.accent,
-        'light': SystemTheme.accentColor.light,
-        'lighter': SystemTheme.accentColor.lighter,
-        'lightest': SystemTheme.accentColor.lightest,
-      });
-    }
-  });   // Accent Color
   Costaz.is_dark = SystemTheme.isDarkMode;          // Dark Mode
   Window.initialize().then((_) async {
     Future<WindowEffect> adaptiveEffect() async {
@@ -66,7 +51,7 @@ class _CostazState extends State<Costaz> {
   Widget build(BuildContext context) => FluentApp(
       debugShowCheckedModeBanner: false,
       theme: (Costaz.is_dark ? ThemeData.dark() : ThemeData.light()).copyWith(
-        accentColor: Costaz.my_accent,
+        accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         navigationPaneTheme: NavigationPaneThemeData(
           backgroundColor: Costaz.is_dark
               ? Colors.transparent

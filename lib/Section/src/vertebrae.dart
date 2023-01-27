@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gsheets/gsheets.dart';
-import 'commons.dart';
 
 class src {
   static const credentials = r'''
@@ -23,13 +22,11 @@ class src {
   static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
 }
 
-Future<bool> fillAPIs() async {
+Future<List<Worksheet>> fillAPIs() async {
   final my_sheet = await src.default_sheet;
 
-  // API.dropdown_sections should be the titles of the worksheets, skipping the last one
-  API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
-
-  return true;
+  // Skip the last one
+  return my_sheet.sheets.sublist(0, my_sheet.sheets.length - 1);
 }
 
 Future<List<Text>> getRow(int row) async {
