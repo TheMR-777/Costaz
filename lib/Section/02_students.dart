@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:contextmenu/contextmenu.dart';
-import 'package:gsheets/gsheets.dart' show Worksheet;
 import 'src/vertebrae.dart';
 import 'src/commons.dart';
 import '01_home.dart';
@@ -83,19 +82,18 @@ class _DearStudentsState extends State<DearStudents> {
           ],
         ),
       ),
-      content: FutureBuilder<List<Worksheet>>(
-        future: fillAPIs(),
-        builder: (context_2, my_sheets_snapshot) => my_sheets_snapshot.hasData
+      content: FutureBuilder<bool>(
+        future: API.load(),
+        builder: (context_2, snapshot) => snapshot.hasData
           ? ListView.builder(
-              itemCount: my_sheets_snapshot.data?.length ?? 0,
+              itemCount: API.dropdown_sections.length,
               itemBuilder: (context_2, index) => TheDropDown(
                 update, index,
                 is_expand: index == DearStudents.expanded_menu,
-                data: my_sheets_snapshot.data![index],
               ),
             )
-          : my_sheets_snapshot.hasError
-            ? Text("${my_sheets_snapshot.error}")
+          : snapshot.hasError
+            ? Text("${snapshot.error}")
             : const Center(child: ProgressRing()),
       ),
     );
@@ -103,7 +101,6 @@ class _DearStudentsState extends State<DearStudents> {
 
 class TheDropDown extends StatefulWidget {
   const TheDropDown(this.update, this.number, {
-    required this.data,
     this.is_expand = false,
     super.key
   });
@@ -111,7 +108,6 @@ class TheDropDown extends StatefulWidget {
   final int number;
   final bool is_expand;
   final VoidCallback update;
-  final Worksheet data;
 
   @override
   State<TheDropDown> createState() => _TheDropDownState();

@@ -22,11 +22,35 @@ class src {
   static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
 }
 
-Future<List<Worksheet>> fillAPIs() async {
-  final my_sheet = await src.default_sheet;
+class API {
+  static var dropdown_sections = [
+    "Morning", "Afternoon"
+  ];
 
-  // Skip the last one
-  return my_sheet.sheets.sublist(0, my_sheet.sheets.length - 1);
+  static var top_row = [
+    "Roll Number", "Name", "CGPA", "Attendance"
+  ];
+  static var names = [
+    "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
+  ];
+  static var roll_no = [
+    "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
+  ];
+  static var cgpa_s = [
+    "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
+  ];
+  static var is_present = [
+    true, true, false, true, false, true, false, true, false,
+  ];
+
+  static Future<bool> load() async {
+    final my_sheet = await src.default_sheet;
+
+    // API.dropdown_sections should be the titles of the worksheets, skipping the last one
+    API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
+
+    return true;
+  }
 }
 
 Future<List<Text>> getRow(int row) async {
