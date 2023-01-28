@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:contextmenu/contextmenu.dart';
 import 'src/vertebrae.dart';
 import 'src/commons.dart';
 
@@ -13,8 +12,61 @@ class DearStudents extends StatefulWidget {
 }
 
 class _DearStudentsState extends State<DearStudents> {
+  static bool to_load = true;
   void update() => setState(() {});
-  void addSection(BuildContext context) => showDialog(
+  // void addSection(BuildContext context) => showDialog(
+  //   context: context,
+  //   builder: (context) {
+  //     String newSection = "";
+  //     void cancelSection() {
+  //       show.infoBar(
+  //         context,
+  //         type: InfoBarSeverity.warning,
+  //         title: "Cancelled",
+  //         detail: "Section was not added",
+  //       );
+  //       Navigator.pop(context);
+  //     }
+  //     void returnSection() {
+  //       if (newSection.isNotEmpty) {
+  //         show.infoBar(
+  //           context,
+  //           title: "Added",
+  //           detail: "New section added!",
+  //         );
+  //         setState(() => API.dropdown_sections.add(newSection));
+  //         Navigator.pop(context);
+  //       }
+  //       else {
+  //         cancelSection();
+  //       }
+  //     }
+  //
+  //     return ContentDialog(
+  //       title: const Text("Add a New Section"),
+  //       content: TextBox(
+  //         autofocus: true,
+  //         onChanged: (val) => newSection = val,
+  //         onSubmitted: (val) => returnSection(),
+  //         placeholder: "Section Name",
+  //       ),
+  //       actions: [
+  //         FilledButton(
+  //           style: button_pad,
+  //           onPressed: returnSection,
+  //           child: const Text("Add"),
+  //         ),
+  //         Button(
+  //           style: button_pad,
+  //           onPressed: cancelSection,
+  //           child: const Text("Cancel"),
+  //         ),
+  //       ],
+  //     );
+  //   },
+  // );
+
+  void addSection(BuildContext context) => showDialog<bool>(
     context: context,
     builder: (context) {
       String newSection = "";
@@ -25,7 +77,7 @@ class _DearStudentsState extends State<DearStudents> {
           title: "Cancelled",
           detail: "Section was not added",
         );
-        Navigator.pop(context);
+        Navigator.pop(context, false);
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
@@ -35,7 +87,7 @@ class _DearStudentsState extends State<DearStudents> {
             detail: "New section added!",
           );
           setState(() => API.dropdown_sections.add(newSection));
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
         else {
           cancelSection();
@@ -64,10 +116,37 @@ class _DearStudentsState extends State<DearStudents> {
         ],
       );
     },
-  );
+  ).then((result) {
+    if (result != null) {
+      if (result) {
+        show.infoBar(
+          context,
+          title: "Success",
+          detail: "Section added!",
+        );
+      }
+      else {
+        show.infoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "No changes made!",
+        );
+      }
+    }
+  });
 
   @override
-  Widget build(BuildContext context) => ScaffoldPage(
+  Widget build(BuildContext context) {
+    print(API.dropdown_sections.length);
+    final the_content = ListView.builder(
+      itemCount: API.dropdown_sections.length,
+      itemBuilder: (context_2, index) => TheDropDown(
+        update, index,
+        is_expand: index == DearStudents.expanded_menu,
+      ),
+    );
+    return ScaffoldPage(
       header: PageHeader(
         title: const Text("Students"),
         commandBar: CommandBar(
@@ -81,21 +160,20 @@ class _DearStudentsState extends State<DearStudents> {
           ],
         ),
       ),
-      content: FutureBuilder<bool>(
+      content: to_load
+      ? FutureBuilder<bool>(
         future: API.load(),
         builder: (context_2, snapshot) => snapshot.hasData
-          ? ListView.builder(
-              itemCount: API.dropdown_sections.length,
-              itemBuilder: (context_2, index) => TheDropDown(
-                update, index,
-                is_expand: index == DearStudents.expanded_menu,
-              ),
-            )
-          : snapshot.hasError
+            ? () {
+              to_load = false;
+              return the_content;
+            }()
+            : snapshot.hasError
             ? Text("${snapshot.error}")
             : const Center(child: ProgressRing()),
-      ),
+      ) : the_content,
     );
+  }
 }
 
 class TheDropDown extends StatefulWidget {
@@ -305,18 +383,8 @@ class _TheDropDownState extends State<TheDropDown> {
     }
   });
 
-  // void contextMenuEditEntry({required final int of}) {
-  //   Navigator.pop(context);
-  //   dialogBox4UpdatingDetails(of);
-  // }
-  void contextMenuDeleteEntry({required final int of}) {
-    Navigator.pop(context);
-    dialogBox4DeletingDetails(of);
-  }
-
-  void contextMenuEditMenu(BuildContext context_2) {
+  void dialogBox4UpdatingMenu() {
     String name = API.dropdown_sections[widget.number];
-    Navigator.pop(context_2);
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -363,47 +431,50 @@ class _TheDropDownState extends State<TheDropDown> {
       }
     });
   }
-  void contextMenuDeleteMenu(BuildContext context_2) {
-    Navigator.pop(context_2);
-    showDialog<bool>(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: const Text("Delete Section"),
-        content: const Text("Are you sure you want to delete this section?"),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Delete"),
-          ),
-          Button(
-            autofocus: true,
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    ).then((value) {
-      if (value!) {
+  void dialogBox4DeletingMenu() => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text("Delete Section"),
+      content: const Text("Are you sure you want to delete this section?"),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: button_pad,
+          child: const Text("Delete"),
+        ),
+        Button(
+          autofocus: true,
+          onPressed: () => Navigator.pop(context, false),
+          style: button_pad,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ),
+  ).then((value) {
+    if (value!) {
+      widget.update();
+      setState(() {
         API.dropdown_sections.removeAt(widget.number);
-        widget.update();
-        show.infoBar(
-          context,
-          title: "Deleted",
-          detail: "Worksheet deleted!",
-        );
-      }
-      else {
-        show.infoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Deletion cancelled!",
-        );
-      }
-    });
-  }
+        API.names.removeAt(widget.number);
+        API.roll_no.removeAt(widget.number);
+        API.cgpa_s.removeAt(widget.number);
+        API.is_present.removeAt(widget.number);
+      });
+      show.infoBar(
+        context,
+        title: "Deleted",
+        detail: "Worksheet deleted!",
+      );
+    }
+    else {
+      show.infoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "Deletion cancelled!",
+      );
+    }
+  });
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
@@ -438,24 +509,11 @@ class _TheDropDownState extends State<TheDropDown> {
       "Present: ${API.is_present[widget.number].where((element) => element).length} / ${API.is_present[widget.number].length}",
     ),          // Present Count
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: GestureDetector(
-        onSecondaryTapUp: (details) => showContextMenu(
-          details.globalPosition, context,
-          (context_2) => [
-            ListTile(
-              onPressed: () => contextMenuEditMenu(context_2),
-              leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
-              title: const Text("Edit"),
-            ),  // Edit
-            ListTile(
-              onPressed: () => contextMenuDeleteMenu(context_2),
-              leading: const Icon(FluentIcons.delete, size: factor + 7),
-              title: const Text("Delete"),
-            ),  // Delete
-          ],
-          7.0, 200.0
-        ),
-        child: Text(API.dropdown_sections[widget.number])
+    header: show.XNativeContextMenu(
+      context,
+      onEdit: () => dialogBox4UpdatingMenu(),
+      onDelete: () => dialogBox4DeletingMenu(),
+      child: Text(API.dropdown_sections[widget.number]),
     ), // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
@@ -467,7 +525,8 @@ class _TheDropDownState extends State<TheDropDown> {
             (index) => material.DataColumn(label: Text(API.top_row[index])),
           ), // Headers
           rows: List.generate(
-            API.roll_no[widget.number].length, (index) => makeTableEntry(context, index),
+            API.roll_no[widget.number].length,
+            (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
         ),
         my_spacing,                    // Spacing

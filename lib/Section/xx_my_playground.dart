@@ -8,9 +8,9 @@ class ThePlayground extends StatelessWidget {
   Widget build(BuildContext context) => ScaffoldPage.withPadding(
     padding: const EdgeInsets.all(20),
     content: Center(
-      child: show.NativeContextMenu(
+      child: show.XNativeContextMenu(
         context,
-        onTap: () {}, onDelete: () {}, onEdit: () {},
+        onDelete: () {}, onEdit: () {},
         child: Container(
           width: 200,
           height: 200,

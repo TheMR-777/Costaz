@@ -56,6 +56,66 @@ class show {
     );
   }
 
+  static Widget XNativeContextMenu(BuildContext context, {
+    VoidCallback? onTap,
+    required VoidCallback onEdit,
+    required VoidCallback onDelete,
+    required Widget child,
+  }) {
+    const borderRadius = Radius.circular(5);
+    final my_controller = FlyoutController();
+
+    Button makeField({bool is_edit = true}) => Button(
+      onPressed: () {
+        Navigator.of(context).pop();
+        (is_edit ? onEdit : onDelete)();
+      },
+      style: ButtonStyle(
+        backgroundColor: ButtonState.all(FluentTheme.of(context).acrylicBackgroundColor.withOpacity(0.9)),
+        padding: ButtonState.all(EdgeInsets.zero),
+        shape: ButtonState.all(RoundedRectangleBorder(
+          borderRadius: is_edit ? const BorderRadius.only(
+            topLeft: borderRadius,
+            topRight: borderRadius,
+          ) : const BorderRadius.only(
+            bottomLeft: borderRadius,
+            bottomRight: borderRadius,
+          ),
+        )),
+      ),
+      child: Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.all(factor),
+              child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete)
+          ),
+          //const SizedBox(width: 10),
+          Text(is_edit ? 'Edit' : 'Delete'),
+        ],
+      ),
+    );
+    return GestureDetector(
+      onTap: onTap,
+      onSecondaryTapUp: (details) => my_controller.showFlyout(
+        position: details.globalPosition,
+        builder: (context) => SizedBox(
+          height: factor * 6,
+          width: factor * 7,
+          child: Column(
+            children: [
+              makeField(),
+              makeField(is_edit: false),
+            ],
+          ),
+        ),
+      ),
+      child: FlyoutTarget(
+        controller: my_controller,
+        child: child,
+      ),
+    );
+  }
+
   static void infoBar(BuildContext context, {
     InfoBarSeverity type = InfoBarSeverity.success,
     required String title,
