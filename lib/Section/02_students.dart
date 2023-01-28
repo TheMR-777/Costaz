@@ -14,59 +14,8 @@ class DearStudents extends StatefulWidget {
 class _DearStudentsState extends State<DearStudents> {
   static bool to_load = true;
   void update() => setState(() {});
-  // void addSection(BuildContext context) => showDialog(
-  //   context: context,
-  //   builder: (context) {
-  //     String newSection = "";
-  //     void cancelSection() {
-  //       show.infoBar(
-  //         context,
-  //         type: InfoBarSeverity.warning,
-  //         title: "Cancelled",
-  //         detail: "Section was not added",
-  //       );
-  //       Navigator.pop(context);
-  //     }
-  //     void returnSection() {
-  //       if (newSection.isNotEmpty) {
-  //         show.infoBar(
-  //           context,
-  //           title: "Added",
-  //           detail: "New section added!",
-  //         );
-  //         setState(() => API.dropdown_sections.add(newSection));
-  //         Navigator.pop(context);
-  //       }
-  //       else {
-  //         cancelSection();
-  //       }
-  //     }
-  //
-  //     return ContentDialog(
-  //       title: const Text("Add a New Section"),
-  //       content: TextBox(
-  //         autofocus: true,
-  //         onChanged: (val) => newSection = val,
-  //         onSubmitted: (val) => returnSection(),
-  //         placeholder: "Section Name",
-  //       ),
-  //       actions: [
-  //         FilledButton(
-  //           style: button_pad,
-  //           onPressed: returnSection,
-  //           child: const Text("Add"),
-  //         ),
-  //         Button(
-  //           style: button_pad,
-  //           onPressed: cancelSection,
-  //           child: const Text("Cancel"),
-  //         ),
-  //       ],
-  //     );
-  //   },
-  // );
 
-  void addSection(BuildContext context) => showDialog<bool>(
+  void addSection(BuildContext context) => showDialog(
     context: context,
     builder: (context) {
       String newSection = "";
@@ -116,25 +65,7 @@ class _DearStudentsState extends State<DearStudents> {
         ],
       );
     },
-  ).then((result) {
-    if (result != null) {
-      if (result) {
-        show.infoBar(
-          context,
-          title: "Success",
-          detail: "Section added!",
-        );
-      }
-      else {
-        show.infoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "No changes made!",
-        );
-      }
-    }
-  });
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -319,10 +250,20 @@ class _TheDropDownState extends State<TheDropDown> {
     ).then((value) {
       if (value! && name.text.isNotEmpty && roll_no.text.isNotEmpty && cgpa.text.isNotEmpty) {
         setState(() {
-          API.names[widget.number].add(name.text);
-          API.roll_no[widget.number].add(roll_no.text);
-          API.cgpa_s[widget.number].add(cgpa.text);
-          API.is_present[widget.number].add(false);
+          // If widget.number > API.roll_no.length then it will add a new list
+          // Otherwise it will add to the existing list
+          if (widget.number >= API.roll_no.length) {
+            API.roll_no.add([roll_no.text]);
+            API.names.add([name.text]);
+            API.cgpa_s.add([cgpa.text]);
+            API.is_present.add([false]);
+          }
+          else {
+            API.roll_no[widget.number].add(roll_no.text);
+            API.names[widget.number].add(name.text);
+            API.cgpa_s[widget.number].add(cgpa.text);
+            API.is_present[widget.number].add(false);
+          }
         });
         show.infoBar(
           context,
@@ -505,9 +446,11 @@ class _TheDropDownState extends State<TheDropDown> {
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
-    trailing: Text(
-      "Present: ${API.is_present[widget.number].where((element) => element).length} / ${API.is_present[widget.number].length}",
-    ),          // Present Count
+    trailing: API.roll_no.length > widget.number
+        ? Text(
+          "Present: ${API.is_present[widget.number].where((element) => element).length} / ${API.is_present[widget.number].length}",
+        )               // Present Count
+        : const Icon(FluentIcons.people),
     leading: const Icon(FluentIcons.people),     // People Icon
     header: show.XNativeContextMenu(
       context,
@@ -519,7 +462,7 @@ class _TheDropDownState extends State<TheDropDown> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        material.DataTable(
+        if (API.roll_no.length > widget.number) material.DataTable(
           columns: List.generate(
             API.top_row.length,
             (index) => material.DataColumn(label: Text(API.top_row[index])),
