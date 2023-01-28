@@ -69,7 +69,6 @@ class _DearStudentsState extends State<DearStudents> {
 
   @override
   Widget build(BuildContext context) {
-    print(API.dropdown_sections.length);
     final the_content = ListView.builder(
       itemCount: API.dropdown_sections.length,
       itemBuilder: (context_2, index) => TheDropDown(
@@ -462,7 +461,7 @@ class _TheDropDownState extends State<TheDropDown> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (API.roll_no.length > widget.number) material.DataTable(
+        if (API.roll_no.length > widget.number && API.roll_no[widget.number].isNotEmpty) material.DataTable(
           columns: List.generate(
             API.top_row.length,
             (index) => material.DataColumn(label: Text(API.top_row[index])),
