@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:contextmenu/contextmenu.dart';
 import 'src/commons.dart';
-import '01_home.dart';
 
 class API {
   static var dropdown_sections = [
@@ -41,7 +40,7 @@ class _DearStudentsState extends State<DearStudents> {
     builder: (context) {
       String newSection = "";
       void cancelSection() {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -51,7 +50,7 @@ class _DearStudentsState extends State<DearStudents> {
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
-          showInfoBar(
+          show.infoBar(
             context,
             title: "Added",
             detail: "New section added!",
@@ -137,7 +136,7 @@ class _TheDropDownState extends State<TheDropDown> {
       builder: (context) {
         bool is_present = API.is_present[index];
         void returnClass() {
-          showInfoBar(
+          show.infoBar(
             context,
             title: "Updated",
             detail: "New details applied!",
@@ -155,7 +154,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ));
         }
         void cancelClass() {
-          showInfoBar(
+          show.infoBar(
             context,
             type: InfoBarSeverity.warning,
             title: "Cancelled",
@@ -259,14 +258,14 @@ class _TheDropDownState extends State<TheDropDown> {
           API.cgpa_s.add(cgpa.text);
           API.is_present.add(false);
         });
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Added",
           detail: "Student added!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -302,14 +301,14 @@ class _TheDropDownState extends State<TheDropDown> {
         API.cgpa_s.removeAt(index);
         API.is_present.removeAt(index);
       });
-      showInfoBar(
+      show.infoBar(
         context,
         title: "Deleted",
         detail: "Student deleted!",
       );
     }
     else {
-      showInfoBar(
+      show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -360,14 +359,14 @@ class _TheDropDownState extends State<TheDropDown> {
         setState(() {
           API.dropdown_sections[widget.number] = name;
         });
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Edited",
           detail: "Worksheet name edited!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -401,14 +400,14 @@ class _TheDropDownState extends State<TheDropDown> {
       if (value!) {
         API.dropdown_sections.removeAt(widget.number);
         widget.update();
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Deleted",
           detail: "Worksheet deleted!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",

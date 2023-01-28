@@ -1,7 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:my_desktop_project/Section/src/commons.dart';
-const factor = 15.0;
-final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
 
 class Class {
   Class(this.name, this.description);
@@ -76,14 +74,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     );
     if (result != null) {
       setState(() => classes.add(result));
-      showInfoBar(
+      show.infoBar(
         context,
         title: "Success",
         detail: "Class added!",
       );
     }
     else {
-      showInfoBar(
+      show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",

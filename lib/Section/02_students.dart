@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' as material;
 import 'package:contextmenu/contextmenu.dart';
 import 'src/vertebrae.dart';
 import 'src/commons.dart';
-import '01_home.dart';
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
@@ -20,7 +19,7 @@ class _DearStudentsState extends State<DearStudents> {
     builder: (context) {
       String newSection = "";
       void cancelSection() {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -30,7 +29,7 @@ class _DearStudentsState extends State<DearStudents> {
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
-          showInfoBar(
+          show.infoBar(
             context,
             title: "Added",
             detail: "New section added!",
@@ -125,7 +124,7 @@ class _TheDropDownState extends State<TheDropDown> {
       builder: (context) {
         bool is_present = API.is_present[widget.number][index];
         void returnClass() {
-          showInfoBar(
+          show.infoBar(
             context,
             title: "Updated",
             detail: "New details applied!",
@@ -143,7 +142,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ));
         }
         void cancelClass() {
-          showInfoBar(
+          show.infoBar(
             context,
             type: InfoBarSeverity.warning,
             title: "Cancelled",
@@ -247,14 +246,14 @@ class _TheDropDownState extends State<TheDropDown> {
           API.cgpa_s[widget.number].add(cgpa.text);
           API.is_present[widget.number].add(false);
         });
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Added",
           detail: "Student added!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -285,19 +284,19 @@ class _TheDropDownState extends State<TheDropDown> {
   ).then((value) {
     if (value!) {
       setState(() {
-        API.names.removeAt(index);
-        API.roll_no.removeAt(index);
+        API.names[widget.number].removeAt(index);
+        API.roll_no[widget.number].removeAt(index);
         API.cgpa_s[widget.number].removeAt(index);
         API.is_present[widget.number].removeAt(index);
       });
-      showInfoBar(
+      show.infoBar(
         context,
         title: "Deleted",
         detail: "Student deleted!",
       );
     }
     else {
-      showInfoBar(
+      show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -306,10 +305,10 @@ class _TheDropDownState extends State<TheDropDown> {
     }
   });
 
-  void contextMenuEditEntry({required final int of}) {
-    Navigator.pop(context);
-    dialogBox4UpdatingDetails(of);
-  }
+  // void contextMenuEditEntry({required final int of}) {
+  //   Navigator.pop(context);
+  //   dialogBox4UpdatingDetails(of);
+  // }
   void contextMenuDeleteEntry({required final int of}) {
     Navigator.pop(context);
     dialogBox4DeletingDetails(of);
@@ -348,14 +347,14 @@ class _TheDropDownState extends State<TheDropDown> {
         setState(() {
           API.dropdown_sections[widget.number] = name;
         });
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Edited",
           detail: "Worksheet name edited!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -389,14 +388,14 @@ class _TheDropDownState extends State<TheDropDown> {
       if (value!) {
         API.dropdown_sections.removeAt(widget.number);
         widget.update();
-        showInfoBar(
+        show.infoBar(
           context,
           title: "Deleted",
           detail: "Worksheet deleted!",
         );
       }
       else {
-        showInfoBar(
+        show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -408,27 +407,15 @@ class _TheDropDownState extends State<TheDropDown> {
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
-        material.DataCell(GestureDetector(
-          onTap: () => toggleAttendance(index),
-          onSecondaryTapUp: (details) => showContextMenu(
-            details.globalPosition,
+        material.DataCell(
+          show.NativeContextMenu(
             context,
-            (context) => [
-              ListTile(
-                onPressed: () => contextMenuEditEntry(of: index),
-                leading: const Icon(FluentIcons.edit_contact, size: factor + 7),
-                title: const Text("Edit"),
-              ),  // Edit
-              ListTile(
-                onPressed: () => contextMenuDeleteEntry(of: index),
-                leading: const Icon(FluentIcons.delete, size: factor + 7),
-                title: const Text("Delete"),
-              ),  // Delete
-            ],
-            7.0, 200.0
+            onTap: () => toggleAttendance(index),
+            onEdit: () => dialogBox4UpdatingDetails(index),
+            onDelete: () => dialogBox4DeletingDetails(index),
+            child: Text(from[index]),
           ),
-          child: Text(from[index]),
-    ));
+        );
 
     return material.DataRow(cells: [
       canToggleAttendance(from: API.roll_no[widget.number]),
