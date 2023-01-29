@@ -1,7 +1,46 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
-import 'src/vertebrae.dart';
+import 'src/vertebrae.dart' hide API;
 import 'src/commons.dart';
+
+class Student {
+  static final top_row = [
+    "Roll No",
+    "Name",
+    "CGPA",
+    "Attendance",
+  ];
+
+  String roll_no = "N/A";
+  String name = "N/A";
+  String cgpa = "0.0";
+  bool attendance = false;
+
+  Student(this.roll_no, this.name, this.cgpa, this.attendance);
+}
+
+class Section {
+  String title = "N/A";
+  List<Student> students = [
+    Student("BSCS_F19_M_63", "TheMR", "3.72", true),
+    Student("BSCS_F19_M_64", "John Wick", "4.00", true),
+    Student("BSCS_F19_M_65", "Dr. Who", "2.71", false),
+    Student("BSCS_F19_M_66", "Boogeyman", "3.00", true),
+    Student("BSCS_F19_M_67", "Highway Man", "3.50", false),
+    Student("BSCS_F19_M_68", "Mr Strange", "2.00", true),
+    Student("BSCS_F19_M_69", "Adam Smasher", "3.53", false),
+    Student("BSCS_F19_M_70", "The Silence", "3.24", true),
+    Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
+  ];
+}
+
+class API {
+  static List<Section> sections = [
+    Section()..title = "Morning",
+    Section()..title = "Afternoon",
+    Section()..title = "Evening",
+  ];
+}
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
@@ -26,7 +65,7 @@ class _DearStudentsState extends State<DearStudents> {
           title: "Cancelled",
           detail: "Section was not added",
         );
-        Navigator.pop(context, false);
+        Navigator.pop(context);
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
@@ -35,7 +74,7 @@ class _DearStudentsState extends State<DearStudents> {
             title: "Added",
             detail: "New section added!",
           );
-          setState(() => API.dropdown_sections.add(newSection));
+          setState(() => API.sections.add(Section()..title = newSection));
           Navigator.pop(context, true);
         }
         else {
@@ -70,7 +109,7 @@ class _DearStudentsState extends State<DearStudents> {
   @override
   Widget build(BuildContext context) {
     final the_content = ListView.builder(
-      itemCount: API.dropdown_sections.length,
+      itemCount: API.sections.length,
       itemBuilder: (context_2, index) => TheDropDown(
         update, index,
         is_expand: index == DearStudents.expanded_menu,
@@ -90,18 +129,19 @@ class _DearStudentsState extends State<DearStudents> {
           ],
         ),
       ),
-      content: to_load
-      ? FutureBuilder<bool>(
-        future: API.load(),
-        builder: (context_2, snapshot) => snapshot.hasData
-            ? () {
-              to_load = false;
-              return the_content;
-            }()
-            : snapshot.hasError
-            ? Text("${snapshot.error}")
-            : const Center(child: ProgressRing()),
-      ) : the_content,
+      content: the_content,
+      // content: to_load
+      // ? FutureBuilder<bool>(
+      //   future: API.load(),
+      //   builder: (context_2, snapshot) => snapshot.hasData
+      //       ? () {
+      //         to_load = false;
+      //         return the_content;
+      //       }()
+      //       : snapshot.hasError
+      //       ? Text("${snapshot.error}")
+      //       : const Center(child: ProgressRing()),
+      // ) : the_content,
     );
   }
 }
@@ -123,14 +163,14 @@ class TheDropDown extends StatefulWidget {
 class _TheDropDownState extends State<TheDropDown> {
   static const my_spacing = SizedBox(height: factor);
   void toggleAttendance(int index) {
-    setState(() => API.is_present[widget.number][index] = !API.is_present[widget.number][index]);
+    setState(() => API.sections[widget.number].students[index].attendance = !API.sections[widget.number].students[index].attendance);
   }
-  void updateAttendance(int index, bool value) => setState(() => API.is_present[widget.number][index] = value);
+  void updateAttendance(int index, bool value) => setState(() => API.sections[widget.number].students[index].attendance = value);
 
-  void dialogBox4UpdatingDetails(int index) => showDialog<material.DataRow>(
+  void dialogBox4UpdatingStudent(int index) => showDialog<material.DataRow>(
       context: context,
       builder: (context) {
-        bool is_present = API.is_present[widget.number][index];
+        bool is_present = API.sections[widget.number].students[index].attendance;
         void returnClass() {
           show.infoBar(
             context,
@@ -139,9 +179,9 @@ class _TheDropDownState extends State<TheDropDown> {
           );
           Navigator.pop(context, material.DataRow(
           cells: [
-            material.DataCell(Text(API.names[widget.number][index])),
-            material.DataCell(Text(API.roll_no[widget.number][index])),
-            material.DataCell(Text(API.cgpa_s[widget.number][index])),
+            material.DataCell(Text(API.sections[widget.number].students[index].name)),
+            material.DataCell(Text(API.sections[widget.number].students[index].roll_no)),
+            material.DataCell(Text(API.sections[widget.number].students[index].cgpa)),
             material.DataCell(Checkbox(
               checked: is_present,
               onChanged: (val) => updateAttendance(index, val!),
@@ -167,23 +207,23 @@ class _TheDropDownState extends State<TheDropDown> {
               my_spacing,
               TextBox(
                 autofocus: true,
-                onChanged: (val) => API.names[widget.number][index] = val,
+                onChanged: (val) => API.sections[widget.number].students[index].name = val,
                 placeholder: "Name",
-                initialValue: API.names[widget.number][index],
+                initialValue: API.sections[widget.number].students[index].name,
               ),    // Ask Name
               my_spacing,
               TextBox(
-                onChanged: (val) => API.roll_no[widget.number][index] = val,
+                onChanged: (val) => API.sections[widget.number].students[index].roll_no = val,
                 onSubmitted: (val) => returnClass(),
                 placeholder: "Roll No",
-                initialValue: API.roll_no[widget.number][index],
+                initialValue: API.sections[widget.number].students[index].roll_no,
               ),    // Ask Roll No
               my_spacing,
               TextBox(
-                onChanged: (val) => API.cgpa_s[widget.number][index] = val,
+                onChanged: (val) => API.sections[widget.number].students[index].cgpa = val,
                 onSubmitted: (val) => returnClass(),
                 placeholder: "CGPA",
-                initialValue: API.cgpa_s[widget.number][index],
+                initialValue: API.sections[widget.number].students[index].cgpa,
               ),    // Ask CGPA
             ],
           ),
@@ -202,9 +242,9 @@ class _TheDropDownState extends State<TheDropDown> {
         );
       },
     );
-  void dialogBox4AddingDetails() {
+  void dialogBox4AddingStudent() {
+    final TextEditingController roll = TextEditingController();
     final TextEditingController name = TextEditingController();
-    final TextEditingController roll_no = TextEditingController();
     final TextEditingController cgpa = TextEditingController();
     showDialog<bool>(
       context: context,
@@ -221,7 +261,7 @@ class _TheDropDownState extends State<TheDropDown> {
             ),    // Ask Name
             my_spacing,
             TextBox(
-              onChanged: (val) => roll_no.text = val,
+              onChanged: (val) => roll.text = val,
               onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
@@ -247,22 +287,15 @@ class _TheDropDownState extends State<TheDropDown> {
         ],
       ),
     ).then((value) {
-      if (value! && name.text.isNotEmpty && roll_no.text.isNotEmpty && cgpa.text.isNotEmpty) {
+      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
         setState(() {
-          // If widget.number > API.roll_no.length then it will add a new list
-          // Otherwise it will add to the existing list
-          if (widget.number >= API.roll_no.length) {
-            API.roll_no.add([roll_no.text]);
-            API.names.add([name.text]);
-            API.cgpa_s.add([cgpa.text]);
-            API.is_present.add([false]);
-          }
-          else {
-            API.roll_no[widget.number].add(roll_no.text);
-            API.names[widget.number].add(name.text);
-            API.cgpa_s[widget.number].add(cgpa.text);
-            API.is_present[widget.number].add(false);
-          }
+          // if (widget.number >= API.sections[widget.number].students.length) {
+          //   API.sections[widget.number].students.add(Student(name.text, roll_no.text, cgpa.text, false));
+          // }
+          // else {
+          //   API.sections[widget.number].students.insert(widget.number, Student(name.text, roll_no.text, cgpa.text, false));
+          // }
+          API.sections[widget.number].students.add(Student(roll.text, name.text, cgpa.text, false));
         });
         show.infoBar(
           context,
@@ -280,7 +313,7 @@ class _TheDropDownState extends State<TheDropDown> {
       }
     });
   }
-  void dialogBox4DeletingDetails(int index) => showDialog<bool>(
+  void dialogBox4DeletingStudent(int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
       title: const Text("Delete Student"),
@@ -302,10 +335,7 @@ class _TheDropDownState extends State<TheDropDown> {
   ).then((value) {
     if (value!) {
       setState(() {
-        API.names[widget.number].removeAt(index);
-        API.roll_no[widget.number].removeAt(index);
-        API.cgpa_s[widget.number].removeAt(index);
-        API.is_present[widget.number].removeAt(index);
+        API.sections[widget.number].students.removeAt(index);
       });
       show.infoBar(
         context,
@@ -324,7 +354,7 @@ class _TheDropDownState extends State<TheDropDown> {
   });
 
   void dialogBox4UpdatingMenu() {
-    String name = API.dropdown_sections[widget.number];
+    String name = API.sections[widget.number].title;
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -353,7 +383,7 @@ class _TheDropDownState extends State<TheDropDown> {
     ).then((value) {
       if (value!) {
         setState(() {
-          API.dropdown_sections[widget.number] = name;
+          API.sections[widget.number].title = name;
         });
         show.infoBar(
           context,
@@ -394,11 +424,7 @@ class _TheDropDownState extends State<TheDropDown> {
     if (value!) {
       widget.update();
       setState(() {
-        API.dropdown_sections.removeAt(widget.number);
-        API.names.removeAt(widget.number);
-        API.roll_no.removeAt(widget.number);
-        API.cgpa_s.removeAt(widget.number);
-        API.is_present.removeAt(widget.number);
+        API.sections.removeAt(widget.number);
       });
       show.infoBar(
         context,
@@ -422,21 +448,21 @@ class _TheDropDownState extends State<TheDropDown> {
           show.NativeContextMenu(
             context,
             onTap: () => toggleAttendance(index),
-            onEdit: () => dialogBox4UpdatingDetails(index),
-            onDelete: () => dialogBox4DeletingDetails(index),
+            onEdit: () => dialogBox4UpdatingStudent(index),
+            onDelete: () => dialogBox4DeletingStudent(index),
             child: Text(from[index]),
           ),
         );
 
     return material.DataRow(cells: [
-      canToggleAttendance(from: API.roll_no[widget.number]),
-      canToggleAttendance(from: API.names[widget.number]),
-      canToggleAttendance(from: API.cgpa_s[widget.number]),
+      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.roll_no).toList()),
+      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.name).toList()),
+      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.cgpa).toList()),
       material.DataCell(Checkbox(
         onChanged: (value) => updateAttendance(index, value!),
         autofocus: true,
-        checked: API.is_present[widget.number][index],
-        content: Text("  ${API.is_present[widget.number][index] ? "Pre" : "Ab"}sent  "),
+        checked: API.sections[widget.number].students[index].attendance,
+        content: Text("  ${API.sections[widget.number].students[index].attendance ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
@@ -445,9 +471,9 @@ class _TheDropDownState extends State<TheDropDown> {
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
-    trailing: API.roll_no.length > widget.number
+    trailing: API.sections[widget.number].students.isNotEmpty
         ? Text(
-          "Present: ${API.is_present[widget.number].where((element) => element).length} / ${API.is_present[widget.number].length}",
+          "Present: ${API.sections[widget.number].students.where((element) => element.attendance).length} / ${API.sections[widget.number].students.length}",
         )               // Present Count
         : const Icon(FluentIcons.people),
     leading: const Icon(FluentIcons.people),     // People Icon
@@ -455,25 +481,26 @@ class _TheDropDownState extends State<TheDropDown> {
       context,
       onEdit: () => dialogBox4UpdatingMenu(),
       onDelete: () => dialogBox4DeletingMenu(),
-      child: Text(API.dropdown_sections[widget.number]),
+      child: Text(API.sections[widget.number].title),
     ),                            // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (API.roll_no.length > widget.number && API.roll_no[widget.number].isNotEmpty) material.DataTable(
-          columns: List.generate(
-            API.top_row.length,
-            (index) => material.DataColumn(label: Text(API.top_row[index])),
-          ), // Headers
-          rows: List.generate(
-            API.roll_no[widget.number].length,
+        if (API.sections[widget.number].students.isNotEmpty)
+          material.DataTable(
+            columns: List.generate(
+              Student.top_row.length,
+              (index) => material.DataColumn(label: Text(Student.top_row[index])),
+            ), // Headers
+            rows: List.generate(
+            API.sections[widget.number].students.length,
             (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
         ),
         my_spacing,                    // Spacing
         Button(
-          onPressed: () => dialogBox4AddingDetails(),
+          onPressed: () => dialogBox4AddingStudent(),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             backgroundColor: ButtonState.all(Colors.transparent),
