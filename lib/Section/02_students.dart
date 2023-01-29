@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'src/vertebrae.dart' hide API;
 import 'src/commons.dart';
+const my_spacing = SizedBox(height: factor);
 
 class Student {
   static final top_row = [
@@ -11,12 +12,185 @@ class Student {
     "Attendance",
   ];
 
+  Student(this.roll_no, this.name, this.cgpa, this.attendance);
+
   String roll_no = "N/A";
   String name = "N/A";
   String cgpa = "0.0";
   bool attendance = false;
 
-  Student(this.roll_no, this.name, this.cgpa, this.attendance);
+  static
+  void dialogBox_Adding(BuildContext context, VoidCallback refresh, int section_id) {
+    final TextEditingController roll = TextEditingController();
+    final TextEditingController name = TextEditingController();
+    final TextEditingController cgpa = TextEditingController();
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Add Student"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            my_spacing,
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => name.text = val,
+              placeholder: "Name",
+            ),    // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => roll.text = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Roll Number",
+            ),    // Ask Roll No
+            my_spacing,
+            TextBox(
+              onChanged: (val) => cgpa.text = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "CGPA",
+            ),    // Ask CGPA
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Add"),
+          ),  // Add Button
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),        // Cancel Button
+        ],
+      ),
+    ).then((value) {
+      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
+        API.sections[section_id].students.add(Student(roll.text, name.text, cgpa.text, false));
+        refresh();
+        show.infoBar(
+          context,
+          title: "Added",
+          detail: "Student added!",
+        );
+      }
+      else {
+        show.infoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Addition cancelled!",
+        );
+      }
+    });
+  }
+  static
+  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text("Delete Student"),
+      content: const Text("Are you sure you want to delete this student?"),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: button_pad,
+          child: const Text("Delete"),
+        ),
+        Button(
+          autofocus: true,
+          onPressed: () => Navigator.pop(context, false),
+          style: button_pad,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ),
+  ).then((value) {
+    if (value!) {
+      API.sections[section_id].students.removeAt(index);
+      refresh();
+      show.infoBar(
+        context,
+        title: "Deleted",
+        detail: "Student deleted!",
+      );
+    }
+    else {
+      show.infoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "Deletion cancelled!",
+      );
+    }
+  });
+  void dialogBox_Update(BuildContext context, VoidCallback refresh) {
+    void returnClass() {
+      show.infoBar(
+        context,
+        title: "Updated",
+        detail: "New details applied!",
+      );
+      Navigator.pop(context);
+    }
+    void cancelClass() {
+      show.infoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "All changes discarded!",
+      );
+      Navigator.pop(context);
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) =>
+          ContentDialog(
+            title: const Text("Update Details"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                my_spacing,
+                TextBox(
+                  autofocus: true,
+                  onChanged: (val) => name = val,
+                  placeholder: "Name",
+                  initialValue: name,
+                ), // Ask Name
+                my_spacing,
+                TextBox(
+                  onChanged: (val) => roll_no = val,
+                  onSubmitted: (val) => returnClass(),
+                  placeholder: "Roll No",
+                  initialValue: roll_no,
+                ), // Ask Roll No
+                my_spacing,
+                TextBox(
+                  onChanged: (val) => cgpa = val,
+                  onSubmitted: (val) => returnClass(),
+                  placeholder: "CGPA",
+                  initialValue: cgpa,
+                ), // Ask CGPA
+              ],
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  refresh();
+                  returnClass();
+                },
+                style: button_pad,
+                child: const Text("Update"),
+              ), // Update Button
+              Button(
+                onPressed: cancelClass,
+                style: button_pad,
+                child: const Text("Cancel"),
+              ), // Cancel Button
+            ],
+          ),
+    );
+  }
 }
 
 class Section {
@@ -161,197 +335,11 @@ class TheDropDown extends StatefulWidget {
 }
 
 class _TheDropDownState extends State<TheDropDown> {
-  static const my_spacing = SizedBox(height: factor);
-  void toggleAttendance(int index) {
-    setState(() => API.sections[widget.number].students[index].attendance = !API.sections[widget.number].students[index].attendance);
-  }
-  void updateAttendance(int index, bool value) => setState(() => API.sections[widget.number].students[index].attendance = value);
+  void update() => setState(() {});
+  Student studentAt(int index) => API.sections[widget.number].students[index];
 
-  void dialogBox4UpdatingStudent(int index) => showDialog<material.DataRow>(
-      context: context,
-      builder: (context) {
-        bool is_present = API.sections[widget.number].students[index].attendance;
-        void returnClass() {
-          show.infoBar(
-            context,
-            title: "Updated",
-            detail: "New details applied!",
-          );
-          Navigator.pop(context, material.DataRow(
-          cells: [
-            material.DataCell(Text(API.sections[widget.number].students[index].name)),
-            material.DataCell(Text(API.sections[widget.number].students[index].roll_no)),
-            material.DataCell(Text(API.sections[widget.number].students[index].cgpa)),
-            material.DataCell(Checkbox(
-              checked: is_present,
-              onChanged: (val) => updateAttendance(index, val!),
-            )),
-          ],
-        ));
-        }
-        void cancelClass() {
-          show.infoBar(
-            context,
-            type: InfoBarSeverity.warning,
-            title: "Cancelled",
-            detail: "All changes discarded!",
-          );
-          Navigator.pop(context);
-        }
-
-        return ContentDialog(
-          title: const Text("Update Details"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              my_spacing,
-              TextBox(
-                autofocus: true,
-                onChanged: (val) => API.sections[widget.number].students[index].name = val,
-                placeholder: "Name",
-                initialValue: API.sections[widget.number].students[index].name,
-              ),    // Ask Name
-              my_spacing,
-              TextBox(
-                onChanged: (val) => API.sections[widget.number].students[index].roll_no = val,
-                onSubmitted: (val) => returnClass(),
-                placeholder: "Roll No",
-                initialValue: API.sections[widget.number].students[index].roll_no,
-              ),    // Ask Roll No
-              my_spacing,
-              TextBox(
-                onChanged: (val) => API.sections[widget.number].students[index].cgpa = val,
-                onSubmitted: (val) => returnClass(),
-                placeholder: "CGPA",
-                initialValue: API.sections[widget.number].students[index].cgpa,
-              ),    // Ask CGPA
-            ],
-          ),
-          actions: [
-            FilledButton(
-              onPressed: () => setState(() => returnClass()),
-              style: button_pad,
-              child: const Text("Update"),
-            ),  // Update Button
-            Button(
-              onPressed: cancelClass,
-              style: button_pad,
-              child: const Text("Cancel"),
-            ),        // Cancel Button
-          ],
-        );
-      },
-    );
-  void dialogBox4AddingStudent() {
-    final TextEditingController roll = TextEditingController();
-    final TextEditingController name = TextEditingController();
-    final TextEditingController cgpa = TextEditingController();
-    showDialog<bool>(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: const Text("Add Student"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            my_spacing,
-            TextBox(
-              autofocus: true,
-              onChanged: (val) => name.text = val,
-              placeholder: "Name",
-            ),    // Ask Name
-            my_spacing,
-            TextBox(
-              onChanged: (val) => roll.text = val,
-              onSubmitted: (val) => Navigator.pop(context, true),
-              placeholder: "Roll Number",
-            ),    // Ask Roll No
-            my_spacing,
-            TextBox(
-              onChanged: (val) => cgpa.text = val,
-              onSubmitted: (val) => Navigator.pop(context, true),
-              placeholder: "CGPA",
-            ),    // Ask CGPA
-          ],
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Add"),
-          ),  // Add Button
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),        // Cancel Button
-        ],
-      ),
-    ).then((value) {
-      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
-        setState(() {
-          // if (widget.number >= API.sections[widget.number].students.length) {
-          //   API.sections[widget.number].students.add(Student(name.text, roll_no.text, cgpa.text, false));
-          // }
-          // else {
-          //   API.sections[widget.number].students.insert(widget.number, Student(name.text, roll_no.text, cgpa.text, false));
-          // }
-          API.sections[widget.number].students.add(Student(roll.text, name.text, cgpa.text, false));
-        });
-        show.infoBar(
-          context,
-          title: "Added",
-          detail: "Student added!",
-        );
-      }
-      else {
-        show.infoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Addition cancelled!",
-        );
-      }
-    });
-  }
-  void dialogBox4DeletingStudent(int index) => showDialog<bool>(
-    context: context,
-    builder: (context) => ContentDialog(
-      title: const Text("Delete Student"),
-      content: const Text("Are you sure you want to delete this student?"),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: button_pad,
-          child: const Text("Delete"),
-        ),
-        Button(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context, false),
-          style: button_pad,
-          child: const Text("Cancel"),
-        ),
-      ],
-    ),
-  ).then((value) {
-    if (value!) {
-      setState(() {
-        API.sections[widget.number].students.removeAt(index);
-      });
-      show.infoBar(
-        context,
-        title: "Deleted",
-        detail: "Student deleted!",
-      );
-    }
-    else {
-      show.infoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "Deletion cancelled!",
-      );
-    }
-  });
+  void toggleAttendance(int index) => setState(() => studentAt(index).attendance = !studentAt(index).attendance);
+  void updateAttendance(int index, bool value) => setState(() => studentAt(index).attendance = value);
 
   void dialogBox4UpdatingMenu() {
     String name = API.sections[widget.number].title;
@@ -448,8 +436,8 @@ class _TheDropDownState extends State<TheDropDown> {
           show.NativeContextMenu(
             context,
             onTap: () => toggleAttendance(index),
-            onEdit: () => dialogBox4UpdatingStudent(index),
-            onDelete: () => dialogBox4DeletingStudent(index),
+            onEdit: () => studentAt(index).dialogBox_Update(context, update),
+            onDelete: () => Student.dialogBox_Delete(context, update, widget.number, index),
             child: Text(from[index]),
           ),
         );
@@ -461,8 +449,8 @@ class _TheDropDownState extends State<TheDropDown> {
       material.DataCell(Checkbox(
         onChanged: (value) => updateAttendance(index, value!),
         autofocus: true,
-        checked: API.sections[widget.number].students[index].attendance,
-        content: Text("  ${API.sections[widget.number].students[index].attendance ? "Pre" : "Ab"}sent  "),
+        checked: studentAt(index).attendance,
+        content: Text("  ${studentAt(index).attendance ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
@@ -500,7 +488,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ),
         my_spacing,                    // Spacing
         Button(
-          onPressed: () => dialogBox4AddingStudent(),
+          onPressed: () => Student.dialogBox_Adding(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             backgroundColor: ButtonState.all(Colors.transparent),
