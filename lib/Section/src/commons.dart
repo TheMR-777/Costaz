@@ -89,7 +89,6 @@ class show {
               padding: const EdgeInsets.all(factor),
               child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete)
           ),
-          //const SizedBox(width: 10),
           Text(is_edit ? 'Edit' : 'Delete'),
         ],
       ),
