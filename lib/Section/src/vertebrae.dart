@@ -105,7 +105,7 @@ class src {
 // }
 
 class Student {
-  static final top_row = [
+  static var top_row = [
     "Roll No",
     "Name",
     "CGPA",
@@ -302,15 +302,15 @@ class Section {
 
   String title = "N/A";
   List<Student> students = [
-    Student("BSCS_F19_M_63", "TheMR", "3.72", true),
-    Student("BSCS_F19_M_64", "John Wick", "4.00", true),
-    Student("BSCS_F19_M_65", "Dr. Who", "2.71", false),
-    Student("BSCS_F19_M_66", "Boogeyman", "3.00", true),
-    Student("BSCS_F19_M_67", "Highway Man", "3.50", false),
-    Student("BSCS_F19_M_68", "Mr Strange", "2.00", true),
-    Student("BSCS_F19_M_69", "Adam Smasher", "3.53", false),
-    Student("BSCS_F19_M_70", "The Silence", "3.24", true),
-    Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
+    // Student("BSCS_F19_M_63", "TheMR", "3.72", true),
+    // Student("BSCS_F19_M_64", "John Wick", "4.00", true),
+    // Student("BSCS_F19_M_65", "Dr. Who", "2.71", false),
+    // Student("BSCS_F19_M_66", "Boogeyman", "3.00", true),
+    // Student("BSCS_F19_M_67", "Highway Man", "3.50", false),
+    // Student("BSCS_F19_M_68", "Mr Strange", "2.00", true),
+    // Student("BSCS_F19_M_69", "Adam Smasher", "3.53", false),
+    // Student("BSCS_F19_M_70", "The Silence", "3.24", true),
+    // Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
   ];
 
   void dialogBox_Update(BuildContext context, VoidCallback refresh) {
@@ -401,9 +401,9 @@ class Section {
 
 class API {
   static List<Section> sections = [
-    Section()..title = "Morning",
-    Section()..title = "Afternoon",
-    Section()..title = "Evening",
+    // Section()..title = "Morning",
+    // Section()..title = "Afternoon",
+    // Section()..title = "Evening",
   ];
   // static Future<bool> load() async {
 //     final my_sheet = await src.default_sheet;
@@ -447,17 +447,63 @@ class API {
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
 
-    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-      final worksheet = my_sheet.sheets[i];
-      final row_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+    // for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+    //   final worksheet = my_sheet.sheets[i];
+    //   final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+    //   print(worksheet.title);
+    //   final mySection = Section()..title = worksheet.title;
+    //
+    //   if (i == 0) Student.top_row = await worksheet.values.row(1);
+    //
+    //   for (final row in rows_data) {
+    //     print(row);
+    //     mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
+    //   }
+    //   sections.add(mySection);
+    // }
 
-      print(worksheet.title);
-      for (final row in row_data) {
-        print(row);
+    Future<List<Section>> getData() async {
+      final my_sheet = await src.default_sheet;
+      final sections = <Section>[];
+      for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+        final worksheet = my_sheet.sheets[i];
+        final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+        print(worksheet.title);
+        final mySection = Section()..title = worksheet.title;
+
+        if (i == 0) Student.top_row = await worksheet.values.row(1);
+
+        for (final row in rows_data) {
+          print(row);
+          mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
+        }
+        sections.add(mySection);
       }
+      return sections;
     }
+    sections = await getData();
 
     return true;
+  }
+
+  static Future<List<Section>> load_2() async {
+    final my_sheet = await src.default_sheet;
+    final sections = <Section>[];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      final worksheet = my_sheet.sheets[i];
+      final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+      print(worksheet.title);
+      final mySection = Section()..title = worksheet.title;
+
+      if (i == 0) Student.top_row = await worksheet.values.row(1);
+
+      for (final row in rows_data) {
+        print(row);
+        mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
+      }
+      sections.add(mySection);
+    }
+    return sections;
   }
 }
 

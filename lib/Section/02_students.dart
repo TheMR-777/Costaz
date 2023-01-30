@@ -66,16 +66,16 @@ class _DearStudentsState extends State<DearStudents> {
       );
     },
   );
+  ListView get the_content => ListView.builder(
+    itemCount: API.sections.length,
+    itemBuilder: (context_2, index) => TheDropDown(
+      update, index,
+      is_expand: index == DearStudents.expanded_menu,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final the_content = ListView.builder(
-      itemCount: API.sections.length,
-      itemBuilder: (context_2, index) => TheDropDown(
-        update, index,
-        is_expand: index == DearStudents.expanded_menu,
-      ),
-    );
     return ScaffoldPage(
       header: PageHeader(
         title: const Text("Students"),
@@ -90,7 +90,6 @@ class _DearStudentsState extends State<DearStudents> {
           ],
         ),
       ),
-      // content: the_content,
       content: to_load
       ? FutureBuilder<bool>(
         future: API.load(),
@@ -100,8 +99,8 @@ class _DearStudentsState extends State<DearStudents> {
               return the_content;
             }()
             : snapshot.hasError
-            ? Text("${snapshot.error}")
-            : const Center(child: ProgressRing()),
+              ? Text("${snapshot.error}")
+              : const Center(child: ProgressRing()),
       ) : the_content,
     );
   }
