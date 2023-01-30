@@ -4,6 +4,14 @@ import 'src/vertebrae.dart' hide API;
 import 'src/commons.dart';
 const my_spacing = SizedBox(height: factor);
 
+class API {
+  static List<Section> sections = [
+    Section()..title = "Morning",
+    Section()..title = "Afternoon",
+    Section()..title = "Evening",
+  ];
+}
+
 class Student {
   static final top_row = [
     "Roll No",
@@ -18,6 +26,9 @@ class Student {
   String name = "N/A";
   String cgpa = "0.0";
   bool attendance = false;
+
+  void toggleAttendance() => attendance = !attendance;
+  void updateAttendance(bool val) => attendance = val;
 
   static
   void dialogBox_Adding(BuildContext context, VoidCallback refresh, int section_id) {
@@ -206,14 +217,133 @@ class Section {
     Student("BSCS_F19_M_70", "The Silence", "3.24", true),
     Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
   ];
-}
 
-class API {
-  static List<Section> sections = [
-    Section()..title = "Morning",
-    Section()..title = "Afternoon",
-    Section()..title = "Evening",
-  ];
+  void dialogBox_Update(BuildContext context, VoidCallback refresh) {
+    String name = title;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+          title: const Text("Edit Section"),
+          content: TextBox(
+            autofocus: true,
+            onChanged: (value) => name = value,
+            onSubmitted: (value) => Navigator.pop(context, true),
+            initialValue: name,
+            placeholder: "Section Name",
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: button_pad,
+              child: const Text("Edit"),
+            ),
+            Button(
+              onPressed: () => Navigator.pop(context, false),
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),
+          ],
+        ),
+    ).then((value) {
+      if (value!) {
+        title = name; refresh();
+        show.infoBar(
+          context,
+          title: "Edited",
+          detail: "Section title edited!",
+        );
+      }
+      else {
+        show.infoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Editing cancelled!",
+        );
+      }
+    });
+  }
+
+  // void dialogBox4DeletingMenu() => showDialog<bool>(
+  //   context: context,
+  //   builder: (context) => ContentDialog(
+  //     title: const Text("Delete Section"),
+  //     content: const Text("Are you sure you want to delete this section?"),
+  //     actions: [
+  //       FilledButton(
+  //         onPressed: () => Navigator.pop(context, true),
+  //         style: button_pad,
+  //         child: const Text("Delete"),
+  //       ),
+  //       Button(
+  //         autofocus: true,
+  //         onPressed: () => Navigator.pop(context, false),
+  //         style: button_pad,
+  //         child: const Text("Cancel"),
+  //       ),
+  //     ],
+  //   ),
+  // ).then((value) {
+  //   if (value!) {
+  //     widget.update();
+  //     setState(() {
+  //       API.sections.removeAt(widget.number);
+  //     });
+  //     show.infoBar(
+  //       context,
+  //       title: "Deleted",
+  //       detail: "Worksheet deleted!",
+  //     );
+  //   }
+  //   else {
+  //     show.infoBar(
+  //       context,
+  //       type: InfoBarSeverity.warning,
+  //       title: "Cancelled",
+  //       detail: "Deletion cancelled!",
+  //     );
+  //   }
+  // });
+
+  static
+  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text("Delete Section"),
+      content: const Text("Are you sure you want to delete this section?"),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: button_pad,
+          child: const Text("Delete"),
+        ),
+        Button(
+          autofocus: true,
+          onPressed: () => Navigator.pop(context, false),
+          style: button_pad,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ),
+  ).then((value) {
+    if (value!) {
+      refresh();
+      API.sections.removeAt(index);
+      show.infoBar(
+        context,
+        title: "Deleted",
+        detail: "Worksheet deleted!",
+      );
+    }
+    else {
+      show.infoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "Deletion cancelled!",
+      );
+    }
+  });
 }
 
 class DearStudents extends StatefulWidget {
@@ -336,106 +466,15 @@ class TheDropDown extends StatefulWidget {
 
 class _TheDropDownState extends State<TheDropDown> {
   void update() => setState(() {});
-  Student studentAt(int index) => API.sections[widget.number].students[index];
-
-  void toggleAttendance(int index) => setState(() => studentAt(index).attendance = !studentAt(index).attendance);
-  void updateAttendance(int index, bool value) => setState(() => studentAt(index).attendance = value);
-
-  void dialogBox4UpdatingMenu() {
-    String name = API.sections[widget.number].title;
-    showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return ContentDialog(
-          title: const Text("Edit Section"),
-          content: TextBox(
-            autofocus: true,
-            onChanged: (value) => name = value,
-            initialValue: name,
-            placeholder: "Section Name",
-          ),
-          actions: [
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: button_pad,
-              child: const Text("Edit"),
-            ),
-            Button(
-              onPressed: () => Navigator.pop(context, false),
-              style: button_pad,
-              child: const Text("Cancel"),
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      if (value!) {
-        setState(() {
-          API.sections[widget.number].title = name;
-        });
-        show.infoBar(
-          context,
-          title: "Edited",
-          detail: "Worksheet name edited!",
-        );
-      }
-      else {
-        show.infoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Editing cancelled!",
-        );
-      }
-    });
-  }
-  void dialogBox4DeletingMenu() => showDialog<bool>(
-    context: context,
-    builder: (context) => ContentDialog(
-      title: const Text("Delete Section"),
-      content: const Text("Are you sure you want to delete this section?"),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: button_pad,
-          child: const Text("Delete"),
-        ),
-        Button(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context, false),
-          style: button_pad,
-          child: const Text("Cancel"),
-        ),
-      ],
-    ),
-  ).then((value) {
-    if (value!) {
-      widget.update();
-      setState(() {
-        API.sections.removeAt(widget.number);
-      });
-      show.infoBar(
-        context,
-        title: "Deleted",
-        detail: "Worksheet deleted!",
-      );
-    }
-    else {
-      show.infoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "Deletion cancelled!",
-      );
-    }
-  });
+  Section thisSection() => API.sections[widget.number];
+  Student studentAt(int index) => thisSection().students[index];
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
         material.DataCell(
           show.NativeContextMenu(
             context,
-            onTap: () => toggleAttendance(index),
+            onTap: () => setState(() => studentAt(index).toggleAttendance()),
             onEdit: () => studentAt(index).dialogBox_Update(context, update),
             onDelete: () => Student.dialogBox_Delete(context, update, widget.number, index),
             child: Text(from[index]),
@@ -443,11 +482,11 @@ class _TheDropDownState extends State<TheDropDown> {
         );
 
     return material.DataRow(cells: [
-      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.roll_no).toList()),
-      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.name).toList()),
-      canToggleAttendance(from: API.sections[widget.number].students.map((e) => e.cgpa).toList()),
+      canToggleAttendance(from: thisSection().students.map((e) => e.roll_no).toList()),
+      canToggleAttendance(from: thisSection().students.map((e) => e.name).toList()),
+      canToggleAttendance(from: thisSection().students.map((e) => e.cgpa).toList()),
       material.DataCell(Checkbox(
-        onChanged: (value) => updateAttendance(index, value!),
+        onChanged: (value) => setState(() => studentAt(index).updateAttendance(value!)),
         autofocus: true,
         checked: studentAt(index).attendance,
         content: Text("  ${studentAt(index).attendance ? "Pre" : "Ab"}sent  "),
@@ -459,30 +498,30 @@ class _TheDropDownState extends State<TheDropDown> {
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
-    trailing: API.sections[widget.number].students.isNotEmpty
+    trailing: thisSection().students.isNotEmpty
         ? Text(
-          "Present: ${API.sections[widget.number].students.where((element) => element.attendance).length} / ${API.sections[widget.number].students.length}",
+          "Present: ${thisSection().students.where((element) => element.attendance).length} / ${thisSection().students.length}",
         )               // Present Count
         : const Icon(FluentIcons.people),
     leading: const Icon(FluentIcons.people),     // People Icon
     header: show.XNativeContextMenu(
       context,
-      onEdit: () => dialogBox4UpdatingMenu(),
-      onDelete: () => dialogBox4DeletingMenu(),
-      child: Text(API.sections[widget.number].title),
+      onEdit: () => thisSection().dialogBox_Update(context, update),
+      onDelete: () => Section.dialogBox_Delete(context, widget.update, widget.number),
+      child: Text(thisSection().title),
     ),                            // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (API.sections[widget.number].students.isNotEmpty)
+        if (thisSection().students.isNotEmpty)
           material.DataTable(
             columns: List.generate(
               Student.top_row.length,
               (index) => material.DataColumn(label: Text(Student.top_row[index])),
             ), // Headers
             rows: List.generate(
-            API.sections[widget.number].students.length,
+            thisSection().students.length,
             (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
         ),
