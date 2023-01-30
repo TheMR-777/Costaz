@@ -263,48 +263,6 @@ class Section {
       }
     });
   }
-
-  // void dialogBox4DeletingMenu() => showDialog<bool>(
-  //   context: context,
-  //   builder: (context) => ContentDialog(
-  //     title: const Text("Delete Section"),
-  //     content: const Text("Are you sure you want to delete this section?"),
-  //     actions: [
-  //       FilledButton(
-  //         onPressed: () => Navigator.pop(context, true),
-  //         style: button_pad,
-  //         child: const Text("Delete"),
-  //       ),
-  //       Button(
-  //         autofocus: true,
-  //         onPressed: () => Navigator.pop(context, false),
-  //         style: button_pad,
-  //         child: const Text("Cancel"),
-  //       ),
-  //     ],
-  //   ),
-  // ).then((value) {
-  //   if (value!) {
-  //     widget.update();
-  //     setState(() {
-  //       API.sections.removeAt(widget.number);
-  //     });
-  //     show.infoBar(
-  //       context,
-  //       title: "Deleted",
-  //       detail: "Worksheet deleted!",
-  //     );
-  //   }
-  //   else {
-  //     show.infoBar(
-  //       context,
-  //       type: InfoBarSeverity.warning,
-  //       title: "Cancelled",
-  //       detail: "Deletion cancelled!",
-  //     );
-  //   }
-  // });
-
   static
   void dialogBox_Delete(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
     context: context,
