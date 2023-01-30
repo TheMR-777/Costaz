@@ -23,87 +23,6 @@ class src {
   static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
 }
 
-// class API {
-//   static var dropdown_sections = [
-//     "Morning", "Afternoon"
-//   ];
-//   static var top_row = [
-//     "Roll Number", "Name", "CGPA", "Attendance"
-//   ];
-//   static var roll_no = [
-//     [
-//       "BSCS_F19_M_63", "BSCS_F19_M_64", "BSCS_F19_M_65", "BSCS_F19_M_66", "BSCS_F19_M_67", "BSCS_F19_M_68", "BSCS_F19_M_69", "BSCS_F19_M_70", "BSCS_F19_M_71",
-//     ],
-//     [
-//       "BSCS_F19_A_63", "BSCS_F19_A_64", "BSCS_F19_A_65", "BSCS_F19_A_66", "BSCS_F19_A_67", "BSCS_F19_A_68", "BSCS_F19_A_69", "BSCS_F19_A_70", "BSCS_F19_A_71",
-//     ],
-//   ];
-//   static var names = [
-//     [
-//       "TheMR", "John Wick", "Dr. Who", "Boogeyman", "Highway Man", "Mr Strange", "Adam Smasher", "The Silence", "The Weeping Angel",
-//     ],
-//     [
-//       "The Doctor", "The Master", "The Rani", "The Valeyard", "The Brigadier", "Cool Man", "The Cybermen", "The Daleks", "The Sontarans"
-//     ],
-//   ];
-//   static var cgpa_s = [
-//     [
-//       "3.72", "4.00", "2.71", "3.00", "3.50", "2.00", "3.53", "3.24", "3.11",
-//     ],
-//     // Randomly generate values: 1..4
-//     [
-//       "1.45", "3.23", "2.54", "3.67", "2.34", "3.45", "2.34", "1.33", "2.77",
-//     ]
-//   ];
-//   static var is_present = [
-//     [
-//       true, true, false, true, false, true, false, true, false,
-//     ],
-//     [
-//       false, false, true, false, true, false, true, false, true,
-//     ]
-//   ];
-//
-//   static Future<bool> load() async {
-//     final my_sheet = await src.default_sheet;
-//
-//     // Dropdowns: Skipping the last one
-//     API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
-//
-//     // Top Row: Located in the last sheet, 1st row
-//     API.top_row = await my_sheet.sheets.last.values.row(1);
-//
-//     // Roll No: 1st column of all sheets, except the last one, and skipping the first row
-//     API.roll_no = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.roll_no.add(await my_sheet.sheets[i].values.column(1, fromRow: 2));
-//     }
-//
-//     // Names: 2nd column of all sheets, except the last one, and skipping the first row
-//     API.names = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.names.add(await my_sheet.sheets[i].values.column(2, fromRow: 2));
-//     }
-//
-//     // CGPA: 3rd column of all sheets, except the last one, and skipping the first row
-//     API.cgpa_s = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.cgpa_s.add(await my_sheet.sheets[i].values.column(3, fromRow: 2));
-//     }
-//
-//     // Attendance: 4th column of all sheets,
-//     // except the last one, and skipping the first row
-//     // mark true if there is any value in the cell
-//     // mark false if the cell is empty
-//     API.is_present = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.is_present.add(await my_sheet.sheets[i].values.column(4, fromRow: 2).then((value) => value.map((e) => e != "").toList()));
-//     }
-//
-//     return true;
-//   }
-// }
-
 class Student {
   static var top_row = [
     "Roll No",
@@ -405,90 +324,11 @@ class API {
     // Section()..title = "Afternoon",
     // Section()..title = "Evening",
   ];
-  // static Future<bool> load() async {
-//     final my_sheet = await src.default_sheet;
-//
-//     // Dropdowns: Skipping the last one
-//     API.dropdown_sections = my_sheet.sheets.map((e) => e.title).toList().sublist(0, my_sheet.sheets.length - 1);
-//
-//     // Top Row: Located in the last sheet, 1st row
-//     API.top_row = await my_sheet.sheets.last.values.row(1);
-//
-//     // Roll No: 1st column of all sheets, except the last one, and skipping the first row
-//     API.roll_no = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.roll_no.add(await my_sheet.sheets[i].values.column(1, fromRow: 2));
-//     }
-//
-//     // Names: 2nd column of all sheets, except the last one, and skipping the first row
-//     API.names = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.names.add(await my_sheet.sheets[i].values.column(2, fromRow: 2));
-//     }
-//
-//     // CGPA: 3rd column of all sheets, except the last one, and skipping the first row
-//     API.cgpa_s = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.cgpa_s.add(await my_sheet.sheets[i].values.column(3, fromRow: 2));
-//     }
-//
-//     // Attendance: 4th column of all sheets,
-//     // except the last one, and skipping the first row
-//     // mark true if there is any value in the cell
-//     // mark false if the cell is empty
-//     API.is_present = [];
-//     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-//       API.is_present.add(await my_sheet.sheets[i].values.column(4, fromRow: 2).then((value) => value.map((e) => e != "").toList()));
-//     }
-//
-//     return true;
-//   }
 
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
+    final cache_sections = <Section>[];
 
-    // for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-    //   final worksheet = my_sheet.sheets[i];
-    //   final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
-    //   print(worksheet.title);
-    //   final mySection = Section()..title = worksheet.title;
-    //
-    //   if (i == 0) Student.top_row = await worksheet.values.row(1);
-    //
-    //   for (final row in rows_data) {
-    //     print(row);
-    //     mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
-    //   }
-    //   sections.add(mySection);
-    // }
-
-    Future<List<Section>> getData() async {
-      final my_sheet = await src.default_sheet;
-      final sections = <Section>[];
-      for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-        final worksheet = my_sheet.sheets[i];
-        final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
-        print(worksheet.title);
-        final mySection = Section()..title = worksheet.title;
-
-        if (i == 0) Student.top_row = await worksheet.values.row(1);
-
-        for (final row in rows_data) {
-          print(row);
-          mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
-        }
-        sections.add(mySection);
-      }
-      return sections;
-    }
-    sections = await getData();
-
-    return true;
-  }
-
-  static Future<List<Section>> load_2() async {
-    final my_sheet = await src.default_sheet;
-    final sections = <Section>[];
     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
       final worksheet = my_sheet.sheets[i];
       final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
@@ -501,9 +341,11 @@ class API {
         print(row);
         mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
       }
-      sections.add(mySection);
+      cache_sections.add(mySection);
     }
-    return sections;
+    API.sections = cache_sections;
+
+    return true;
   }
 }
 
