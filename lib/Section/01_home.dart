@@ -74,14 +74,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     );
     if (result != null) {
       setState(() => classes.add(result));
-      show.infoBar(
+      Show.infoBar(
         context,
         title: "Success",
         detail: "Class added!",
       );
     }
     else {
-      show.infoBar(
+      Show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",

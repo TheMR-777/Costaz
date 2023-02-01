@@ -90,14 +90,14 @@ class Student {
       if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
         API.sections[section_id].students.add(Student(roll.text, name.text, cgpa.text, false));
         refresh();
-        show.infoBar(
+        Show.infoBar(
           context,
           title: "Added",
           detail: "Student added!",
         );
       }
       else {
-        show.infoBar(
+        Show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -130,14 +130,14 @@ class Student {
     if (value!) {
       API.sections[section_id].students.removeAt(index);
       refresh();
-      show.infoBar(
+      Show.infoBar(
         context,
         title: "Deleted",
         detail: "Student deleted!",
       );
     }
     else {
-      show.infoBar(
+      Show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -147,7 +147,7 @@ class Student {
   });
   void dialogBox_Update(BuildContext context, VoidCallback refresh) {
     void returnClass() {
-      show.infoBar(
+      Show.infoBar(
         context,
         title: "Updated",
         detail: "New details applied!",
@@ -155,7 +155,7 @@ class Student {
       Navigator.pop(context);
     }
     void cancelClass() {
-      show.infoBar(
+      Show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -261,14 +261,14 @@ class Section {
     ).then((value) {
       if (value!) {
         title = name; refresh();
-        show.infoBar(
+        Show.infoBar(
           context,
           title: "Edited",
           detail: "Section title edited!",
         );
       }
       else {
-        show.infoBar(
+        Show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -301,14 +301,14 @@ class Section {
     if (value!) {
       refresh();
       API.sections.removeAt(index);
-      show.infoBar(
+      Show.infoBar(
         context,
         title: "Deleted",
         detail: "Worksheet deleted!",
       );
     }
     else {
-      show.infoBar(
+      Show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",

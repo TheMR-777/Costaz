@@ -20,7 +20,7 @@ class _DearStudentsState extends State<DearStudents> {
     builder: (context) {
       String newSection = "";
       void cancelSection() {
-        show.infoBar(
+        Show.infoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -30,7 +30,7 @@ class _DearStudentsState extends State<DearStudents> {
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
-          show.infoBar(
+          Show.infoBar(
             context,
             title: "Added",
             detail: "New section added!",
@@ -128,7 +128,7 @@ class _TheDropDownState extends State<TheDropDown> {
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
         material.DataCell(
-          show.NativeContextMenu(
+          Show.SmartNativeContextMenu(
             context,
             onTap: () => setState(() => studentAt(index).toggleAttendance()),
             onEdit: () => studentAt(index).dialogBox_Update(context, update),
@@ -160,7 +160,7 @@ class _TheDropDownState extends State<TheDropDown> {
         )               // Present Count
         : const Icon(FluentIcons.people),
     leading: const Icon(FluentIcons.people),     // People Icon
-    header: show.XNativeContextMenu(
+    header: Show.NativeContextMenu(
       context,
       onEdit: () => thisSection().dialogBox_Update(context, update),
       onDelete: () => Section.dialogBox_Delete(context, widget.update, widget.number),
