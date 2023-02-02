@@ -61,7 +61,7 @@ class Show {
     required VoidCallback onTap,
     required VoidCallback onEdit,
     required VoidCallback onDelete,
-    required Widget child,
+    required Widget on,
   }) {
     const borderRadius = Radius.circular(5);
     final my_controller = FlyoutController();
@@ -105,7 +105,7 @@ class Show {
       ),
       child: FlyoutTarget(
         controller: my_controller,
-        child: child,
+        child: on,
       ),
     );
   }
@@ -114,7 +114,7 @@ class Show {
     VoidCallback? onTap,
     required VoidCallback onEdit,
     required VoidCallback onDelete,
-    required Widget child,
+    required Widget on,
   }) {
     const borderRadius = Radius.circular(5);
     final my_controller = FlyoutController();
@@ -164,7 +164,7 @@ class Show {
       ),
       child: FlyoutTarget(
         controller: my_controller,
-        child: child,
+        child: on,
       ),
     );
   }

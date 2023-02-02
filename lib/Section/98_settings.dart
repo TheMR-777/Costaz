@@ -21,7 +21,10 @@ class TheSettings extends StatelessWidget {
             onChanged: theme_change,
           ),
           leading: const Icon(FluentIcons.clear_night),
-          title: const Text("Dark Mode"),
+          title: GestureDetector(
+              onTap: () => theme_change(!dark_enabled),
+              child: const Text("Dark Mode")
+          ),
         ),
       ],
     ),

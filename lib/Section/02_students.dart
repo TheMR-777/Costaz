@@ -133,7 +133,7 @@ class _TheDropDownState extends State<TheDropDown> {
             onTap: () => setState(() => studentAt(index).toggleAttendance()),
             onEdit: () => studentAt(index).dialogBox_Update(context, update),
             onDelete: () => Student.dialogBox_Delete(context, update, widget.number, index),
-            child: Text(from[index]),
+            on: Text(from[index]),
           ),
         );
 
@@ -164,7 +164,7 @@ class _TheDropDownState extends State<TheDropDown> {
       context,
       onEdit: () => thisSection().dialogBox_Update(context, update),
       onDelete: () => Section.dialogBox_Delete(context, widget.update, widget.number),
-      child: Text(thisSection().title),
+      on: Text(thisSection().title),
     ),                            // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,

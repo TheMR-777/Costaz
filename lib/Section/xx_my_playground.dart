@@ -11,7 +11,7 @@ class ThePlayground extends StatelessWidget {
       child: Show.NativeContextMenu(
         context,
         onDelete: () {}, onEdit: () {},
-        child: Container(
+        on: Container(
           width: 200,
           height: 200,
           color: Colors.red,
