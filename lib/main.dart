@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 import 'AppBar/app_bar.dart';
 import 'Section/01_home.dart';
@@ -13,24 +12,7 @@ import 'Section/xx_my_playground.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();        // Initialize
   Costaz.is_dark = SystemTheme.isDarkMode;          // Dark Mode
-  Window.initialize().then((_) async {
-    Future<WindowEffect> adaptiveEffect() async {
-      var info = await DeviceInfoPlugin().windowsInfo;
-
-      // High than 22523 is Windows 11 22H2 -> tabbed
-      // Less than 22523 is Windows 11 22H1 -> mica
-      // Less than 22000 is Windows 10 any  -> acrylic
-      // Less than 10240 is Deprecated      -> solid
-      return info.buildNumber > 22523
-          ? WindowEffect.tabbed
-          : info.buildNumber >= 22000
-          ? WindowEffect.mica
-          : info.buildNumber >= 10240
-          ? WindowEffect.acrylic
-          : WindowEffect.solid;
-    }
-    await Window.setEffect(effect: await adaptiveEffect());
-  });        // Set Window Effect
+  Window.initialize().then(TheTheme.loadDefault);   // Set Window Effect
   runApp(const Costaz());                           // Run App
 }
 
@@ -39,13 +21,18 @@ class Costaz extends StatefulWidget {
   static AccentColor my_accent = Colors.blue;
   static var my_page = 0;
   static var is_dark = true;
+  static var is_tabb = false;
 
   @override
   State<Costaz> createState() => _CostazState();
 }
 
 class _CostazState extends State<Costaz> {
-  void change_theme(bool? val) => setState(() => Costaz.is_dark = val as bool);
+  void change_dark(bool? val) => setState(() => Costaz.is_dark = val!);
+  void change_tabb(bool? val) {
+    setState(() => Costaz.is_tabb = val!);
+    Window.setEffect(effect: val! ? WindowEffect.tabbed : WindowEffect.mica);
+  }
 
   @override
   Widget build(BuildContext context) => FluentApp(
@@ -89,7 +76,9 @@ class _CostazState extends State<Costaz> {
                 title: const Text("Settings"),
                 body: TheSettings(
                   dark_enabled: Costaz.is_dark,
-                  theme_change: change_theme,
+                  tabb_enabled: Costaz.is_tabb,
+                  dark_change: change_dark,
+                  tabb_change: change_tabb,
                 ),
               ),    // Settings
               PaneItem(

@@ -72,7 +72,7 @@ class Show {
         (is_edit ? onEdit : onDelete)();
       },
       style: ButtonStyle(
-        backgroundColor: ButtonState.all(FluentTheme.of(context).acrylicBackgroundColor.withOpacity(0.9)),
+        backgroundColor: ButtonState.all(FluentTheme.of(context).micaBackgroundColor.withOpacity(0.9)),
         padding: ButtonState.all(EdgeInsets.zero),
         shape: ButtonState.all(RoundedRectangleBorder(
           borderRadius: is_edit ? const BorderRadius.only(
