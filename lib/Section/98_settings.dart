@@ -1,6 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class TheTheme {
   static late final WindowsDeviceInfo info;
@@ -13,6 +13,7 @@ class TheTheme {
     info = await DeviceInfoPlugin().windowsInfo;
 
     // High than 22523 is Windows 11 22H2 -> tabbed
+    // ↑ Not using it now, because it's overkill
     // Less than 22523 is Windows 11 22H1 -> mica
     // Less than 22000 is Windows 10 any  -> acrylic
     // Less than 10240 is Deprecated      -> solid
@@ -40,6 +41,8 @@ class TheSettings extends StatelessWidget {
   final void Function(bool?) dark_change;
   final void Function(bool?) tabb_change;
 
+  bool get shall_tab => TheTheme.info.buildNumber > TheTheme.Win11_New && dark_enabled;
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.all(20),
@@ -56,7 +59,7 @@ class TheSettings extends StatelessWidget {
               child: const Text("Dark Mode")
           ),
         ),    // Dark Mode
-        if (TheTheme.info.buildNumber > TheTheme.Win11_New && dark_enabled)
+        if (shall_tab)
           ListTile(
             trailing: Checkbox(
               checked: tabb_enabled,
@@ -67,7 +70,7 @@ class TheSettings extends StatelessWidget {
                 onTap: () => tabb_change(!tabb_enabled),
                 child: const Text("Vibe Mode")
             ),
-          ),  // Tabbed Effect
+        ),  // Tabbed Effect
       ],
     ),
   );
