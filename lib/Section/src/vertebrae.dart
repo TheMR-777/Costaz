@@ -325,6 +325,13 @@ class API {
     // Section()..title = "Evening",
   ];
 
+  static List<String> sessions_all = [
+    "2023-02-05",
+    "2023-02-03",
+    "2023-01-31",
+    "2023-01-29",
+  ];
+
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
     final cache_sections = <Section>[];

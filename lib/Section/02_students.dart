@@ -6,6 +6,7 @@ import 'src/commons.dart';
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
   static int expanded_menu = 0;
+  static int selected_session = API.sessions_all.length - 1;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
@@ -78,7 +79,31 @@ class _DearStudentsState extends State<DearStudents> {
   Widget build(BuildContext context) {
     return ScaffoldPage(
       header: PageHeader(
-        title: const Text("Students"),
+        title: Row(
+          children: [
+            Text(() {
+              final date = DateTime.now();
+              final day = date.day;
+              final month = date.month;
+              final year = date.year;
+              // Format: 1st of January, 2021
+              // Format: 2nd of September, 2023
+              // Format: 3rd of February, 2024
+              // Format: 4th of December, 2025
+              // Format: 5th of March, 2026
+
+              final suffix = day == 1
+                ? "st"
+                : day == 2
+                  ? "nd"
+                  : day == 3
+                    ? "rd"
+                    : "th";
+              final month_name = monthNames[month - 1];
+              return "$day$suffix of $month_name, $year";
+            }()),
+          ],
+        ),
         commandBar: CommandBar(
           mainAxisAlignment: MainAxisAlignment.end,
           primaryItems: [
