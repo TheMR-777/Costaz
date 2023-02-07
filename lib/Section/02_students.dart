@@ -3,18 +3,79 @@ import 'package:flutter/material.dart' as material;
 import 'src/vertebrae.dart';
 import 'src/commons.dart';
 
+final weekDays = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
+final monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+List<DateTime> sessions_all = [
+  DateTime(2023, 2, 5),
+  DateTime(2023, 2, 3),
+  DateTime(2023, 1, 31),
+  DateTime(2023, 1, 29),
+  DateTime.now().subtract(const Duration(days: 1)),
+];
+
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
   static int expanded_menu = 0;
-  static int selected_session = API.sessions_all.length - 1;
+  static int selected_session = sessions_all.length - 1;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
 }
 
 class _DearStudentsState extends State<DearStudents> {
-  static bool to_load = true;
   void update() => setState(() {});
+  ListView get the_content => ListView.builder(
+    itemCount: API.sections.length,
+    itemBuilder: (context_2, index) => TheDropDown(
+      update, index,
+      is_expand: index == DearStudents.expanded_menu,
+    ),
+  );
+
+  static bool to_load = true;
+  static String the_short_date({required DateTime of}) => "${monthNames[of.month - 1]}, ${of.year}";
+  static String the_date({required DateTime of}) => "${of.day} ${the_short_date(of: of)}";
+  static ListTile makeDateTile(DateTime date, {required VoidCallback onTap}) => ListTile(
+    onPressed: onTap,
+    leading: Text(
+      date.day < 10 ? "0${date.day}" : "${date.day}",
+      style: const TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    title: Text(the_short_date(of: date)),
+    subtitle: Text(weekDays[date.weekday - 1]),
+    trailing: date.day == sessions_all[DearStudents.selected_session].day
+        ? null
+        : date.day == DateTime.now().day
+            ? const Text("Today")
+            : date.day == DateTime.now().day - 1
+                ? const Text("Yesterday") : null,
+  );
 
   void addSection(BuildContext context) => showDialog(
     context: context,
@@ -67,43 +128,62 @@ class _DearStudentsState extends State<DearStudents> {
       );
     },
   );
-  ListView get the_content => ListView.builder(
-    itemCount: API.sections.length,
-    itemBuilder: (context_2, index) => TheDropDown(
-      update, index,
-      is_expand: index == DearStudents.expanded_menu,
-    ),
-  );
 
   @override
-  Widget build(BuildContext context) {
-    return ScaffoldPage(
+  Widget build(BuildContext context) => ScaffoldPage(
       header: PageHeader(
-        title: Row(
-          children: [
-            Text(() {
-              final date = DateTime.now();
-              final day = date.day;
-              final month = date.month;
-              final year = date.year;
-              // Format: 1st of January, 2021
-              // Format: 2nd of September, 2023
-              // Format: 3rd of February, 2024
-              // Format: 4th of December, 2025
-              // Format: 5th of March, 2026
-
-              final suffix = day == 1
-                ? "st"
-                : day == 2
-                  ? "nd"
-                  : day == 3
-                    ? "rd"
-                    : "th";
-              final month_name = monthNames[month - 1];
-              return "$day$suffix of $month_name, $year";
-            }()),
-          ],
-        ),
+        padding: factor + 10,
+        title: makeDateTile(sessions_all[DearStudents.selected_session], onTap: () => showDialog(
+          context: context,
+          builder: (context) => ContentDialog(
+            title: const Text("Load a Session"),
+            content: ListView.builder(
+              shrinkWrap: true,
+              itemCount: sessions_all.length,
+              itemBuilder: (context_2, index) => makeDateTile(
+                sessions_all[index],
+                onTap: () {
+                  setState(() => DearStudents.selected_session = index);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            actions: [
+              FilledButton(
+                style: button_pad,
+                child: const Text("New Session"),
+                onPressed: () {
+                  final current_session = DateTime.now();
+                  final already_exists = sessions_all.any((session) => the_date(of: session) == the_date(of: current_session));
+                  if (already_exists) {
+                    Show.infoBar(
+                      context,
+                      title: "Cancelled",
+                      detail: "You can only have one session per day",
+                      type: InfoBarSeverity.warning,
+                    );
+                  }
+                  else {
+                    Show.infoBar(
+                      context,
+                      title: "Added",
+                      detail: "New session added!",
+                    );
+                    sessions_all.add(current_session);
+                    DearStudents.selected_session = sessions_all.length - 1;
+                    update();
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              Button(
+                style: button_pad,
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+            ],
+          ),
+        )),
         commandBar: CommandBar(
           mainAxisAlignment: MainAxisAlignment.end,
           primaryItems: [
@@ -128,7 +208,6 @@ class _DearStudentsState extends State<DearStudents> {
               : const Center(child: ProgressRing()),
       ) : the_content,
     );
-  }
 }
 
 class TheDropDown extends StatefulWidget {
