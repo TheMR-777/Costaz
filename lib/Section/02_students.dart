@@ -6,13 +6,13 @@ import 'src/commons.dart';
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
   static int expanded_menu = 0;
-  static int selected_session = SessionManager.the_list.length - 1;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
 }
 
 class _DearStudentsState extends State<DearStudents> {
+  static bool to_load = true;
   void update() => setState(() {});
   ListView get the_content => ListView.builder(
     itemCount: API.sections.length,
@@ -21,8 +21,6 @@ class _DearStudentsState extends State<DearStudents> {
       is_expand: index == DearStudents.expanded_menu,
     ),
   );
-
-  static bool to_load = true;
 
   void addSection(BuildContext context) => showDialog(
     context: context,

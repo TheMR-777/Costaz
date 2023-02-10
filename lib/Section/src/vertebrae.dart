@@ -362,25 +362,8 @@ class Session {
     final month_name = _monthNames[month - 1];
     return "$month_name, $year";
   }
-  // static ListTile makeDateTile(DateTime date, {required VoidCallback onTap}) => ListTile(
-  //   onPressed: onTap,
-  //   leading: Text(
-  //     date.day < 10 ? "0${date.day}" : "${date.day}",
-  //     style: const TextStyle(
-  //       fontSize: 25,
-  //       fontWeight: FontWeight.bold,
-  //     ),
-  //   ),
-  //   title: Text(the_short_date(of: date)),
-  //   subtitle: Text(weekDays[date.weekday - 1]),
-  //   trailing: date.day == sessions_all[DearStudents.selected_session].day
-  //       ? null
-  //       : date.day == DateTime.now().day
-  //       ? const Text("Today")
-  //       : date.day == DateTime.now().day - 1
-  //       ? const Text("Yesterday") : null,
-  // );
-  ListTile makeDateTile({required VoidCallback onTap}) => ListTile(
+  ListTile makeDateTile({required VoidCallback onTap, bool selected = false}) => ListTile.selectable(
+    selected: selected,
     onPressed: onTap,
     leading: Text(
       date.day < 10 ? "0${date.day}" : "${date.day}",
@@ -391,10 +374,10 @@ class Session {
     ),
     title: Text(formatted_short()),
     subtitle: Text(_weekDays[date.weekday - 1]),
-    trailing: date.day == DateTime.now().day
-        ? const Text("Today")
-        : date.day == DateTime.now().day - 1
-        ? const Text("Yesterday") : null,
+    trailing: formatted() == SessionManager.currentSession.formatted()
+      ? null : date.day == DateTime.now().day
+        ? const Text("Today") : date.day == DateTime.now().day - 1
+          ? const Text("Yesterday") : null,
   );
   void update(BuildContext context, VoidCallback refresh) {
     DateTime intermediate = date;
@@ -450,7 +433,8 @@ class SessionManager {
     Session(DateTime.now().subtract(const Duration(days: 1))),
   ];
   static int selected = the_list.length - 1;
-  static ListTile currentTile(BuildContext context, VoidCallback refresh) => the_list[selected].makeDateTile(onTap: () => showDialog(
+  static Session get currentSession => the_list[selected];
+  static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
       title: const Text("Load a Session"),
@@ -458,6 +442,7 @@ class SessionManager {
         shrinkWrap: true,
         itemCount: SessionManager.the_list.length,
         itemBuilder: (context_2, index) => the_list[index].makeDateTile(
+          selected: index == selected,
           onTap: () {
             selected = index;
             refresh();
@@ -471,7 +456,6 @@ class SessionManager {
           child: const Text("New Session"),
           onPressed: () {
             final current_session = Session(DateTime.now());
-            //final already_exists = sessions_all.any((session) => the_date(of: session) == the_date(of: current_session));
             final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
             if (already_exists) {
               Show.infoBar(
@@ -502,6 +486,7 @@ class SessionManager {
       ],
     ),
   ));
+
   static void addCurrent() => the_list.add(Session(DateTime.now()));
   static void removeAt(int index) => the_list.removeAt(index);
 }
