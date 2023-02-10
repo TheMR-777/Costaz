@@ -479,12 +479,13 @@ class SessionManager {
           onTap: () {
             selected = index;
             refresh();
+            Show.infoBar(context, title: "Loaded", detail: the_list[index].formatted());
             Navigator.pop(context);
           },
         ),
       ),
       actions: [
-        FilledButton(
+        Button(
           style: button_pad,
           child: const Text("New Session"),
           onPressed: () {
@@ -494,7 +495,7 @@ class SessionManager {
               Show.infoBar(
                 context,
                 title: "Cancelled",
-                detail: "You can only have one session per day",
+                detail: "A session for today already exists!",
                 type: InfoBarSeverity.warning,
               );
             }
