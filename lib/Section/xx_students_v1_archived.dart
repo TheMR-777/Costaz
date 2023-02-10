@@ -173,8 +173,8 @@ class _TheDropDownState extends State<TheDropDown> {
         if (thisSection().students.isNotEmpty)
           material.DataTable(
             columns: List.generate(
-              Student.top_row.length,
-              (index) => material.DataColumn(label: Text(Student.top_row[index])),
+              Section.top_row.length,
+              (index) => material.DataColumn(label: Text(Section.top_row[index])),
             ), // Headers
             rows: List.generate(
             thisSection().students.length,

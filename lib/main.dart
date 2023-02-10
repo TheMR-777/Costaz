@@ -18,10 +18,9 @@ void main() {
 
 class Costaz extends StatefulWidget {
   const Costaz({Key? key}) : super(key: key);
-  static AccentColor my_accent = Colors.blue;
   static var my_page = 0;
   static var is_dark = true;
-  static var is_tabb = false;
+  static var do_vibe = false;
 
   @override
   State<Costaz> createState() => _CostazState();
@@ -29,8 +28,8 @@ class Costaz extends StatefulWidget {
 
 class _CostazState extends State<Costaz> {
   void change_dark(bool? val) => setState(() => Costaz.is_dark = val!);
-  void change_tabb(bool? val) {
-    setState(() => Costaz.is_tabb = val!);
+  void change_vibe(bool? val) {
+    setState(() => Costaz.do_vibe = val!);
     Window.setEffect(effect: val! ? WindowEffect.tabbed : WindowEffect.mica);
   }
 
@@ -76,9 +75,9 @@ class _CostazState extends State<Costaz> {
                 title: const Text("Settings"),
                 body: TheSettings(
                   dark_enabled: Costaz.is_dark,
-                  tabb_enabled: Costaz.is_tabb,
+                  tabb_enabled: Costaz.do_vibe,
                   dark_change: change_dark,
-                  tabb_change: change_tabb,
+                  tabb_change: change_vibe,
                 ),
               ),    // Settings
               PaneItem(

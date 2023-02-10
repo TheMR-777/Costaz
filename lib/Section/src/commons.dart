@@ -8,7 +8,7 @@ class Show {
   static const borderRadius = Radius.circular(5);
   static button_style_of(BuildContext context, bool is_edit, {bool smart = false}) => ButtonStyle(
     backgroundColor: ButtonState.all(
-        (Costaz.is_tabb
+        (Costaz.do_vibe
             ? FluentTheme.of(context).micaBackgroundColor
             : FluentTheme.of(context).acrylicBackgroundColor
         ).withOpacity(0.9)

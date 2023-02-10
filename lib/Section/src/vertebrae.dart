@@ -24,13 +24,6 @@ class src {
 }
 
 class Student {
-  static var top_row = [
-    "Roll No",
-    "Name",
-    "CGPA",
-    "Attendance",
-  ];
-
   Student(this.roll_no, this.name, this.cgpa, this.attendance);
 
   String roll_no = "N/A";
@@ -216,6 +209,12 @@ class Student {
 }
 
 class Section {
+  static var top_row = [
+    "Roll No",
+    "Name",
+    "CGPA",
+    "Attendance",
+  ];
   Section();
   Section.specified(this.title, this.students);
 
@@ -232,6 +231,45 @@ class Section {
     // Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
   ];
 
+  static
+  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text("Delete Section"),
+      content: const Text("Are you sure you want to delete this section?"),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: button_pad,
+          child: const Text("Delete"),
+        ),
+        Button(
+          autofocus: true,
+          onPressed: () => Navigator.pop(context, false),
+          style: button_pad,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ),
+  ).then((value) {
+    if (value!) {
+      refresh();
+      API.sections.removeAt(index);
+      Show.infoBar(
+        context,
+        title: "Deleted",
+        detail: "Worksheet deleted!",
+      );
+    }
+    else {
+      Show.infoBar(
+        context,
+        type: InfoBarSeverity.warning,
+        title: "Cancelled",
+        detail: "Deletion cancelled!",
+      );
+    }
+  });
   void dialogBox_Update(BuildContext context, VoidCallback refresh) {
     String name = title;
     showDialog<bool>(
@@ -277,45 +315,195 @@ class Section {
       }
     });
   }
-  static
-  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
+}
+
+class Session {
+  static const _weekDays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  static const _monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  DateTime date;
+  Session(this.date);
+
+  String export_details() => date.toString().split(" ")[0];
+  String formatted() {
+    final day = date.day;
+    final month = date.month;
+    final year = date.year;
+    final weekday = date.weekday;
+    final day_suffix = day == 1 ? "st" : day == 2 ? "nd" : day == 3 ? "rd" : "th";
+    final month_name = _monthNames[month - 1];
+    final weekday_name = _weekDays[weekday - 1];
+    return "$weekday_name, $day$day_suffix $month_name $year";
+  }
+  String formatted_short() {
+    final month = date.month;
+    final year = date.year;
+    final month_name = _monthNames[month - 1];
+    return "$month_name, $year";
+  }
+  // static ListTile makeDateTile(DateTime date, {required VoidCallback onTap}) => ListTile(
+  //   onPressed: onTap,
+  //   leading: Text(
+  //     date.day < 10 ? "0${date.day}" : "${date.day}",
+  //     style: const TextStyle(
+  //       fontSize: 25,
+  //       fontWeight: FontWeight.bold,
+  //     ),
+  //   ),
+  //   title: Text(the_short_date(of: date)),
+  //   subtitle: Text(weekDays[date.weekday - 1]),
+  //   trailing: date.day == sessions_all[DearStudents.selected_session].day
+  //       ? null
+  //       : date.day == DateTime.now().day
+  //       ? const Text("Today")
+  //       : date.day == DateTime.now().day - 1
+  //       ? const Text("Yesterday") : null,
+  // );
+  ListTile makeDateTile({required VoidCallback onTap}) => ListTile(
+    onPressed: onTap,
+    leading: Text(
+      date.day < 10 ? "0${date.day}" : "${date.day}",
+      style: const TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    title: Text(formatted_short()),
+    subtitle: Text(_weekDays[date.weekday - 1]),
+    trailing: date.day == DateTime.now().day
+        ? const Text("Today")
+        : date.day == DateTime.now().day - 1
+        ? const Text("Yesterday") : null,
+  );
+  void update(BuildContext context, VoidCallback refresh) {
+    DateTime intermediate = date;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Edit Session"),
+        content: DatePicker(
+          selected: date,
+          onChanged: (value) => intermediate = value,
+          onCancel: () => Navigator.pop(context, false),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Edit"),
+          ),
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value!) {
+        date = intermediate; refresh();
+        Show.infoBar(
+          context,
+          title: "Edited",
+          detail: "Session date edited!",
+        );
+      }
+      else {
+        Show.infoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "Editing cancelled!",
+        );
+      }
+    });
+  }
+}
+
+class SessionManager {
+  static List<Session> the_list = [
+    Session(DateTime(2023, 2, 5)),
+    Session(DateTime(2023, 2, 3)),
+    Session(DateTime(2023, 1, 31)),
+    Session(DateTime(2023, 1, 29)),
+    Session(DateTime.now().subtract(const Duration(days: 1))),
+  ];
+  static int selected = the_list.length - 1;
+  static ListTile currentTile(BuildContext context, VoidCallback refresh) => the_list[selected].makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
-      title: const Text("Delete Section"),
-      content: const Text("Are you sure you want to delete this section?"),
+      title: const Text("Load a Session"),
+      content: ListView.builder(
+        shrinkWrap: true,
+        itemCount: SessionManager.the_list.length,
+        itemBuilder: (context_2, index) => the_list[index].makeDateTile(
+          onTap: () {
+            selected = index;
+            refresh();
+            Navigator.pop(context);
+          },
+        ),
+      ),
       actions: [
         FilledButton(
-          onPressed: () => Navigator.pop(context, true),
           style: button_pad,
-          child: const Text("Delete"),
+          child: const Text("New Session"),
+          onPressed: () {
+            final current_session = Session(DateTime.now());
+            //final already_exists = sessions_all.any((session) => the_date(of: session) == the_date(of: current_session));
+            final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
+            if (already_exists) {
+              Show.infoBar(
+                context,
+                title: "Cancelled",
+                detail: "You can only have one session per day",
+                type: InfoBarSeverity.warning,
+              );
+            }
+            else {
+              Show.infoBar(
+                context,
+                title: "Added",
+                detail: "New session added!",
+              );
+              the_list.add(current_session);
+              selected = the_list.length - 1;
+              refresh();
+              Navigator.of(context).pop();
+            }
+          },
         ),
         Button(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context, false),
           style: button_pad,
+          onPressed: () => Navigator.pop(context),
           child: const Text("Cancel"),
         ),
       ],
     ),
-  ).then((value) {
-    if (value!) {
-      refresh();
-      API.sections.removeAt(index);
-      Show.infoBar(
-        context,
-        title: "Deleted",
-        detail: "Worksheet deleted!",
-      );
-    }
-    else {
-      Show.infoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "Deletion cancelled!",
-      );
-    }
-  });
+  ));
+  static void addCurrent() => the_list.add(Session(DateTime.now()));
+  static void removeAt(int index) => the_list.removeAt(index);
 }
 
 class API {
@@ -335,11 +523,11 @@ class API {
       print(worksheet.title);
       final mySection = Section()..title = worksheet.title;
 
-      if (i == 0) Student.top_row = await worksheet.values.row(1);
+      if (i == 0) Section.top_row = await worksheet.values.row(1);
 
       for (final row in rows_data) {
         print(row);
-        mySection.students.add(Student(row[0], row[1], row[2], row.length == Student.top_row.length));
+        mySection.students.add(Student(row[0], row[1], row[2], row.length == Section.top_row.length));
       }
       cache_sections.add(mySection);
     }
