@@ -15,7 +15,7 @@ class _DearStudentsState extends State<DearStudents> {
   static bool to_load = true;
   void update() => setState(() {});
   ListView get the_content => ListView.builder(
-    itemCount: API.sections.length,
+    itemCount: SectionManager.sections.length,
     itemBuilder: (context_2, index) => TheDropDown(
       update, index,
       is_expand: index == DearStudents.expanded_menu,
@@ -42,7 +42,7 @@ class _DearStudentsState extends State<DearStudents> {
             title: "Added",
             detail: "New section added!",
           );
-          setState(() => API.sections.add(Section()..title = newSection));
+          setState(() => SectionManager.sections.add(Section()..title = newSection));
           Navigator.pop(context, true);
         }
         else {
@@ -92,7 +92,7 @@ class _DearStudentsState extends State<DearStudents> {
       ),
       content: to_load
       ? FutureBuilder<bool>(
-        future: API.load(),
+        future: SectionManager.load(),
         builder: (context_2, snapshot) => snapshot.hasData
             ? () {
               to_load = false;
@@ -121,7 +121,7 @@ class TheDropDown extends StatefulWidget {
 
 class _TheDropDownState extends State<TheDropDown> {
   void update() => setState(() {});
-  Section thisSection() => API.sections[widget.number];
+  Section thisSection() => SectionManager.sections[widget.number];
   Student studentAt(int index) => thisSection().students[index];
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
@@ -130,8 +130,8 @@ class _TheDropDownState extends State<TheDropDown> {
           Show.SmartNativeContextMenu(
             context,
             onTap: () => setState(() => studentAt(index).toggleAttendance()),
-            onEdit: () => studentAt(index).dialogBox_Update(context, update),
-            onDelete: () => Student.dialogBox_Delete(context, update, widget.number, index),
+            onEdit: () => studentAt(index).update_with_dialogBox(context, update),
+            onDelete: () => Student.delete_with_dialogBox(context, update, widget.number, index),
             on: Text(from[index]),
           ),
         );
@@ -161,8 +161,8 @@ class _TheDropDownState extends State<TheDropDown> {
     leading: const Icon(FluentIcons.people),     // People Icon
     header: Show.NativeContextMenu(
       context,
-      onEdit: () => thisSection().dialogBox_Update(context, update),
-      onDelete: () => Section.dialogBox_Delete(context, widget.update, widget.number),
+      onEdit: () => thisSection().update_with_dialogBox(context, update),
+      onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
       on: Text(thisSection().title),
     ),                            // Worksheet Name
     content: Column(
@@ -182,7 +182,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ),
         my_spacing,                    // Spacing
         Button(
-          onPressed: () => Student.dialogBox_Adding(context, update, widget.number),
+          onPressed: () => Student.adding_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             backgroundColor: ButtonState.all(Colors.transparent),

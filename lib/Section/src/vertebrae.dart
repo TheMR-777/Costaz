@@ -17,7 +17,10 @@ class src {
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/i-am-testing-it%40costaz-desktop-project.iam.gserviceaccount.com"
   }
   ''';
-  static const def_sheet_ID = "1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI";
+  static const def_sheet_ID =
+      "1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI"
+      //"1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
+  ;
   static final gsheet_handle = GSheets(src.credentials);
   static final default_sheet = gsheet_handle.spreadsheet(src.def_sheet_ID);
   static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
@@ -35,7 +38,7 @@ class Student {
   void updateAttendance(bool val) => attendance = val;
 
   static
-  void dialogBox_Adding(BuildContext context, VoidCallback refresh, int section_id) {
+  void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
     final TextEditingController roll = TextEditingController();
     final TextEditingController name = TextEditingController();
     final TextEditingController cgpa = TextEditingController();
@@ -81,7 +84,7 @@ class Student {
       ),
     ).then((value) {
       if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
-        API.sections[section_id].students.add(Student(roll.text, name.text, cgpa.text, false));
+        SectionManager.sections[section_id].students.add(Student(roll.text, name.text, cgpa.text, false));
         refresh();
         Show.infoBar(
           context,
@@ -100,7 +103,7 @@ class Student {
     });
   }
   static
-  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
+  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
       title: const Text("Delete Student"),
@@ -121,7 +124,7 @@ class Student {
     ),
   ).then((value) {
     if (value!) {
-      API.sections[section_id].students.removeAt(index);
+      SectionManager.sections[section_id].students.removeAt(index);
       refresh();
       Show.infoBar(
         context,
@@ -138,7 +141,7 @@ class Student {
       );
     }
   });
-  void dialogBox_Update(BuildContext context, VoidCallback refresh) {
+  void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     void returnClass() {
       Show.infoBar(
         context,
@@ -232,7 +235,7 @@ class Section {
   ];
 
   static
-  void dialogBox_Delete(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
+  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
       title: const Text("Delete Section"),
@@ -254,7 +257,7 @@ class Section {
   ).then((value) {
     if (value!) {
       refresh();
-      API.sections.removeAt(index);
+      SectionManager.sections.removeAt(index);
       Show.infoBar(
         context,
         title: "Deleted",
@@ -270,7 +273,7 @@ class Section {
       );
     }
   });
-  void dialogBox_Update(BuildContext context, VoidCallback refresh) {
+  void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String name = title;
     showDialog<bool>(
       context: context,
@@ -317,6 +320,36 @@ class Section {
   }
 }
 
+class SectionManager {
+  static List<Section> sections = [
+    // Section()..title = "Morning",
+    // Section()..title = "Afternoon",
+    // Section()..title = "Evening",
+  ];
+  static Future<bool> load() async {
+    final my_sheet = await src.default_sheet;
+    final cache_sections = <Section>[];
+
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      final worksheet = my_sheet.sheets[i];
+      final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+      print(worksheet.title);
+      final mySection = Section()..title = worksheet.title;
+
+      if (i == 0) Section.top_row = await worksheet.values.row(1);
+
+      for (final row in rows_data) {
+        print(row);
+        mySection.students.add(Student(row[0], row[1], row[2], row.length == Section.top_row.length));
+      }
+      cache_sections.add(mySection);
+    }
+    SectionManager.sections = cache_sections;
+
+    return true;
+  }
+}
+
 class Session {
   static const _weekDays = [
     'Monday',
@@ -345,7 +378,7 @@ class Session {
   DateTime date;
   Session(this.date);
 
-  String export_details() => date.toString().split(" ")[0];
+  String export_details() => date.toString().split(" ").first;
   String formatted() {
     final day = date.day;
     final month = date.month;
@@ -489,41 +522,4 @@ class SessionManager {
 
   static void addCurrent() => the_list.add(Session(DateTime.now()));
   static void removeAt(int index) => the_list.removeAt(index);
-}
-
-class API {
-  static List<Section> sections = [
-    // Section()..title = "Morning",
-    // Section()..title = "Afternoon",
-    // Section()..title = "Evening",
-  ];
-
-  static Future<bool> load() async {
-    final my_sheet = await src.default_sheet;
-    final cache_sections = <Section>[];
-
-    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-      final worksheet = my_sheet.sheets[i];
-      final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
-      print(worksheet.title);
-      final mySection = Section()..title = worksheet.title;
-
-      if (i == 0) Section.top_row = await worksheet.values.row(1);
-
-      for (final row in rows_data) {
-        print(row);
-        mySection.students.add(Student(row[0], row[1], row[2], row.length == Section.top_row.length));
-      }
-      cache_sections.add(mySection);
-    }
-    API.sections = cache_sections;
-
-    return true;
-  }
-}
-
-Future<List<Text>> getRow(int row) async {
-  final sheet = await src.default_works;
-  final row_data = await sheet?.values.row(row);
-  return row_data!.map((e) => Text(e)).toList();
 }
