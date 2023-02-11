@@ -22,7 +22,7 @@ class _DearStudentsState extends State<DearStudents> {
           children: [
             Flexible(
                 child: SessionManager.currentTile(context, update),
-            ),
+            ),  // Session Info
             Button(
               onPressed: () => addSection(context),
               style: ButtonStyle(
@@ -34,14 +34,14 @@ class _DearStudentsState extends State<DearStudents> {
               child: Row(
                 children: const [
                   Icon(FluentIcons.add),
-                  SizedBox(width: factor),
+                  SizedBox(width: factor * 2),
                   Text("Add Section", style: TextStyle(fontSize: factor)),
                 ],
               ),
-            )
+            ),    // Add Section
           ],
         ),
-      ),
+      ),     // Session Info
       Expanded(
         child: ListView.builder(
           itemCount: SectionManager.sections.length,
@@ -50,7 +50,7 @@ class _DearStudentsState extends State<DearStudents> {
             is_expand: index == DearStudents.expanded_menu,
           ),
         ),
-      ),
+      ),    // Section List
     ],
   );
 
@@ -83,6 +83,7 @@ class _DearStudentsState extends State<DearStudents> {
       }
 
       return ContentDialog(
+        style: dialog_pad,
         title: const Text("Add a New Section"),
         content: TextBox(
           autofocus: true,

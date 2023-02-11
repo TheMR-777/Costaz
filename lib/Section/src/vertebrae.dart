@@ -45,11 +45,11 @@ class Student {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
+        style: dialog_pad,
         title: const Text("Add Student"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            my_spacing,
             TextBox(
               autofocus: true,
               onChanged: (val) => name.text = val,
@@ -106,6 +106,7 @@ class Student {
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
+      style: dialog_pad,
       title: const Text("Delete Student"),
       content: const Text("Are you sure you want to delete this student?"),
       actions: [
@@ -164,11 +165,11 @@ class Student {
       context: context,
       builder: (context) =>
           ContentDialog(
+            style: dialog_pad,
             title: const Text("Update Details"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                my_spacing,
                 TextBox(
                   autofocus: true,
                   onChanged: (val) => name = val,
@@ -238,6 +239,7 @@ class Section {
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
+      style: dialog_pad,
       title: const Text("Delete Section"),
       content: const Text("Are you sure you want to delete this section?"),
       actions: [
@@ -278,6 +280,7 @@ class Section {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
+        style: dialog_pad,
         title: const Text("Edit Section"),
         content: TextBox(
           autofocus: true,
@@ -422,6 +425,7 @@ class Session {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
+        style: dialog_pad,
         title: const Text("Edit Session"),
         content: DatePicker(
           selected: date,
@@ -475,6 +479,7 @@ class SessionManager {
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
+      style: dialog_pad,
       title: const Text("Load a Session"),
       content: ListView.builder(
         shrinkWrap: true,
