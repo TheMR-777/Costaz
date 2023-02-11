@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
@@ -8,6 +7,7 @@ import 'Section/01_home.dart';
 import 'Section/02_students.dart';
 import 'Section/98_settings.dart';
 import 'Section/xx_my_playground.dart';
+import 'Section/src/commons.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();        // Initialize
@@ -36,7 +36,21 @@ class _CostazState extends State<Costaz> {
   @override
   Widget build(BuildContext context) => FluentApp(
       debugShowCheckedModeBanner: false,
-      theme: (Costaz.is_dark ? ThemeData.dark() : ThemeData.light()).copyWith(
+      theme: FluentThemeData(
+        brightness: Costaz.is_dark ? Brightness.dark : Brightness.light,
+        dialogTheme: ContentDialogThemeData(
+          padding: const EdgeInsets.all(factor * 2),
+          titlePadding: const EdgeInsets.only(bottom: factor * 2),
+          titleStyle: TextStyle(
+            color: Costaz.is_dark ? Colors.white : Colors.black,
+            fontSize: factor + 10,
+            fontWeight: FontWeight.w500,
+          ),
+          actionsPadding: const EdgeInsets.symmetric(
+            vertical: factor + 5,
+            horizontal: factor * 2,
+          ),
+        ),
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         navigationPaneTheme: NavigationPaneThemeData(
           backgroundColor: Costaz.is_dark

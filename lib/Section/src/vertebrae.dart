@@ -34,6 +34,8 @@ class Student {
   String cgpa = "0.0";
   bool attendance = false;
 
+  List<bool> attendance_record = [];
+
   void toggleAttendance() => attendance = !attendance;
   void updateAttendance(bool val) => attendance = val;
 
@@ -45,7 +47,6 @@ class Student {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        style: dialog_pad,
         title: const Text("Add Student"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,7 +107,7 @@ class Student {
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
-      style: dialog_pad,
+      
       title: const Text("Delete Student"),
       content: const Text("Are you sure you want to delete this student?"),
       actions: [
@@ -165,7 +166,7 @@ class Student {
       context: context,
       builder: (context) =>
           ContentDialog(
-            style: dialog_pad,
+            
             title: const Text("Update Details"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -216,7 +217,7 @@ class Section {
   static var top_row = [
     "Roll No",
     "Name",
-    "CGPA",
+    "Record",
     "Attendance",
   ];
   Section();
@@ -239,7 +240,7 @@ class Section {
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
-      style: dialog_pad,
+      
       title: const Text("Delete Section"),
       content: const Text("Are you sure you want to delete this section?"),
       actions: [
@@ -280,7 +281,7 @@ class Section {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        style: dialog_pad,
+        
         title: const Text("Edit Section"),
         content: TextBox(
           autofocus: true,
@@ -352,7 +353,7 @@ class SectionManager {
 
     // Session Loading
     // ...
-    if (SessionManager.the_list.isEmpty) SessionManager.addCurrent();
+    if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
 
     return true;
   }
@@ -403,6 +404,7 @@ class Session {
     final month_name = _monthNames[month - 1];
     return "$month_name, $year";
   }
+  bool get is_selected => formatted() == SessionManager.currentSession.formatted();
   ListTile makeDateTile({required VoidCallback onTap, bool selected = false}) => ListTile.selectable(
     selected: selected,
     onPressed: onTap,
@@ -415,8 +417,7 @@ class Session {
     ),
     title: Text(formatted_short()),
     subtitle: Text(_weekDays[date.weekday - 1]),
-    trailing: formatted() == SessionManager.currentSession.formatted()
-      ? null : date.day == DateTime.now().day
+    trailing: is_selected ? null : date.day == DateTime.now().day
         ? const Text("Today") : date.day == DateTime.now().day - 1
           ? const Text("Yesterday") : null,
   );
@@ -425,7 +426,7 @@ class Session {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        style: dialog_pad,
+        
         title: const Text("Edit Session"),
         content: DatePicker(
           selected: date,
@@ -468,18 +469,18 @@ class Session {
 
 class SessionManager {
   static List<Session> the_list = [
-    // Session(DateTime(2023, 2, 5)),
-    // Session(DateTime(2023, 2, 3)),
-    // Session(DateTime(2023, 1, 31)),
-    // Session(DateTime(2023, 1, 29)),
-    // Session(DateTime.now().subtract(const Duration(days: 1))),
+    Session(DateTime(2023, 2, 5)),
+    Session(DateTime(2023, 2, 3)),
+    Session(DateTime(2023, 1, 31)),
+    Session(DateTime(2023, 1, 29)),
+    Session(DateTime.now().subtract(const Duration(days: 1))),
   ];
   static int selected = the_list.length - 1;
   static Session get currentSession => the_list[selected];
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
-      style: dialog_pad,
+      
       title: const Text("Load a Session"),
       content: ListView.builder(
         shrinkWrap: true,
@@ -498,29 +499,7 @@ class SessionManager {
         Button(
           style: button_pad,
           child: const Text("New Session"),
-          onPressed: () {
-            final current_session = Session(DateTime.now());
-            final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
-            if (already_exists) {
-              Show.infoBar(
-                context,
-                title: "Cancelled",
-                detail: "A session for today already exists!",
-                type: InfoBarSeverity.warning,
-              );
-            }
-            else {
-              Show.infoBar(
-                context,
-                title: "Added",
-                detail: "New session added!",
-              );
-              the_list.add(current_session);
-              selected = the_list.length - 1;
-              refresh();
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: () => addCurrent(context, refresh: refresh),
         ),
         Button(
           style: button_pad,
@@ -531,6 +510,28 @@ class SessionManager {
     ),
   ));
 
-  static void addCurrent() => the_list.add(Session(DateTime.now()));
+  static void addCurrent(BuildContext context, {VoidCallback? refresh}) {
+    final current_session = Session(DateTime.now());
+    final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
+    if (already_exists) {
+      Show.infoBar(
+        context,
+        title: "Cancelled",
+        detail: "A session for today already exists!",
+        type: InfoBarSeverity.warning,
+      );
+    }
+    else {
+      Show.infoBar(
+        context,
+        title: "Added",
+        detail: "New session added!",
+      );
+      the_list.add(current_session);
+      selected = the_list.length - 1;
+      refresh!();
+      Navigator.of(context).pop();
+    }
+  }
   static void removeAt(int index) => the_list.removeAt(index);
 }

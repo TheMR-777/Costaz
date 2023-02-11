@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluent_ui: ^4.2.0
+  fluent_ui: any
   google_fonts: any
   contextmenu: ^3.0.0
   gsheets: ^0.4.2

@@ -28,14 +28,14 @@ class _DearStudentsState extends State<DearStudents> {
               style: ButtonStyle(
                 padding: ButtonState.all(const EdgeInsets.symmetric(
                     vertical: factor,
-                    horizontal: factor * 2
+                    horizontal: factor + 10
                 )),
               ),
               child: Row(
                 children: const [
                   Icon(FluentIcons.add),
-                  SizedBox(width: factor * 2),
-                  Text("Add Section", style: TextStyle(fontSize: factor)),
+                  SizedBox(width: factor + 10),
+                  Text("New Section", style: TextStyle(fontSize: factor)),
                 ],
               ),
             ),    // Add Section
@@ -83,7 +83,6 @@ class _DearStudentsState extends State<DearStudents> {
       }
 
       return ContentDialog(
-        style: dialog_pad,
         title: const Text("Add a New Section"),
         content: TextBox(
           autofocus: true,
@@ -138,8 +137,8 @@ class TheDropDown extends StatefulWidget {
 
 class _TheDropDownState extends State<TheDropDown> {
   void update() => setState(() {});
-  Section thisSection() => SectionManager.sections[widget.number];
-  Student studentAt(int index) => thisSection().students[index];
+  Section get currentSection => SectionManager.sections[widget.number];
+  Student studentAt(int index) => currentSection.students[index];
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) =>
@@ -153,10 +152,20 @@ class _TheDropDownState extends State<TheDropDown> {
           ),
         );
 
+    final record = double.parse(studentAt(index).cgpa) * 25;
+
     return material.DataRow(cells: [
-      canToggleAttendance(from: thisSection().students.map((e) => e.roll_no).toList()),
-      canToggleAttendance(from: thisSection().students.map((e) => e.name).toList()),
-      canToggleAttendance(from: thisSection().students.map((e) => e.cgpa).toList()),
+      canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
+      canToggleAttendance(from: currentSection.students.map((e) => e.name).toList()),
+      // canToggleAttendance(from: currentSection.students.map((e) => e.cgpa).toList()),
+      material.DataCell(
+        ProgressBar(
+          value: record,
+          activeColor: record != 100
+              ? FluentTheme.of(context).resources.textFillColorTertiary
+              : null,
+        ),
+      ),
       material.DataCell(Checkbox(
         onChanged: (value) => setState(() => studentAt(index).updateAttendance(value!)),
         autofocus: true,
@@ -170,30 +179,30 @@ class _TheDropDownState extends State<TheDropDown> {
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
-    trailing: thisSection().students.isNotEmpty
+    trailing: currentSection.students.isNotEmpty
         ? Text(
-          "Present: ${thisSection().students.where((element) => element.attendance).length} / ${thisSection().students.length}",
+          "Present: ${currentSection.students.where((element) => element.attendance).length} / ${currentSection.students.length}",
         )               // Present Count
         : const Icon(FluentIcons.people),
     leading: const Icon(FluentIcons.people),     // People Icon
     header: Show.NativeContextMenu(
       context,
-      onEdit: () => thisSection().update_with_dialogBox(context, update),
+      onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
-      on: Text(thisSection().title),
+      on: Text(currentSection.title),
     ),                            // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (thisSection().students.isNotEmpty)
+        if (currentSection.students.isNotEmpty)
           material.DataTable(
             columns: List.generate(
               Section.top_row.length,
               (index) => material.DataColumn(label: Text(Section.top_row[index])),
             ), // Headers
             rows: List.generate(
-            thisSection().students.length,
+            currentSection.students.length,
             (index) => makeTableEntry(context, index),
           ),    // Rows (Elem)
         ),

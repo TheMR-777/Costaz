@@ -3,18 +3,6 @@ import '../../main.dart' show Costaz;
 const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
-const dialog_pad = ContentDialogThemeData(
-  padding: EdgeInsets.all(factor * 2),
-  titlePadding: EdgeInsets.only(bottom: factor * 2),
-  titleStyle: TextStyle(
-    fontSize: factor + 10,
-    fontWeight: FontWeight.w500,
-  ),
-  actionsPadding: EdgeInsets.symmetric(
-    vertical: factor + 5,
-    horizontal: factor * 2,
-  ),
-);
 
 class Show {
   static const borderRadius = Radius.circular(5);

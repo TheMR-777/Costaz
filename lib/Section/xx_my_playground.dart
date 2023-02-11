@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'src/commons.dart';
 
 class ThePlayground extends StatelessWidget {
   const ThePlayground({Key? key}) : super(key: key);
@@ -9,12 +8,8 @@ class ThePlayground extends StatelessWidget {
   Widget build(BuildContext context) => ScaffoldPage.withPadding(
     padding: const EdgeInsets.all(20),
     content: Center(
-      child: GestureDetector(
-        // onTap: Show a Dialog Box with Beautifully formatted Date
-        child: Container(
-          width: 300, height: 150,
-          color: FluentTheme.of(context).accentColor,
-        ),
+      child: ProgressRing(
+        value: 55,
       )
     )
   );

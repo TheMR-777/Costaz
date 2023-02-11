@@ -37,7 +37,6 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         void returnClass() => Navigator.pop(context, newClass);
 
         return ContentDialog(
-          style: dialog_pad,
           title: const Text("Add a New Class"),
           content: Column(
             mainAxisSize: MainAxisSize.min,

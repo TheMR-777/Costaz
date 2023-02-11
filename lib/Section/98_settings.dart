@@ -41,7 +41,7 @@ class TheSettings extends StatelessWidget {
   final void Function(bool?) dark_change;
   final void Function(bool?) tabb_change;
 
-  bool get shall_tab => TheTheme.info.buildNumber > TheTheme.Win11_New && dark_enabled;
+  bool get shall_vibe => TheTheme.info.buildNumber > TheTheme.Win11_New && dark_enabled;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -49,7 +49,7 @@ class TheSettings extends StatelessWidget {
     child: ListView(
       children: [
         ListTile(
-          trailing: Checkbox(
+          trailing: ToggleSwitch(
             checked: dark_enabled,
             onChanged: dark_change,
           ),
@@ -59,9 +59,9 @@ class TheSettings extends StatelessWidget {
               child: const Text("Dark Mode")
           ),
         ),    // Dark Mode
-        if (shall_tab)
+        if (shall_vibe)
           ListTile(
-            trailing: Checkbox(
+            trailing: ToggleSwitch(
               checked: tabb_enabled,
               onChanged: tabb_change,
             ),
