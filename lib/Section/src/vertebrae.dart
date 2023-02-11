@@ -328,8 +328,9 @@ class SectionManager {
   ];
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
-    final cache_sections = <Section>[];
 
+    // Section Loading
+    final cache_sections = <Section>[];
     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
       final worksheet = my_sheet.sheets[i];
       final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
@@ -345,6 +346,10 @@ class SectionManager {
       cache_sections.add(mySection);
     }
     SectionManager.sections = cache_sections;
+
+    // Session Loading
+    // ...
+    if (SessionManager.the_list.isEmpty) SessionManager.addCurrent();
 
     return true;
   }
@@ -459,11 +464,11 @@ class Session {
 
 class SessionManager {
   static List<Session> the_list = [
-    Session(DateTime(2023, 2, 5)),
-    Session(DateTime(2023, 2, 3)),
-    Session(DateTime(2023, 1, 31)),
-    Session(DateTime(2023, 1, 29)),
-    Session(DateTime.now().subtract(const Duration(days: 1))),
+    // Session(DateTime(2023, 2, 5)),
+    // Session(DateTime(2023, 2, 3)),
+    // Session(DateTime(2023, 1, 31)),
+    // Session(DateTime(2023, 1, 29)),
+    // Session(DateTime.now().subtract(const Duration(days: 1))),
   ];
   static int selected = the_list.length - 1;
   static Session get currentSession => the_list[selected];

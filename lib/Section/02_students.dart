@@ -14,12 +14,44 @@ class DearStudents extends StatefulWidget {
 class _DearStudentsState extends State<DearStudents> {
   static bool to_load = true;
   void update() => setState(() {});
-  ListView get the_content => ListView.builder(
-    itemCount: SectionManager.sections.length,
-    itemBuilder: (context_2, index) => TheDropDown(
-      update, index,
-      is_expand: index == DearStudents.expanded_menu,
-    ),
+  Column get the_content => Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(factor + 10),
+        child: Row(
+          children: [
+            Flexible(
+                child: SessionManager.currentTile(context, update),
+            ),
+            Button(
+              onPressed: () => addSection(context),
+              style: ButtonStyle(
+                padding: ButtonState.all(const EdgeInsets.symmetric(
+                    vertical: factor,
+                    horizontal: factor * 2
+                )),
+              ),
+              child: Row(
+                children: const [
+                  Icon(FluentIcons.add),
+                  SizedBox(width: factor),
+                  Text("Add Section", style: TextStyle(fontSize: factor)),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: SectionManager.sections.length,
+          itemBuilder: (context_2, index) => TheDropDown(
+            update, index,
+            is_expand: index == DearStudents.expanded_menu,
+          ),
+        ),
+      ),
+    ],
   );
 
   void addSection(BuildContext context) => showDialog(
@@ -75,34 +107,18 @@ class _DearStudentsState extends State<DearStudents> {
   );
 
   @override
-  Widget build(BuildContext context) => ScaffoldPage(
-      header: PageHeader(
-        padding: factor + 10,
-        title: SessionManager.currentTile(context, update),
-        commandBar: CommandBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            CommandBarButton(
-              icon: const Icon(FluentIcons.add),
-              label: const Text("Add Section"),
-              onPressed: () => addSection(context),
-            )
-          ],
-        ),
-      ),
-      content: to_load
-      ? FutureBuilder<bool>(
-        future: SectionManager.load(),
-        builder: (context_2, snapshot) => snapshot.hasData
-            ? () {
-              to_load = false;
-              return the_content;
-            }()
-            : snapshot.hasError
-              ? Text("${snapshot.error}")
-              : const Center(child: ProgressRing()),
-      ) : the_content,
-    );
+  Widget build(BuildContext context) => to_load
+  ? FutureBuilder<bool>(
+    future: SectionManager.load(),
+    builder: (context_2, snapshot) => snapshot.hasData
+        ? () {
+          to_load = false;
+          return the_content;
+        }()
+        : snapshot.hasError
+          ? Text("${snapshot.error}")
+          : const Center(child: ProgressRing()),
+  ) : the_content;
 }
 
 class TheDropDown extends StatefulWidget {
