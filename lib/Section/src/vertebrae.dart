@@ -325,28 +325,38 @@ class SectionManager {
     // Loading Settings
     for (final row in await my_sheet.sheets.last.values.allRows())
     {
-      if (row[0] == "TopRow:") {
-        Section.top_row = row.skip(1).where((element) => element.isNotEmpty).toList();
+      if (row.first == "TopRow:") {
+        Section.top_row = row.skip(1)
+            .where((element) => element.isNotEmpty)
+            .toList();
       }
-      else if (row[0] == "Sessions:")
+      else if (row.first == "Sessions:")
       {
-        SessionManager.the_list = row.skip(1).where((element) => element.isNotEmpty).map((e) {
-          final date = src.google_epoch.add(Duration(days: int.parse(e)));
-          return Session(date);
-        }).toList();
+        SessionManager.the_list = row.skip(1)
+            .where((element) => element.isNotEmpty)
+            .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
+            .toList();
 
         // If no sessions are found, add a new one
         if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
       }
     }
     print(Section.top_row);
-    print(SessionManager.the_list.map((e) => e.date.toString().split(" ")[0]).toList());
+    print(SessionManager.the_list
+        .map((e) => e.date.toString()
+        .split(" ").first)
+        .toList()
+    );
 
     // Section Loading
     final cache_sections = <Section>[];
     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
       final worksheet = my_sheet.sheets[i];
-      final rows_data = await worksheet.values.allRows().then((value) => value.skip(1).toList());
+      final rows_data = await worksheet.values
+          .allRows()
+          .then((value) => value.skip(1)
+          .toList());
+
       print("");
       print(worksheet.title);
       final mySection = Section()..title = worksheet.title;
@@ -357,7 +367,7 @@ class SectionManager {
         final myRoll = student_data[1];
         final Record = List.generate(SessionManager.the_list.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
         mySection.students.add(Student.withRecord(myName, myRoll, Record));
-        print("${Record}: ${student_data}");
+        print("$Record: $student_data");
       }
       cache_sections.add(mySection);
     }
