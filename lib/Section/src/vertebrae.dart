@@ -3,6 +3,7 @@ import 'package:gsheets/gsheets.dart';
 import 'commons.dart';
 
 class src {
+  static final google_epoch = DateTime(1899,12,30);
   static const credentials = r'''
   {
     "type": "service_account",
@@ -18,8 +19,8 @@ class src {
   }
   ''';
   static const def_sheet_ID =
-      "1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI"
-      //"1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
+      //"1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI"
+      "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
   ;
   static final gsheet_handle = GSheets(src.credentials);
   static final default_sheet = gsheet_handle.spreadsheet(src.def_sheet_ID);
@@ -27,23 +28,24 @@ class src {
 }
 
 class Student {
-  Student(this.roll_no, this.name, this.cgpa, this.attendance);
+  Student(this.roll_no, this.name) {
+    attendance_record = List.generate(SessionManager.the_list.length, (index) => false);
+  }
+
+  Student.withRecord(this.roll_no, this.name, this.attendance_record);
 
   String roll_no = "N/A";
   String name = "N/A";
-  String cgpa = "0.0";
-  bool attendance = false;
 
   List<bool> attendance_record = [];
 
-  void toggleAttendance() => attendance = !attendance;
-  void updateAttendance(bool val) => attendance = val;
+  void toggleAttendance({required int session_id}) => attendance_record[session_id] = !attendance_record[session_id];
+  void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
   static
   void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
     final TextEditingController roll = TextEditingController();
     final TextEditingController name = TextEditingController();
-    final TextEditingController cgpa = TextEditingController();
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -62,12 +64,6 @@ class Student {
               onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
-            my_spacing,
-            TextBox(
-              onChanged: (val) => cgpa.text = val,
-              onSubmitted: (val) => Navigator.pop(context, true),
-              placeholder: "CGPA",
-            ),    // Ask CGPA
           ],
         ),
         actions: [
@@ -84,8 +80,8 @@ class Student {
         ],
       ),
     ).then((value) {
-      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty && cgpa.text.isNotEmpty) {
-        SectionManager.sections[section_id].students.add(Student(roll.text, name.text, cgpa.text, false));
+      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty) {
+        SectionManager.sections[section_id].students.add(Student(roll.text, name.text));
         refresh();
         Show.infoBar(
           context,
@@ -184,13 +180,6 @@ class Student {
                   placeholder: "Roll No",
                   initialValue: roll_no,
                 ), // Ask Roll No
-                my_spacing,
-                TextBox(
-                  onChanged: (val) => cgpa = val,
-                  onSubmitted: (val) => returnClass(),
-                  placeholder: "CGPA",
-                  initialValue: cgpa,
-                ), // Ask CGPA
               ],
             ),
             actions: [
@@ -233,7 +222,7 @@ class Section {
     // Student("BSCS_F19_M_68", "Mr Strange", "2.00", true),
     // Student("BSCS_F19_M_69", "Adam Smasher", "3.53", false),
     // Student("BSCS_F19_M_70", "The Silence", "3.24", true),
-    // Student("BSCS_F19_M_71", "Dominic Toretto", "3.11", false),
+    // Student("BSCS_F19_M_71", "Dominic", "3.11", false),
   ];
 
   static
@@ -333,6 +322,31 @@ class SectionManager {
   static Future<bool> load() async {
     final my_sheet = await src.default_sheet;
 
+    // Loading Settings
+    for (final row in await my_sheet.sheets.last.values.allRows())
+    {
+      // Top Row Loading
+      if (row[0] == "TopRow:")
+      {
+        Section.top_row = row.skip(1).where((element) => element.isNotEmpty).toList();
+        print(Section.top_row);
+      }
+
+      // Session Loading
+      else if (row[0] == "Sessions:")
+      {
+        SessionManager.the_list = row.skip(1).where((element) => element.isNotEmpty).map((e) {
+          final date = src.google_epoch.add(Duration(days: int.parse(e)));
+          print(date);
+          return Session(date);
+        }).toList();
+
+        // If no sessions are found, add a new one
+        if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
+      }
+    }
+    print("");
+
     // Section Loading
     final cache_sections = <Section>[];
     for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
@@ -341,19 +355,17 @@ class SectionManager {
       print(worksheet.title);
       final mySection = Section()..title = worksheet.title;
 
-      if (i == 0) Section.top_row = await worksheet.values.row(1);
-
-      for (final row in rows_data) {
-        print(row);
-        mySection.students.add(Student(row[0], row[1], row[2], row.length == Section.top_row.length));
+      // Student Loading
+      for (final student_data in rows_data) {
+        final myName = student_data[0];
+        final myRoll = student_data[1];
+        final Record = List.generate(SessionManager.the_list.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
+        mySection.students.add(Student.withRecord(myName, myRoll, Record));
+        print("${Record}: ${student_data}");
       }
       cache_sections.add(mySection);
     }
     SectionManager.sections = cache_sections;
-
-    // Session Loading
-    // ...
-    if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
 
     return true;
   }
@@ -529,6 +541,13 @@ class SessionManager {
       );
       the_list.add(current_session);
       selected = the_list.length - 1;
+      for (final section in SectionManager.sections) {
+        for (final student in section.students) {
+          if (student.attendance_record.length < the_list.length) {
+            student.attendance_record.add(false);
+          }
+        }
+      }
       refresh!();
       Navigator.of(context).pop();
     }

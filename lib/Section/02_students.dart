@@ -145,14 +145,18 @@ class _TheDropDownState extends State<TheDropDown> {
         material.DataCell(
           Show.SmartNativeContextMenu(
             context,
-            onTap: () => setState(() => studentAt(index).toggleAttendance()),
+            onTap: () => setState(() => studentAt(index).toggleAttendance(session_id: SessionManager.selected)),
             onEdit: () => studentAt(index).update_with_dialogBox(context, update),
             onDelete: () => Student.delete_with_dialogBox(context, update, widget.number, index),
             on: Text(from[index]),
           ),
         );
 
-    final record = double.parse(studentAt(index).cgpa) * 25;
+    // Student.attendance_record contains the attendance record of the student
+    // in the form of boolean list. I want to get the percentage of attendance
+    final record = studentAt(index).attendance_record
+        .where((element) => element)
+        .length / studentAt(index).attendance_record.length * 100;
 
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
@@ -167,10 +171,10 @@ class _TheDropDownState extends State<TheDropDown> {
         ),
       ),
       material.DataCell(Checkbox(
-        onChanged: (value) => setState(() => studentAt(index).updateAttendance(value!)),
+        onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
         autofocus: true,
-        checked: studentAt(index).attendance,
-        content: Text("  ${studentAt(index).attendance ? "Pre" : "Ab"}sent  "),
+        checked: studentAt(index).attendance_record[SessionManager.selected],
+        content: Text("  ${studentAt(index).attendance_record[SessionManager.selected] ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
@@ -179,11 +183,17 @@ class _TheDropDownState extends State<TheDropDown> {
   Widget build(BuildContext context) => Expander(
     onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
     initiallyExpanded: widget.is_expand,
-    trailing: currentSection.students.isNotEmpty
-        ? Text(
-          "Present: ${currentSection.students.where((element) => element.attendance).length} / ${currentSection.students.length}",
-        )               // Present Count
-        : const Icon(FluentIcons.people),
+    trailing: Padding(
+      padding: const EdgeInsets.only(right: factor),
+      child: currentSection.students.isNotEmpty
+          ? ProgressBar(
+              value: (currentSection.students.where((element) => element.attendance_record[SessionManager.selected]).length / currentSection.students.length) * 100,
+              activeColor: currentSection.students.where((element) => element.attendance_record[SessionManager.selected]).length != currentSection.students.length
+                  ? FluentTheme.of(context).resources.textFillColorTertiary
+                  : null,
+          )                     // Present Count
+          : const Icon(FluentIcons.education),
+    ),
     leading: const Icon(FluentIcons.people),     // People Icon
     header: Show.NativeContextMenu(
       context,
