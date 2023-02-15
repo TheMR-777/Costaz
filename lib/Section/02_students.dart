@@ -27,10 +27,10 @@ class _DearStudentsState extends State<DearStudents> {
           children: [
             Flexible(
                 child: SessionManager.currentTile(context, update),
-            ),  // Session Info
+            ),        // Session Info
             const SizedBox(
                 width: factor + 10
-            ),
+            ),  // Spacing
             Button(
               onPressed: () => addSection(context),
               style: ButtonStyle(
@@ -46,7 +46,7 @@ class _DearStudentsState extends State<DearStudents> {
                   Text("New Section", style: TextStyle(fontSize: factor)),
                 ],
               ),
-            ),    // Add Section
+            ),          // Add Section
           ],
         ),
       ),     // Session Info
