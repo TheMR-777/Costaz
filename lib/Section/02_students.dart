@@ -17,12 +17,20 @@ class _DearStudentsState extends State<DearStudents> {
   Column get the_content => Column(
     children: [
       Padding(
-        padding: const EdgeInsets.all(factor + 10),
+        padding: const EdgeInsets.only(
+          top: factor + 10,
+          bottom: factor + 10,
+          left: factor + 7,
+          right: factor + 10,
+        ),
         child: Row(
           children: [
             Flexible(
                 child: SessionManager.currentTile(context, update),
             ),  // Session Info
+            const SizedBox(
+                width: factor + 10
+            ),
             Button(
               onPressed: () => addSection(context),
               style: ButtonStyle(

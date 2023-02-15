@@ -427,9 +427,9 @@ class Session {
     selected: selected,
     onPressed: onTap,
     leading: Text(
-      date.day < 10 ? "0${date.day}" : "${date.day}",
+      " ${date.day < 10 ? "0${date.day}" : "${date.day}"}",
       style: const TextStyle(
-        fontSize: 25,
+        fontSize: factor + 11,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -437,7 +437,7 @@ class Session {
     subtitle: Text(_weekDays[date.weekday - 1]),
     trailing: is_selected ? null : date.day == DateTime.now().day
         ? const Text("Today") : date.day == DateTime.now().day - 1
-          ? const Text("Yesterday") : null,
+        ? const Text("Yesterday") : null,
   );
   void update(BuildContext context, VoidCallback refresh) {
     DateTime intermediate = date;
@@ -498,7 +498,7 @@ class SessionManager {
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
-      
+
       title: const Text("Load a Session"),
       content: ListView.builder(
         shrinkWrap: true,
