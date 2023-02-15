@@ -582,11 +582,66 @@ class SessionManager {
     }
   }
   static void removeAt(BuildContext context, int index, {VoidCallback? refresh}) {
-    if (index == selected) {
+    // if (index == selected) {
+    //   Show.infoBar(
+    //     context,
+    //     title: "Cancelled",
+    //     detail: "Current session cannot be removed!",
+    //     type: InfoBarSeverity.warning,
+    //   );
+    // }
+    // else {
+    //   showDialog<bool>(
+    //     context: context,
+    //     builder: (context) => ContentDialog(
+    //       title: const Text("Remove Session"),
+    //       content: const Text("Removing this session will also remove all attendance records for this session."),
+    //       actions: [
+    //         FilledButton(
+    //           onPressed: () => Navigator.pop(context, true),
+    //           style: button_pad,
+    //           child: const Text("Remove"),
+    //         ),
+    //         Button(
+    //           onPressed: () => Navigator.pop(context, false),
+    //           style: button_pad,
+    //           child: const Text("Cancel"),
+    //         ),
+    //       ],
+    //     ),
+    //   ).then((value) {
+    //     if (value!) {
+    //       Show.infoBar(
+    //         context,
+    //         title: "Removed",
+    //         detail: "Session removed!",
+    //       );
+    //       the_list.removeAt(index);
+    //       for (final section in SectionManager.sections) {
+    //         for (final student in section.students) {
+    //           student.attendance_record.removeAt(index);
+    //         }
+    //       }
+    //       update_selected();
+    //       refresh!();
+    //       Navigator.of(context).pop();
+    //     }
+    //     else {
+    //       Show.infoBar(
+    //         context,
+    //         title: "Cancelled",
+    //         detail: "Session removal cancelled!",
+    //         type: InfoBarSeverity.warning,
+    //       );
+    //     }
+    //   });
+    // }
+
+    if (the_list.length == 1) {
       Show.infoBar(
         context,
         title: "Cancelled",
-        detail: "Current session cannot be removed!",
+        detail: "There must be at least one session!",
         type: InfoBarSeverity.warning,
       );
     }
