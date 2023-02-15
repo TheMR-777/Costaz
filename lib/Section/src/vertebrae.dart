@@ -493,24 +493,47 @@ class SessionManager {
     Session(DateTime(2023, 1, 29)),
     Session(DateTime.now().subtract(const Duration(days: 1))),
   ];
-  static int selected = the_list.length - 1;
+
+  static int _selected = the_list.length - 1;
+  static void update_selected({int? to}) => _selected = to ?? the_list.length - 1;
+  static int get selected => _selected;
+  // static set selected(int value) {
+  //   _selected = value < 0 ? 0 : value >= the_list.length ? the_list.length - 1 : value;
+  // }
+
   static Session get currentSession => the_list[selected];
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
-
       title: const Text("Load a Session"),
-      content: ListView.builder(
-        shrinkWrap: true,
-        itemCount: SessionManager.the_list.length,
-        itemBuilder: (context_2, index) => the_list[index].makeDateTile(
-          selected: index == selected,
-          onTap: () {
-            selected = index;
-            refresh();
-            Show.infoBar(context, title: "Loaded", detail: the_list[index].formatted());
-            Navigator.pop(context);
-          },
+      content: Card(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: SessionManager.the_list.length,
+          itemBuilder: (context_2, index) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 233,
+                child: the_list[index].makeDateTile(
+                  selected: index == selected,
+                  onTap: () {
+                    update_selected(to: index);
+                    refresh();
+                    Show.infoBar(context, title: "Loaded", detail: the_list[index].formatted());
+                    Navigator.pop(context);
+                  },
+                ),
+              ),    // Date Tile
+              IconButton(
+                style: ButtonStyle(
+                  padding: ButtonState.all(const EdgeInsets.all(factor)),
+                ),
+                icon: const Icon(FluentIcons.delete, size: factor + 7),
+                onPressed: () => SessionManager.removeAt(context, index, refresh: refresh),
+              ),  // Delete Button
+            ],
+          ),
         ),
       ),
       actions: [
@@ -546,7 +569,7 @@ class SessionManager {
         detail: "New session added!",
       );
       the_list.add(current_session);
-      selected = the_list.length - 1;
+      update_selected();
       for (final section in SectionManager.sections) {
         for (final student in section.students) {
           if (student.attendance_record.length < the_list.length) {
@@ -558,5 +581,60 @@ class SessionManager {
       Navigator.of(context).pop();
     }
   }
-  static void removeAt(int index) => the_list.removeAt(index);
+  static void removeAt(BuildContext context, int index, {VoidCallback? refresh}) {
+    if (index == selected) {
+      Show.infoBar(
+        context,
+        title: "Cancelled",
+        detail: "Current session cannot be removed!",
+        type: InfoBarSeverity.warning,
+      );
+    }
+    else {
+      showDialog<bool>(
+        context: context,
+        builder: (context) => ContentDialog(
+          title: const Text("Remove Session"),
+          content: const Text("Removing this session will also remove all attendance records for this session."),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: button_pad,
+              child: const Text("Remove"),
+            ),
+            Button(
+              onPressed: () => Navigator.pop(context, false),
+              style: button_pad,
+              child: const Text("Cancel"),
+            ),
+          ],
+        ),
+      ).then((value) {
+        if (value!) {
+          Show.infoBar(
+            context,
+            title: "Removed",
+            detail: "Session removed!",
+          );
+          the_list.removeAt(index);
+          for (final section in SectionManager.sections) {
+            for (final student in section.students) {
+              student.attendance_record.removeAt(index);
+            }
+          }
+          update_selected();
+          refresh!();
+          Navigator.of(context).pop();
+        }
+        else {
+          Show.infoBar(
+            context,
+            title: "Cancelled",
+            detail: "Session removal cancelled!",
+            type: InfoBarSeverity.warning,
+          );
+        }
+      });
+    }
+  }
 }
