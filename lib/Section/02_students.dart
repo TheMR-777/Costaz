@@ -160,8 +160,6 @@ class _TheDropDownState extends State<TheDropDown> {
           ),
         );
 
-    // Student.attendance_record contains the attendance record of the student
-    // in the form of boolean list. I want to get the percentage of attendance
     final record = studentAt(index).attendance_record
         .where((element) => element)
         .length / studentAt(index).attendance_record.length * 100;
@@ -169,12 +167,11 @@ class _TheDropDownState extends State<TheDropDown> {
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
       canToggleAttendance(from: currentSection.students.map((e) => e.name).toList()),
-      // canToggleAttendance(from: currentSection.students.map((e) => e.cgpa).toList()),
       material.DataCell(
         ProgressBar(
           value: record,
           activeColor: record != 100
-              ? FluentTheme.of(context).resources.textFillColorTertiary
+              ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
               : null,
         ),
       ),
@@ -202,13 +199,13 @@ class _TheDropDownState extends State<TheDropDown> {
           )                     // Present Count
           : const Icon(FluentIcons.education),
     ),
-    leading: const Icon(FluentIcons.people),     // People Icon
+    leading: const Icon(FluentIcons.people),              // People Icon
     header: Show.NativeContextMenu(
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
       on: Text(currentSection.title),
-    ),                            // Worksheet Name
+    ),   // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -236,6 +233,6 @@ class _TheDropDownState extends State<TheDropDown> {
         ),                   // Add Student
         my_spacing,                    // Spacing
       ],
-    ),         // Student Fields
+    ),                  // Student Fields
   );
 }

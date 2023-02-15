@@ -497,24 +497,27 @@ class SessionManager {
   static int _selected = the_list.length - 1;
   static void update_selected({int? to}) => _selected = to ?? the_list.length - 1;
   static int get selected => _selected;
-  // static set selected(int value) {
-  //   _selected = value < 0 ? 0 : value >= the_list.length ? the_list.length - 1 : value;
-  // }
 
   static Session get currentSession => the_list[selected];
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
+      constraints: const BoxConstraints(
+        maxHeight: factor * 50,
+        maxWidth: factor * 30,
+      ),
       title: const Text("Load a Session"),
       content: Card(
-        child: ListView.builder(
+        child: ListView.separated(
           shrinkWrap: true,
           itemCount: SessionManager.the_list.length,
           itemBuilder: (context_2, index) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const SizedBox(
+                  width: factor - 10
+              ),  // Padding
               SizedBox(
-                width: 233,
+                width: 300 - factor,
                 child: the_list[index].makeDateTile(
                   selected: index == selected,
                   onTap: () {
@@ -524,16 +527,21 @@ class SessionManager {
                     Navigator.pop(context);
                   },
                 ),
-              ),    // Date Tile
+              ),        // Date Tile
+              const Spacer(),       // Spacer
               IconButton(
                 style: ButtonStyle(
                   padding: ButtonState.all(const EdgeInsets.all(factor)),
                 ),
                 icon: const Icon(FluentIcons.delete, size: factor + 7),
                 onPressed: () => SessionManager.removeAt(context, index, refresh: refresh),
-              ),  // Delete Button
+              ),      // Delete Button
+              const SizedBox(
+                  width: factor
+              ),  // Padding
             ],
           ),
+          separatorBuilder: (context, index) => const Divider(),
         ),
       ),
       actions: [
