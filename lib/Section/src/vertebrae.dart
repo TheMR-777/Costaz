@@ -41,89 +41,71 @@ class Student {
   static String prefix_name = "";
 
 
-  static Row prefix_button(BuildContext context, {required String title}) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(title),      // Title Text
-      Button(
-        style: ButtonStyle(
-          padding: ButtonState.all(const EdgeInsets.symmetric(
-              vertical: factor,
-              horizontal: factor + 10
-          )),
-        ),
-        onPressed: () {
-          String prefix_roll = Student.prefix_roll;
-          String prefix_name = Student.prefix_name;
-          showDialog<bool>(
-            context: context,
-            barrierLabel: "Prefix",
-            builder: (context) => ContentDialog(
-              title: const Text("Prefix"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextBox(
-                    initialValue: prefix_name,
-                    onChanged: (val) => prefix_name = val,
-                    placeholder: "Name Prefix",
-                  ),    // Ask Name Prefix
-                  my_spacing,
-                  TextBox(
-                    autofocus: true,
-                    initialValue: prefix_roll,
-                    onChanged: (val) => prefix_roll = val,
-                    placeholder: "Roll Number Prefix",
-                  ),    // Ask Roll No Prefix
-                  my_spacing,
-                  my_spacing,
-                  const Divider(),
-                  my_spacing,
-                  const Text(
-                    "Note: Prefixes are only used while updating, or adding a new student.",
-                    textAlign: TextAlign.center,
-                  )  // Note
-                ],
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  style: button_pad,
-                  child: const Text("Add"),
-                ),  // Add Button
-                Button(
-                  onPressed: () => Navigator.pop(context, false),
-                  style: button_pad,
-                  child: const Text("Cancel"),
-                ),        // Cancel Button
-              ],
-            ),
-          ).then((value) {
-            if (value!) {
-              Student.prefix_roll = prefix_roll;
-              Student.prefix_name = prefix_name;
-              Show.infoBar(context, title: "Updated", detail: "Prefixes updated");
-            }
-            else {
-              Show.infoBar(
-                context,
-                title: "Cancelled",
-                detail: "Prefixes are not updated",
-                type: InfoBarSeverity.warning,
-              );
-            }
-          });
-        },
-        child: Icon(FluentIcons.increase_indent,
-            size: factor + 7,
-            color: FluentTheme.of(context).accentColor.defaultBrushFor(FluentTheme.of(context).brightness),
-        ),
-      )       // Prefix Button
-    ],
-  );
   void toggleAttendance({required int session_id}) => attendance_record[session_id] = !attendance_record[session_id];
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
+  static
+  void prefix_with_dialogBox(BuildContext context) {
+    String prefix_roll = Student.prefix_roll;
+    String prefix_name = Student.prefix_name;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Setting Prefix"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Note: Prefixes are only used while adding a new student.",
+            ),  // Note
+            my_spacing,
+            my_spacing,
+            const Divider(),
+            my_spacing,
+            my_spacing,
+            TextBox(
+              initialValue: prefix_name,
+              onChanged: (val) => prefix_name = val,
+              placeholder: "Prefix for Name",
+            ),    // Ask Name Prefix
+            my_spacing,
+            TextBox(
+              autofocus: true,
+              initialValue: prefix_roll,
+              onChanged: (val) => prefix_roll = val,
+              placeholder: "Prefix for Roll Number",
+            ),    // Ask Roll No Prefix
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Add"),
+          ),  // Add Button
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ),        // Cancel Button
+        ],
+      ),
+    ).then((value) {
+      if (value!) {
+        Student.prefix_roll = prefix_roll;
+        Student.prefix_name = prefix_name;
+        Show.infoBar(context, title: "Updated", detail: "Prefixes updated");
+      }
+      else {
+        Show.infoBar(
+          context,
+          title: "Cancelled",
+          detail: "Prefixes are not updated",
+          type: InfoBarSeverity.warning,
+        );
+      }
+    });
+  }
   static
   void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
     String roll = "";
@@ -131,7 +113,23 @@ class Student {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        title: prefix_button(context, title: "Add Student"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Add Student"),      // Title Text
+            OutlinedButton(
+              style: ButtonStyle(
+                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+                padding: ButtonState.all(const EdgeInsets.symmetric(
+                    vertical: factor,
+                    horizontal: factor * 2
+                )),
+              ),
+              onPressed: () => Student.prefix_with_dialogBox(context),
+              child: const Icon(FluentIcons.increase_indent, size: factor + 5),
+            )       // Prefix Button
+          ],
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -226,7 +224,7 @@ class Student {
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
-        title: prefix_button(context, title: "Update Student"),
+        title: const Text("Update Student"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
