@@ -170,6 +170,7 @@ class _TheDropDownState extends State<TheDropDown> {
       material.DataCell(
         ProgressBar(
           value: record,
+          backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
           activeColor: record != 100
               ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
               : null,
@@ -214,7 +215,16 @@ class _TheDropDownState extends State<TheDropDown> {
           material.DataTable(
             columns: List.generate(
               Section.top_row.length,
-              (index) => material.DataColumn(label: Text(Section.top_row[index])),
+              (index) => material.DataColumn(
+                label: GestureDetector(
+                  onTap: () => setState(() => currentSection.students.sort(
+                    (a, b) =>  index == 0 ? a.roll_no.compareTo(b.roll_no)
+                        : index == 1 ? a.name.compareTo(b.name)
+                        : index == 2 ? b.attendance_record.where((element) => element).length.compareTo(a.attendance_record.where((element) => element).length) : 0
+                  )),
+                  child: Text(Section.top_row[index]),
+                ),
+              ),
             ), // Headers
             rows: List.generate(
             currentSection.students.length,

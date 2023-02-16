@@ -31,36 +31,120 @@ class Student {
   Student(this.roll_no, this.name) {
     attendance_record = List.generate(SessionManager.the_list.length, (index) => false);
   }
-
   Student.withRecord(this.roll_no, this.name, this.attendance_record);
 
   String roll_no = "N/A";
   String name = "N/A";
-
   List<bool> attendance_record = [];
 
+  static String prefix_roll = "BSCS_F19_";
+  static String prefix_name = "";
+
+
+  static Row prefix_button(BuildContext context, {required String title}) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(title),      // Title Text
+      Button(
+        style: ButtonStyle(
+          padding: ButtonState.all(const EdgeInsets.symmetric(
+              vertical: factor,
+              horizontal: factor + 10
+          )),
+        ),
+        onPressed: () {
+          String prefix_roll = Student.prefix_roll;
+          String prefix_name = Student.prefix_name;
+          showDialog<bool>(
+            context: context,
+            barrierLabel: "Prefix",
+            builder: (context) => ContentDialog(
+              title: const Text("Prefix"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextBox(
+                    initialValue: prefix_name,
+                    onChanged: (val) => prefix_name = val,
+                    placeholder: "Name Prefix",
+                  ),    // Ask Name Prefix
+                  my_spacing,
+                  TextBox(
+                    autofocus: true,
+                    initialValue: prefix_roll,
+                    onChanged: (val) => prefix_roll = val,
+                    placeholder: "Roll Number Prefix",
+                  ),    // Ask Roll No Prefix
+                  my_spacing,
+                  my_spacing,
+                  const Divider(),
+                  my_spacing,
+                  const Text(
+                    "Note: Prefixes are only used while updating, or adding a new student.",
+                    textAlign: TextAlign.center,
+                  )  // Note
+                ],
+              ),
+              actions: [
+                FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  style: button_pad,
+                  child: const Text("Add"),
+                ),  // Add Button
+                Button(
+                  onPressed: () => Navigator.pop(context, false),
+                  style: button_pad,
+                  child: const Text("Cancel"),
+                ),        // Cancel Button
+              ],
+            ),
+          ).then((value) {
+            if (value!) {
+              Student.prefix_roll = prefix_roll;
+              Student.prefix_name = prefix_name;
+              Show.infoBar(context, title: "Updated", detail: "Prefixes updated");
+            }
+            else {
+              Show.infoBar(
+                context,
+                title: "Cancelled",
+                detail: "Prefixes are not updated",
+                type: InfoBarSeverity.warning,
+              );
+            }
+          });
+        },
+        child: Icon(FluentIcons.increase_indent,
+            size: factor + 7,
+            color: FluentTheme.of(context).accentColor.defaultBrushFor(FluentTheme.of(context).brightness),
+        ),
+      )       // Prefix Button
+    ],
+  );
   void toggleAttendance({required int session_id}) => attendance_record[session_id] = !attendance_record[session_id];
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
   static
   void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
-    final TextEditingController roll = TextEditingController();
-    final TextEditingController name = TextEditingController();
+    String roll = "";
+    String name = "";
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text("Add Student"),
+        title: prefix_button(context, title: "Add Student"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextBox(
               autofocus: true,
-              onChanged: (val) => name.text = val,
+              initialValue: prefix_name,
+              onChanged: (val) => name = val,
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
             TextBox(
-              onChanged: (val) => roll.text = val,
+              onChanged: (val) => roll = val,
+              initialValue: prefix_roll,
               onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
@@ -80,8 +164,8 @@ class Student {
         ],
       ),
     ).then((value) {
-      if (value! && name.text.isNotEmpty && roll.text.isNotEmpty) {
-        SectionManager.sections[section_id].students.add(Student(roll.text, name.text));
+      if (value! && name.isNotEmpty && roll.isNotEmpty) {
+        SectionManager.sections[section_id].students.add(Student(roll, name));
         refresh();
         Show.infoBar(
           context,
@@ -139,78 +223,68 @@ class Student {
       );
     }
   });
-  void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    void returnClass() {
+  void update_with_dialogBox(BuildContext context, VoidCallback refresh) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+        title: prefix_button(context, title: "Update Student"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => name = val,
+              placeholder: "Name",
+              initialValue: name,
+            ), // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => roll_no = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Roll No",
+              initialValue: roll_no,
+            ), // Ask Roll No
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: button_pad,
+            child: const Text("Update"),
+          ), // Update Button
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            style: button_pad,
+            child: const Text("Cancel"),
+          ), // Cancel Button
+        ],
+      ),
+  ).then((value) {
+    if (value!) {
+      refresh();
       Show.infoBar(
         context,
         title: "Updated",
         detail: "New details applied!",
       );
-      Navigator.pop(context);
     }
-    void cancelClass() {
+    else {
       Show.infoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
         detail: "All changes discarded!",
       );
-      Navigator.pop(context);
     }
-
-    showDialog(
-      context: context,
-      builder: (context) =>
-          ContentDialog(
-            
-            title: const Text("Update Details"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextBox(
-                  autofocus: true,
-                  onChanged: (val) => name = val,
-                  placeholder: "Name",
-                  initialValue: name,
-                ), // Ask Name
-                my_spacing,
-                TextBox(
-                  onChanged: (val) => roll_no = val,
-                  onSubmitted: (val) => returnClass(),
-                  placeholder: "Roll No",
-                  initialValue: roll_no,
-                ), // Ask Roll No
-              ],
-            ),
-            actions: [
-              FilledButton(
-                onPressed: () {
-                  refresh();
-                  returnClass();
-                },
-                style: button_pad,
-                child: const Text("Update"),
-              ), // Update Button
-              Button(
-                onPressed: cancelClass,
-                style: button_pad,
-                child: const Text("Cancel"),
-              ), // Cancel Button
-            ],
-          ),
-    );
-  }
+  });
 }
 
 class Section {
   static var top_row = [
-    "Roll No",
-    "Name",
-    "Record",
-    "Attendance",
+    // "Roll No",
+    // "Name",
+    // "Record",
+    // "Attendance",
   ];
-  Section();
-  Section.specified(this.title, this.students);
 
   String title = "N/A";
   List<Student> students = [
@@ -590,61 +664,6 @@ class SessionManager {
     }
   }
   static void removeAt(BuildContext context, int index, {VoidCallback? refresh}) {
-    // if (index == selected) {
-    //   Show.infoBar(
-    //     context,
-    //     title: "Cancelled",
-    //     detail: "Current session cannot be removed!",
-    //     type: InfoBarSeverity.warning,
-    //   );
-    // }
-    // else {
-    //   showDialog<bool>(
-    //     context: context,
-    //     builder: (context) => ContentDialog(
-    //       title: const Text("Remove Session"),
-    //       content: const Text("Removing this session will also remove all attendance records for this session."),
-    //       actions: [
-    //         FilledButton(
-    //           onPressed: () => Navigator.pop(context, true),
-    //           style: button_pad,
-    //           child: const Text("Remove"),
-    //         ),
-    //         Button(
-    //           onPressed: () => Navigator.pop(context, false),
-    //           style: button_pad,
-    //           child: const Text("Cancel"),
-    //         ),
-    //       ],
-    //     ),
-    //   ).then((value) {
-    //     if (value!) {
-    //       Show.infoBar(
-    //         context,
-    //         title: "Removed",
-    //         detail: "Session removed!",
-    //       );
-    //       the_list.removeAt(index);
-    //       for (final section in SectionManager.sections) {
-    //         for (final student in section.students) {
-    //           student.attendance_record.removeAt(index);
-    //         }
-    //       }
-    //       update_selected();
-    //       refresh!();
-    //       Navigator.of(context).pop();
-    //     }
-    //     else {
-    //       Show.infoBar(
-    //         context,
-    //         title: "Cancelled",
-    //         detail: "Session removal cancelled!",
-    //         type: InfoBarSeverity.warning,
-    //       );
-    //     }
-    //   });
-    // }
-
     if (the_list.length == 1) {
       Show.infoBar(
         context,
@@ -666,6 +685,7 @@ class SessionManager {
               child: const Text("Remove"),
             ),
             Button(
+              autofocus: true,
               onPressed: () => Navigator.pop(context, false),
               style: button_pad,
               child: const Text("Cancel"),
