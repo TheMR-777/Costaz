@@ -4,6 +4,12 @@ const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
 
+Button CancelButton(BuildContext context) => Button(
+  onPressed: () => Navigator.pop(context, false),
+  style: button_pad,
+  child: const Text("Cancel"),
+);
+
 class Show {
   static const borderRadius = Radius.circular(5);
   static button_style_of(BuildContext context, bool is_edit, {bool smart = false}) => ButtonStyle(

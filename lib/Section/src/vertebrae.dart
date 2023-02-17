@@ -57,7 +57,7 @@ class Student {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              "Note: Prefixes are only used while adding a new student.",
+              "Prefixes are only used while adding a new student",
             ),  // Note
             my_spacing,
             my_spacing,
@@ -82,13 +82,9 @@ class Student {
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: button_pad,
-            child: const Text("Add"),
+            child: const Text("Update"),
           ),  // Add Button
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),        // Cancel Button
+          CancelButton(context),        // Cancel Button
         ],
       ),
     ).then((value) {
@@ -155,11 +151,7 @@ class Student {
             style: button_pad,
             child: const Text("Add"),
           ),  // Add Button
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),        // Cancel Button
+          CancelButton(context),        // Cancel Button
         ],
       ),
     ).then((value) {
@@ -195,12 +187,7 @@ class Student {
           style: button_pad,
           child: const Text("Delete"),
         ),
-        Button(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context, false),
-          style: button_pad,
-          child: const Text("Cancel"),
-        ),
+        CancelButton(context),
       ],
     ),
   ).then((value) {
@@ -250,11 +237,7 @@ class Student {
             style: button_pad,
             child: const Text("Update"),
           ), // Update Button
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ), // Cancel Button
+          CancelButton(context), // Cancel Button
         ],
       ),
   ).then((value) {
@@ -311,12 +294,7 @@ class Section {
           style: button_pad,
           child: const Text("Delete"),
         ),
-        Button(
-          autofocus: true,
-          onPressed: () => Navigator.pop(context, false),
-          style: button_pad,
-          child: const Text("Cancel"),
-        ),
+        CancelButton(context),
       ],
     ),
   ).then((value) {
@@ -358,11 +336,7 @@ class Section {
             style: button_pad,
             child: const Text("Edit"),
           ),
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),
+          CancelButton(context),
         ],
       ),
     ).then((value) {
@@ -530,11 +504,7 @@ class Session {
             style: button_pad,
             child: const Text("Edit"),
           ),
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
-            child: const Text("Cancel"),
-          ),
+          CancelButton(context),
         ],
       ),
     ).then((value) {
@@ -623,11 +593,7 @@ class SessionManager {
           child: const Text("New Session"),
           onPressed: () => addCurrent(context, refresh: refresh),
         ),
-        Button(
-          style: button_pad,
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
+        CancelButton(context),
       ],
     ),
   ));
@@ -683,12 +649,7 @@ class SessionManager {
               style: button_pad,
               child: const Text("Remove"),
             ),
-            Button(
-              autofocus: true,
-              onPressed: () => Navigator.pop(context, false),
-              style: button_pad,
-              child: const Text("Cancel"),
-            ),
+            CancelButton(context),
           ],
         ),
       ).then((value) {
