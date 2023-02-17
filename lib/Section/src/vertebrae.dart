@@ -40,6 +40,7 @@ class Student {
   static String prefix_roll = "BSCS_F19_";
   static String prefix_name = "";
 
+  bool get is_currently_present => attendance_record[SessionManager.selected];
 
   void toggleAttendance({required int session_id}) => attendance_record[session_id] = !attendance_record[session_id];
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;

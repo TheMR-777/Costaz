@@ -167,20 +167,18 @@ class _TheDropDownState extends State<TheDropDown> {
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
       canToggleAttendance(from: currentSection.students.map((e) => e.name).toList()),
-      material.DataCell(
-        ProgressBar(
-          value: record,
-          backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
-          activeColor: record != 100
-              ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
-              : null,
-        ),
-      ),
+      material.DataCell(ProgressBar(
+        value: record,
+        backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+        activeColor: record != 100
+            ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
+            : null,
+      )),
       material.DataCell(Checkbox(
         onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
         autofocus: true,
-        checked: studentAt(index).attendance_record[SessionManager.selected],
-        content: Text("  ${studentAt(index).attendance_record[SessionManager.selected] ? "Pre" : "Ab"}sent  "),
+        checked: studentAt(index).is_currently_present,
+        content: Text("  ${studentAt(index).is_currently_present ? "Pre" : "Ab"}sent  "),
       )),
     ]);
   }
@@ -193,8 +191,8 @@ class _TheDropDownState extends State<TheDropDown> {
       padding: const EdgeInsets.only(right: factor),
       child: currentSection.students.isNotEmpty
           ? ProgressBar(
-              value: (currentSection.students.where((element) => element.attendance_record[SessionManager.selected]).length / currentSection.students.length) * 100,
-              activeColor: currentSection.students.where((element) => element.attendance_record[SessionManager.selected]).length != currentSection.students.length
+              value: (currentSection.students.where((element) => element.is_currently_present).length / currentSection.students.length) * 100,
+              activeColor: currentSection.students.where((element) => element.is_currently_present).length != currentSection.students.length
                   ? FluentTheme.of(context).resources.textFillColorTertiary
                   : null,
           )                     // Present Count
@@ -220,7 +218,9 @@ class _TheDropDownState extends State<TheDropDown> {
                   onTap: () => setState(() => currentSection.students.sort(
                     (a, b) =>  index == 0 ? a.roll_no.compareTo(b.roll_no)
                         : index == 1 ? a.name.compareTo(b.name)
-                        : index == 2 ? b.attendance_record.where((element) => element).length.compareTo(a.attendance_record.where((element) => element).length) : 0
+                        : index == 2 ? b.attendance_record.where((element) => element).length.compareTo(a.attendance_record.where((element) => element).length)
+                        : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
+                        : 0
                   )),
                   child: Text(Section.top_row[index]),
                 ),
