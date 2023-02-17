@@ -30,7 +30,7 @@ class Show {
         (Costaz.do_vibe
             ? FluentTheme.of(context).micaBackgroundColor
             : FluentTheme.of(context).acrylicBackgroundColor
-        ).withOpacity(1)
+        ).withOpacity(0.95)
     ),
     padding: ButtonState.all(EdgeInsets.zero),
     shape: ButtonState.all(RoundedRectangleBorder(borderRadius: smart
