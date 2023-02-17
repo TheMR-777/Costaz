@@ -67,7 +67,7 @@ class _DearStudentsState extends State<DearStudents> {
     builder: (context) {
       String newSection = "";
       void cancelSection() {
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -77,7 +77,7 @@ class _DearStudentsState extends State<DearStudents> {
       }
       void returnSection() {
         if (newSection.isNotEmpty) {
-          Show.infoBar(
+          Show.TheInfoBar(
             context,
             title: "Added",
             detail: "New section added!",
@@ -178,7 +178,10 @@ class _TheDropDownState extends State<TheDropDown> {
         onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
         autofocus: true,
         checked: studentAt(index).is_currently_present,
-        content: Text("  ${studentAt(index).is_currently_present ? "Pre" : "Ab"}sent  "),
+        content: TheClickable(
+          newFactor: factor - 7,
+          child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
+        ),
       )),
     ]);
   }

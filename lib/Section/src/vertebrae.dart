@@ -78,23 +78,16 @@ class Student {
             ),    // Ask Roll No Prefix
           ],
         ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Update"),
-          ),  // Add Button
-          CancelButton(context),        // Cancel Button
-        ],
+        actions: ActionBar(context),
       ),
     ).then((value) {
       if (value!) {
         Student.prefix_roll = prefix_roll;
         Student.prefix_name = prefix_name;
-        Show.infoBar(context, title: "Updated", detail: "Prefixes updated");
+        Show.TheInfoBar(context, title: "Updated", detail: "Prefixes updated");
       }
       else {
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           title: "Cancelled",
           detail: "Prefixes are not updated",
@@ -145,27 +138,20 @@ class Student {
             ),    // Ask Roll No
           ],
         ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Add"),
-          ),  // Add Button
-          CancelButton(context),        // Cancel Button
-        ],
+        actions: ActionBar(context, focus: "Add"),
       ),
     ).then((value) {
       if (value! && name.isNotEmpty && roll.isNotEmpty) {
         SectionManager.sections[section_id].students.add(Student(roll, name));
         refresh();
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           title: "Added",
           detail: "Student added!",
         );
       }
       else {
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -178,30 +164,22 @@ class Student {
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
-      
       title: const Text("Delete Student"),
       content: const Text("Are you sure you want to delete this student?"),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: button_pad,
-          child: const Text("Delete"),
-        ),
-        CancelButton(context),
-      ],
+      actions: ActionBar(context, focus: "Delete"),
     ),
   ).then((value) {
     if (value!) {
       SectionManager.sections[section_id].students.removeAt(index);
       refresh();
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Deleted",
         detail: "Student deleted!",
       );
     }
     else {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -231,26 +209,19 @@ class Student {
             ), // Ask Roll No
           ],
         ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Update"),
-          ), // Update Button
-          CancelButton(context), // Cancel Button
-        ],
+        actions: ActionBar(context),
       ),
   ).then((value) {
     if (value!) {
       refresh();
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Updated",
         detail: "New details applied!",
       );
     }
     else {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -288,27 +259,20 @@ class Section {
       
       title: const Text("Delete Section"),
       content: const Text("Are you sure you want to delete this section?"),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: button_pad,
-          child: const Text("Delete"),
-        ),
-        CancelButton(context),
-      ],
+      actions: ActionBar(context, focus: "Delete"),
     ),
   ).then((value) {
     if (value!) {
       refresh();
       SectionManager.sections.removeAt(index);
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Deleted",
         detail: "Worksheet deleted!",
       );
     }
     else {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         type: InfoBarSeverity.warning,
         title: "Cancelled",
@@ -330,26 +294,19 @@ class Section {
           initialValue: name,
           placeholder: "Section Name",
         ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Edit"),
-          ),
-          CancelButton(context),
-        ],
+        actions: ActionBar(context),
       ),
     ).then((value) {
       if (value!) {
         title = name; refresh();
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           title: "Edited",
           detail: "Section title edited!",
         );
       }
       else {
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -498,26 +455,19 @@ class Session {
           onChanged: (value) => intermediate = value,
           onCancel: () => Navigator.pop(context, false),
         ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
-            child: const Text("Edit"),
-          ),
-          CancelButton(context),
-        ],
+        actions: ActionBar(context),
       ),
     ).then((value) {
       if (value!) {
         date = intermediate; refresh();
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           title: "Edited",
           detail: "Session date edited!",
         );
       }
       else {
-        Show.infoBar(
+        Show.TheInfoBar(
           context,
           type: InfoBarSeverity.warning,
           title: "Cancelled",
@@ -566,7 +516,7 @@ class SessionManager {
                   onTap: () {
                     update_selected(to: index);
                     refresh();
-                    Show.infoBar(context, title: "Loaded", detail: the_list[index].formatted());
+                    Show.TheInfoBar(context, title: "Loaded", detail: the_list[index].formatted());
                     Navigator.pop(context);
                   },
                 ),
@@ -593,7 +543,7 @@ class SessionManager {
           child: const Text("New Session"),
           onPressed: () => addCurrent(context, refresh: refresh),
         ),
-        CancelButton(context),
+        TheCancelButton(context),
       ],
     ),
   ));
@@ -602,7 +552,7 @@ class SessionManager {
     final current_session = Session(DateTime.now());
     final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
     if (already_exists) {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Cancelled",
         detail: "A session for today already exists!",
@@ -610,7 +560,7 @@ class SessionManager {
       );
     }
     else {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Added",
         detail: "New session added!",
@@ -630,7 +580,7 @@ class SessionManager {
   }
   static void removeAt(BuildContext context, int index, {VoidCallback? refresh}) {
     if (the_list.length == 1) {
-      Show.infoBar(
+      Show.TheInfoBar(
         context,
         title: "Cancelled",
         detail: "There must be at least one session!",
@@ -643,18 +593,11 @@ class SessionManager {
         builder: (context) => ContentDialog(
           title: const Text("Remove Session"),
           content: const Text("Removing this session will also remove all attendance records for this session."),
-          actions: [
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: button_pad,
-              child: const Text("Remove"),
-            ),
-            CancelButton(context),
-          ],
+          actions: ActionBar(context, focus: "Remove"),
         ),
       ).then((value) {
         if (value!) {
-          Show.infoBar(
+          Show.TheInfoBar(
             context,
             title: "Removed",
             detail: "Session removed!",
@@ -670,7 +613,7 @@ class SessionManager {
           Navigator.of(context).pop();
         }
         else {
-          Show.infoBar(
+          Show.TheInfoBar(
             context,
             title: "Cancelled",
             detail: "Session removal cancelled!",

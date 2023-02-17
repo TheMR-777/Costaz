@@ -4,40 +4,53 @@ const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
 
-Button CancelButton(BuildContext context) => Button(
+Button TheCancelButton(BuildContext context) => Button(
   onPressed: () => Navigator.pop(context, false),
   style: button_pad,
   child: const Text("Cancel"),
 );
+List<Widget> ActionBar(BuildContext context, {String focus = "Update"}) => [
+  FilledButton(
+    onPressed: () => Navigator.pop(context, true),
+    style: button_pad,
+    child: Text(focus),
+  ),
+  TheCancelButton(context),
+];
+Container TheClickable({required Widget child, final double newFactor = 15}) => Container(
+  color: Colors.transparent,
+  padding: EdgeInsets.symmetric(vertical: newFactor),
+  child: child,
+);
 
 class Show {
-  static const borderRadius = Radius.circular(5);
-  static button_style_of(BuildContext context, bool is_edit, {bool smart = false}) => ButtonStyle(
+  static const _borderRadius = Radius.circular(factor - 10);
+  static _button_style_of(BuildContext context, bool is_edit, {bool smart = false}) => ButtonStyle(
     backgroundColor: ButtonState.all(
         (Costaz.do_vibe
             ? FluentTheme.of(context).micaBackgroundColor
             : FluentTheme.of(context).acrylicBackgroundColor
-        ).withOpacity(0.9)
+        ).withOpacity(1)
     ),
     padding: ButtonState.all(EdgeInsets.zero),
     shape: ButtonState.all(RoundedRectangleBorder(borderRadius: smart
       ? is_edit
           ? const BorderRadius.only(
-              topLeft: borderRadius,
-              bottomLeft: borderRadius,
+              topLeft: _borderRadius,
+              bottomLeft: _borderRadius,
             )
           : const BorderRadius.only(
-              topRight: borderRadius,
-              bottomRight: borderRadius,
+              topRight: _borderRadius,
+              bottomRight: _borderRadius,
             )
       : is_edit
           ? const BorderRadius.only(
-              topLeft: borderRadius,
-              topRight: borderRadius,
+              topLeft: _borderRadius,
+              topRight: _borderRadius,
             )
           : const BorderRadius.only(
-              bottomLeft: borderRadius,
-              bottomRight: borderRadius,
+              bottomLeft: _borderRadius,
+              bottomRight: _borderRadius,
             )
         )
     ),
@@ -56,7 +69,7 @@ class Show {
         Navigator.of(context).pop();
         (is_edit ? onEdit : onDelete)();
       },
-      style: button_style_of(context, is_edit, smart: true),
+      style: _button_style_of(context, is_edit, smart: true),
       child: Padding(
         padding: const EdgeInsets.all(factor),
         child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete),
@@ -76,9 +89,11 @@ class Show {
           ),
         ),
       ),
-      child: FlyoutTarget(
-        controller: my_controller,
-        child: on,
+      child: TheClickable(
+        child: FlyoutTarget(
+          controller: my_controller,
+          child: on,
+        ),
       ),
     );
   }
@@ -96,7 +111,7 @@ class Show {
         Navigator.of(context).pop();
         (is_edit ? onEdit : onDelete)();
       },
-      style: button_style_of(context, is_edit),
+      style: _button_style_of(context, is_edit),
       child: Row(
         children: [
           Padding(
@@ -129,7 +144,7 @@ class Show {
     );
   }
 
-  static void infoBar(BuildContext context, {
+  static void TheInfoBar(BuildContext context, {
     InfoBarSeverity type = InfoBarSeverity.success,
     required String title,
     required String detail,
