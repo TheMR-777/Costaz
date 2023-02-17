@@ -198,16 +198,16 @@ class _TheDropDownState extends State<TheDropDown> {
               activeColor: currentSection.students.where((element) => element.is_currently_present).length != currentSection.students.length
                   ? FluentTheme.of(context).resources.textFillColorTertiary
                   : null,
-          )                     // Present Count
-          : const Icon(FluentIcons.education),
+          )   // Present Count
+          : const Icon(FluentIcons.education),   // Education Icon
     ),
-    leading: const Icon(FluentIcons.people),              // People Icon
+    leading: const Icon(FluentIcons.people),                // People Icon
     header: Show.NativeContextMenu(
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
       on: Text(currentSection.title),
-    ),   // Worksheet Name
+    ),     // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -225,7 +225,10 @@ class _TheDropDownState extends State<TheDropDown> {
                         : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
                         : 0
                   )),
-                  child: Text(Section.top_row[index]),
+                  child: TheClickable(
+                      newFactor: factor + 3.5,
+                      child: Text(Section.top_row[index])
+                  ),
                 ),
               ),
             ), // Headers
@@ -246,6 +249,6 @@ class _TheDropDownState extends State<TheDropDown> {
         ),                   // Add Student
         my_spacing,                    // Spacing
       ],
-    ),                  // Student Fields
+    ),                    // Student Fields
   );
 }
