@@ -157,3 +157,44 @@ class Show {
     ),
   );
 }
+
+class TheMessage {
+  static void Success(BuildContext context) => Show.TheInfoBar(
+    context,
+    title: "Success",
+    detail: "New details applied!",
+  );
+
+  static void Added(BuildContext context, String name) => Show.TheInfoBar(
+    context,
+    title: "Added",
+    detail: "New $name Created",
+  );
+
+  static void Failure(BuildContext context) => Show.TheInfoBar(
+    context,
+    type: InfoBarSeverity.warning,
+    title: "Cancelled",
+    detail: "Changes Discarded",
+  );
+
+  static void Delete(BuildContext context, String name) => Show.TheInfoBar(
+    context,
+    title: "Deleted",
+    detail: "$name Removed",
+  );
+
+  static void DeleteCancel(BuildContext context) => Show.TheInfoBar(
+    context,
+    type: InfoBarSeverity.warning,
+    title: "Cancelled",
+    detail: "Deletion Cancelled",
+  );
+
+  static void Empty(BuildContext context) => Show.TheInfoBar(
+    context,
+    type: InfoBarSeverity.error,
+    title: "Empty",
+    detail: "None of the fields should be empty!",
+  );
+}

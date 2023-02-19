@@ -81,24 +81,21 @@ class Student {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (value!) {
-        Student.prefix_roll = prefix_roll;
-        Student.prefix_name = prefix_name;
-        Show.TheInfoBar(context, title: "Updated", detail: "Prefixes updated");
-      }
-      else {
-        Show.TheInfoBar(
-          context,
-          title: "Cancelled",
-          detail: "Prefixes are not updated",
-          type: InfoBarSeverity.warning,
-        );
+      if (prefix_roll != Student.prefix_roll || prefix_name != Student.prefix_name) {
+        if (value!) {
+          Student.prefix_roll = prefix_roll;
+          Student.prefix_name = prefix_name;
+          TheMessage.Success(context);
+        }
+        else {
+          TheMessage.Failure(context);
+        }
       }
     });
   }
   static
   void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
-    String roll = "";
+    String roll = prefix_roll;
     String name = "";
     showDialog<bool>(
       context: context,
@@ -132,7 +129,7 @@ class Student {
             my_spacing,
             TextBox(
               onChanged: (val) => roll = val,
-              initialValue: prefix_roll,
+              initialValue: roll,
               onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
@@ -144,19 +141,10 @@ class Student {
       if (value! && name.isNotEmpty && roll.isNotEmpty) {
         SectionManager.sections[section_id].students.add(Student(roll, name));
         refresh();
-        Show.TheInfoBar(
-          context,
-          title: "Added",
-          detail: "Student added!",
-        );
+        TheMessage.Added(context, "Student");
       }
       else {
-        Show.TheInfoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Addition cancelled!",
-        );
+        TheMessage.Failure(context);
       }
     });
   }
@@ -172,19 +160,10 @@ class Student {
     if (value!) {
       SectionManager.sections[section_id].students.removeAt(index);
       refresh();
-      Show.TheInfoBar(
-        context,
-        title: "Deleted",
-        detail: "Student deleted!",
-      );
+      TheMessage.Delete(context, "Student");
     }
     else {
-      Show.TheInfoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "Deletion cancelled!",
-      );
+      TheMessage.DeleteCancel(context);
     }
   });
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
@@ -215,21 +194,19 @@ class Student {
           actions: ActionBar(context),
         ),
     ).then((value) {
-      if (value! && name.isNotEmpty && roll_no.isNotEmpty) {
-        refresh();
-        Show.TheInfoBar(
-          context,
-          title: "Updated",
-          detail: "New details applied!",
-        );
-      }
-      else {
-        Show.TheInfoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "No changes applied!",
-        );
+      if (name != my_name || roll != roll_no) {
+        if (name.isEmpty || roll.isEmpty) {
+          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
+        }
+        else if (value!) {
+          my_name = name;
+          roll_no = roll;
+          refresh();
+          TheMessage.Success(context);
+        }
+        else {
+          TheMessage.Failure(context);
+        }
       }
     });
   }
@@ -269,19 +246,10 @@ class Section {
     if (value!) {
       refresh();
       SectionManager.sections.removeAt(index);
-      Show.TheInfoBar(
-        context,
-        title: "Deleted",
-        detail: "Worksheet deleted!",
-      );
+      TheMessage.Delete(context, "Worksheet");
     }
     else {
-      Show.TheInfoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "Deletion cancelled!",
-      );
+      TheMessage.DeleteCancel(context);
     }
   });
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
@@ -300,22 +268,17 @@ class Section {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (title != name && name.isNotEmpty) {
-        if (value!) {
-          title = name; refresh();
-          Show.TheInfoBar(
-            context,
-            title: "Edited",
-            detail: "Section title edited!",
-          );
+      if (name != title) {
+        if (name.isEmpty) {
+          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
+        }
+        else if (value!) {
+          title = name;
+          refresh();
+          TheMessage.Success(context);
         }
         else {
-          Show.TheInfoBar(
-            context,
-            type: InfoBarSeverity.warning,
-            title: "Cancelled",
-            detail: "Editing cancelled!",
-          );
+          TheMessage.Failure(context);
         }
       }
     });
@@ -602,11 +565,7 @@ class SessionManager {
         ),
       ).then((value) {
         if (value!) {
-          Show.TheInfoBar(
-            context,
-            title: "Removed",
-            detail: "Session removed!",
-          );
+          TheMessage.Delete(context, "Session");
           the_list.removeAt(index);
           for (final section in SectionManager.sections) {
             for (final student in section.students) {
