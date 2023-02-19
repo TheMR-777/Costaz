@@ -234,6 +234,50 @@ class Section {
   ];
 
   static
+  void adding_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    String newSection = "";
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ContentDialog(
+          title: const Text("Add a New Section"),
+          content: TextBox(
+            autofocus: true,
+            onChanged: (val) => newSection = val,
+            onSubmitted: (val) => Navigator.pop(context, true),
+            placeholder: "Section Name",
+          ),
+          actions: [
+            FilledButton(
+              style: button_pad,
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Add"),
+            ),
+            Button(
+              style: button_pad,
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (newSection.isNotEmpty) {
+        if (value!) {
+          TheMessage.Added(context, "Section");
+          SectionManager.sections.add(Section()..title = newSection);
+          refresh();
+        }
+        else {
+          TheMessage.Failure(context);
+        }
+      }
+      else if (value!) {
+        TheMessage.Empty(context);
+      }
+    });
+  }
+  static
   void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
     context: context,
     builder: (context) => ContentDialog(
@@ -528,11 +572,7 @@ class SessionManager {
       );
     }
     else {
-      Show.TheInfoBar(
-        context,
-        title: "Added",
-        detail: "New session added!",
-      );
+      TheMessage.Added(context, "Session");
       the_list.add(current_session);
       update_selected();
       for (final section in SectionManager.sections) {

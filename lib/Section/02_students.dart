@@ -32,7 +32,7 @@ class _DearStudentsState extends State<DearStudents> {
                 width: factor + 10
             ),  // Spacing
             Button(
-              onPressed: () => addSection(context),
+              onPressed: () => Section.adding_with_dialogBox(context, update),
               style: ButtonStyle(
                 padding: ButtonState.all(const EdgeInsets.symmetric(
                     vertical: factor,
@@ -60,58 +60,6 @@ class _DearStudentsState extends State<DearStudents> {
         ),
       ),    // Section List
     ],
-  );
-
-  void addSection(BuildContext context) => showDialog(
-    context: context,
-    builder: (context) {
-      String newSection = "";
-      void cancelSection() {
-        Show.TheInfoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Section was not added",
-        );
-        Navigator.pop(context);
-      }
-      void returnSection() {
-        if (newSection.isNotEmpty) {
-          Show.TheInfoBar(
-            context,
-            title: "Added",
-            detail: "New section added!",
-          );
-          setState(() => SectionManager.sections.add(Section()..title = newSection));
-          Navigator.pop(context, true);
-        }
-        else {
-          cancelSection();
-        }
-      }
-
-      return ContentDialog(
-        title: const Text("Add a New Section"),
-        content: TextBox(
-          autofocus: true,
-          onChanged: (val) => newSection = val,
-          onSubmitted: (val) => returnSection(),
-          placeholder: "Section Name",
-        ),
-        actions: [
-          FilledButton(
-            style: button_pad,
-            onPressed: returnSection,
-            child: const Text("Add"),
-          ),
-          Button(
-            style: button_pad,
-            onPressed: cancelSection,
-            child: const Text("Cancel"),
-          ),
-        ],
-      );
-    },
   );
 
   @override
