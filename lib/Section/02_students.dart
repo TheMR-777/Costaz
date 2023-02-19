@@ -165,7 +165,7 @@ class _TheDropDownState extends State<TheDropDown> {
 
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
-      canToggleAttendance(from: currentSection.students.map((e) => e.name).toList()),
+      canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
       material.DataCell(ProgressBar(
         value: record,
         backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
@@ -218,7 +218,7 @@ class _TheDropDownState extends State<TheDropDown> {
                 label: GestureDetector(
                   onTap: () => setState(() => currentSection.students.sort(
                     (a, b) =>  index == 0 ? a.roll_no.compareTo(b.roll_no)
-                        : index == 1 ? a.name.compareTo(b.name)
+                        : index == 1 ? a.my_name.compareTo(b.my_name)
                         : index == 2 ? b.attendance_record.where((element) => element).length.compareTo(a.attendance_record.where((element) => element).length)
                         : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
                         : 0

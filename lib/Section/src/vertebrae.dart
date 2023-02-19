@@ -28,13 +28,13 @@ class src {
 }
 
 class Student {
-  Student(this.roll_no, this.name) {
+  Student(this.roll_no, this.my_name) {
     attendance_record = List.generate(SessionManager.the_list.length, (index) => false);
   }
-  Student.withRecord(this.roll_no, this.name, this.attendance_record);
+  Student.withRecord(this.roll_no, this.my_name, this.attendance_record);
 
   String roll_no = "N/A";
-  String name = "N/A";
+  String my_name = "N/A";
   List<bool> attendance_record = [];
 
   static String prefix_roll = "BSCS_F19_";
@@ -187,48 +187,52 @@ class Student {
       );
     }
   });
-  void update_with_dialogBox(BuildContext context, VoidCallback refresh) => showDialog<bool>(
-    context: context,
-    builder: (context) => ContentDialog(
-        title: const Text("Update Student"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextBox(
-              autofocus: true,
-              onChanged: (val) => name = val,
-              placeholder: "Name",
-              initialValue: name,
-            ), // Ask Name
-            my_spacing,
-            TextBox(
-              onChanged: (val) => roll_no = val,
-              onSubmitted: (val) => Navigator.pop(context, true),
-              placeholder: "Roll No",
-              initialValue: roll_no,
-            ), // Ask Roll No
-          ],
+  void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    String name = my_name;
+    String roll = roll_no;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+          title: const Text("Update Student"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextBox(
+                autofocus: true,
+                onChanged: (val) => name = val,
+                placeholder: "Name",
+                initialValue: name,
+              ), // Ask Name
+              my_spacing,
+              TextBox(
+                onChanged: (val) => roll = val,
+                onSubmitted: (val) => Navigator.pop(context, true),
+                placeholder: "Roll No",
+                initialValue: roll,
+              ), // Ask Roll No
+            ],
+          ),
+          actions: ActionBar(context),
         ),
-        actions: ActionBar(context),
-      ),
-  ).then((value) {
-    if (value!) {
-      refresh();
-      Show.TheInfoBar(
-        context,
-        title: "Updated",
-        detail: "New details applied!",
-      );
-    }
-    else {
-      Show.TheInfoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "All changes discarded!",
-      );
-    }
-  });
+    ).then((value) {
+      if (value! && name.isNotEmpty && roll_no.isNotEmpty) {
+        refresh();
+        Show.TheInfoBar(
+          context,
+          title: "Updated",
+          detail: "New details applied!",
+        );
+      }
+      else {
+        Show.TheInfoBar(
+          context,
+          type: InfoBarSeverity.warning,
+          title: "Cancelled",
+          detail: "No changes applied!",
+        );
+      }
+    });
+  }
 }
 
 class Section {
@@ -285,7 +289,6 @@ class Section {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        
         title: const Text("Edit Section"),
         content: TextBox(
           autofocus: true,
@@ -297,21 +300,23 @@ class Section {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (value!) {
-        title = name; refresh();
-        Show.TheInfoBar(
-          context,
-          title: "Edited",
-          detail: "Section title edited!",
-        );
-      }
-      else {
-        Show.TheInfoBar(
-          context,
-          type: InfoBarSeverity.warning,
-          title: "Cancelled",
-          detail: "Editing cancelled!",
-        );
+      if (title != name && name.isNotEmpty) {
+        if (value!) {
+          title = name; refresh();
+          Show.TheInfoBar(
+            context,
+            title: "Edited",
+            detail: "Section title edited!",
+          );
+        }
+        else {
+          Show.TheInfoBar(
+            context,
+            type: InfoBarSeverity.warning,
+            title: "Cancelled",
+            detail: "Editing cancelled!",
+          );
+        }
       }
     });
   }
@@ -611,14 +616,6 @@ class SessionManager {
           update_selected();
           refresh!();
           Navigator.of(context).pop();
-        }
-        else {
-          Show.TheInfoBar(
-            context,
-            title: "Cancelled",
-            detail: "Session removal cancelled!",
-            type: InfoBarSeverity.warning,
-          );
         }
       });
     }
