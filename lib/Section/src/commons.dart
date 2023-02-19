@@ -89,11 +89,9 @@ class Show {
           ),
         ),
       ),
-      child: TheClickable(
-        child: FlyoutTarget(
-          controller: my_controller,
-          child: on,
-        ),
+      child: FlyoutTarget(
+        controller: my_controller,
+        child: on,
       ),
     );
   }
