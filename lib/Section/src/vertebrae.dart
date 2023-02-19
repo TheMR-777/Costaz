@@ -295,7 +295,7 @@ class Section {
     if (value!) {
       refresh();
       SectionManager.sections.removeAt(index);
-      TheMessage.Delete(context, "Worksheet");
+      TheMessage.Delete(context, "Section");
     }
     else {
       TheMessage.DeleteCancel(context);
