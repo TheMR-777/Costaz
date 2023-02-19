@@ -138,13 +138,18 @@ class Student {
         actions: ActionBar(context, focus: "Add"),
       ),
     ).then((value) {
-      if (value! && name.isNotEmpty && roll.isNotEmpty) {
-        SectionManager.sections[section_id].students.add(Student(roll, name));
-        refresh();
-        TheMessage.Added(context, "Student");
+      if (name.isNotEmpty && roll.isNotEmpty) {
+        if (value!) {
+          SectionManager.sections[section_id].students.add(Student(roll, name));
+          refresh();
+          TheMessage.Added(context, "Student");
+        }
+        else {
+          TheMessage.Failure(context);
+        }
       }
-      else {
-        TheMessage.Failure(context);
+      else if (value!) {
+        TheMessage.Empty(context);
       }
     });
   }
