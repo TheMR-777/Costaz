@@ -17,10 +17,12 @@ List<Widget> ActionBar(BuildContext context, {String focus = "Update"}) => [
   ),
   TheCancelButton(context),
 ];
-Container TheClickable({required Widget child, final double newFactor = 15}) => Container(
-  color: Colors.transparent,
-  padding: EdgeInsets.symmetric(vertical: newFactor),
-  child: child,
+Container TheClickable({required Widget child, final bool width = true}) => Container(
+    color: Colors.transparent,
+    height: double.infinity,
+    width: width ? double.infinity : null,
+    alignment: Alignment.centerLeft,
+    child: child
 );
 
 class Show {

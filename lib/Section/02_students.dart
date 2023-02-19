@@ -149,16 +149,15 @@ class _TheDropDownState extends State<TheDropDown> {
   Student studentAt(int index) => currentSection.students[index];
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
-    material.DataCell canToggleAttendance({required final List<String> from}) =>
-        material.DataCell(
-          Show.SmartNativeContextMenu(
-            context,
-            onTap: () => setState(() => studentAt(index).toggleAttendance(session_id: SessionManager.selected)),
-            onEdit: () => studentAt(index).update_with_dialogBox(context, update),
-            onDelete: () => Student.delete_with_dialogBox(context, update, widget.number, index),
-            on: TheClickable(child: Text(from[index])),
-          ),
-        );
+    material.DataCell canToggleAttendance({required final List<String> from}) => material.DataCell(
+        Show.SmartNativeContextMenu(
+          context,
+          onTap: () => setState(() => studentAt(index).toggleAttendance(session_id: SessionManager.selected)),
+          onEdit: () => studentAt(index).update_with_dialogBox(context, update),
+          onDelete: () => Student.delete_with_dialogBox(context, update, widget.number, index),
+          on: TheClickable(child: Text(from[index])),
+        ),
+    );
 
     final record = studentAt(index).attendance_record
         .where((element) => element)
@@ -178,8 +177,7 @@ class _TheDropDownState extends State<TheDropDown> {
         onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
         autofocus: true,
         checked: studentAt(index).is_currently_present,
-        content: TheClickable(
-          newFactor: factor - 7,
+        content: Center(
           child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
         ),
       )),
@@ -206,7 +204,7 @@ class _TheDropDownState extends State<TheDropDown> {
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
-      on: TheClickable(child: Text(currentSection.title), newFactor: factor - 2),
+      on: TheClickable(child: Text(currentSection.title)),
     ),     // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
@@ -225,10 +223,7 @@ class _TheDropDownState extends State<TheDropDown> {
                         : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
                         : 0
                   )),
-                  child: TheClickable(
-                      newFactor: factor + 3.5,
-                      child: Text(Section.top_row[index])
-                  ),
+                  child: TheClickable(child: Text(Section.top_row[index]), width: false),
                 ),
               ),
             ), // Headers
