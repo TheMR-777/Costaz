@@ -7,6 +7,7 @@ import 'Section/01_home.dart';
 import 'Section/02_students.dart';
 import 'Section/98_settings.dart';
 import 'Section/xx_my_playground.dart';
+import 'Section/xx_students_v0_static.dart' as v0;
 import 'Section/src/commons.dart';
 
 void main() {
@@ -83,6 +84,11 @@ class _CostazState extends State<Costaz> {
                 icon: const Icon(FluentIcons.play),
                 title: const Text("Playground"),
                 body: const ThePlayground(),
+              ),    // Playground
+              PaneItem(
+                icon: const Icon(FluentIcons.rewind),
+                title: const Text("Souvenir"),
+                body: const v0.DearStudents(),
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
