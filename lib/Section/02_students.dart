@@ -123,9 +123,10 @@ class _TheDropDownState extends State<TheDropDown> {
       )),
       material.DataCell(FocusTheme(
         data: FocusThemeData(
-          glowColor: FluentTheme.of(context).accentColor.lightest.withOpacity(0.01),
+          glowColor: FluentTheme.of(context).accentColor.withOpacity(
+              FluentTheme.of(context).brightness == Brightness.dark ? 0.01 : 0.005
+          ),
           primaryBorder: BorderSide(color: FluentTheme.of(context).accentColor),
-          glowFactor: 1.5,
         ),
         child: Checkbox(
           onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
