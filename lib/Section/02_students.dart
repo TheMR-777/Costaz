@@ -121,12 +121,19 @@ class _TheDropDownState extends State<TheDropDown> {
             ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
             : null,
       )),
-      material.DataCell(Checkbox(
-        onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
-        autofocus: true,
-        checked: studentAt(index).is_currently_present,
-        content: Center(
-          child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
+      material.DataCell(FocusTheme(
+        data: FocusThemeData(
+          glowColor: FluentTheme.of(context).accentColor.lightest.withOpacity(0.01),
+          primaryBorder: BorderSide(color: FluentTheme.of(context).accentColor),
+          glowFactor: 1.5,
+        ),
+        child: Checkbox(
+          onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
+          autofocus: true,
+          checked: studentAt(index).is_currently_present,
+          content: Center(
+            child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
+          ),
         ),
       )),
     ]);
