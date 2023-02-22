@@ -98,7 +98,7 @@ class _TheDropDownState extends State<TheDropDown> {
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
     material.DataCell canToggleAttendance({required final List<String> from}) => material.DataCell(
-        Show.SmartNativeContextMenu(
+        Show.SmartContextMenu(
           context,
           onTap: () => setState(() => studentAt(index).toggleAttendance(session_id: SessionManager.selected)),
           onEdit: () => studentAt(index).update_with_dialogBox(context, update),
@@ -156,7 +156,7 @@ class _TheDropDownState extends State<TheDropDown> {
           : const Icon(FluentIcons.education),   // Education Icon
     ),
     leading: const Icon(FluentIcons.people),                // People Icon
-    header: Show.NativeContextMenu(
+    header: Show.TheContextMenu(
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),

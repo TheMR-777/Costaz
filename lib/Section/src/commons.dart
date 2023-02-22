@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import '../../main.dart' show Costaz;
 const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
@@ -26,39 +25,7 @@ Container TheClickable({required Widget child, final bool width = true}) => Cont
 );
 
 class Show {
-  static const _borderRadius = Radius.circular(factor - 10);
-  static _button_style_of(BuildContext context, bool is_edit, {bool smart = false}) => ButtonStyle(
-    backgroundColor: ButtonState.all(
-        (Costaz.do_vibe
-            ? FluentTheme.of(context).micaBackgroundColor
-            : FluentTheme.of(context).acrylicBackgroundColor
-        ).withOpacity(0.95)
-    ),
-    padding: ButtonState.all(EdgeInsets.zero),
-    shape: ButtonState.all(RoundedRectangleBorder(borderRadius: smart
-      ? is_edit
-          ? const BorderRadius.only(
-              topLeft: _borderRadius,
-              bottomLeft: _borderRadius,
-            )
-          : const BorderRadius.only(
-              topRight: _borderRadius,
-              bottomRight: _borderRadius,
-            )
-      : is_edit
-          ? const BorderRadius.only(
-              topLeft: _borderRadius,
-              topRight: _borderRadius,
-            )
-          : const BorderRadius.only(
-              bottomLeft: _borderRadius,
-              bottomRight: _borderRadius,
-            )
-        )
-    ),
-  );
-
-  static Widget SmartNativeContextMenu(BuildContext context, {
+  static Widget SmartContextMenu(BuildContext context, {
     required VoidCallback onTap,
     required VoidCallback onEdit,
     required VoidCallback onDelete,
@@ -66,28 +33,31 @@ class Show {
   }) {
     final my_controller = FlyoutController();
 
-    Button makeButton({bool is_edit = true}) => Button(
+    IconButton makeIconButton(bool is_edit) => IconButton(
+      icon: Padding(
+        padding: const EdgeInsets.all(factor - 5),
+        child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete, size: factor),
+      ),
       onPressed: () {
         Navigator.of(context).pop();
-        (is_edit ? onEdit : onDelete)();
+        is_edit ? onEdit() : onDelete();
       },
-      style: _button_style_of(context, is_edit, smart: true),
-      child: Padding(
-        padding: const EdgeInsets.all(factor),
-        child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete),
-      ),
     );
     return GestureDetector(
       onTap: onTap,
       onSecondaryTapUp: (details) => my_controller.showFlyout(
         position: details.globalPosition,
-        builder: (context) => SizedBox(
-          width: factor * 6,
-          child: Row(
-            children: [
-              makeButton(),
-              makeButton(is_edit: false),
-            ],
+        builder: (context) => FlyoutContent(
+          padding: EdgeInsets.zero,
+          useAcrylic: true,
+          child: SizedBox(
+            width: 94,
+            child: Row(
+              children: [
+                makeIconButton(true),
+                makeIconButton(false),
+              ],
+            ),
           ),
         ),
       ),
@@ -98,7 +68,7 @@ class Show {
     );
   }
 
-  static Widget NativeContextMenu(BuildContext context, {
+  static Widget TheContextMenu(BuildContext context, {
     VoidCallback? onTap,
     required VoidCallback onEdit,
     required VoidCallback onDelete,
@@ -106,19 +76,25 @@ class Show {
   }) {
     final my_controller = FlyoutController();
 
-    Button makeField({bool is_edit = true}) => Button(
+    IconButton makeField(bool is_edit) => IconButton(
+      style: ButtonStyle(
+        padding: ButtonState.all(EdgeInsets.zero),
+      ),
       onPressed: () {
         Navigator.of(context).pop();
-        (is_edit ? onEdit : onDelete)();
+        is_edit ? onEdit() : onDelete();
       },
-      style: _button_style_of(context, is_edit),
-      child: Row(
+      icon: Row(
         children: [
           Padding(
-              padding: const EdgeInsets.all(factor),
-              child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete)
+              padding: const EdgeInsets.all(factor * 1.2),
+              child: Icon(is_edit ? FluentIcons.edit : FluentIcons.delete, size: factor + 1)
           ),
-          Text(is_edit ? 'Edit' : 'Delete'),
+          Container(
+            width: factor * 4,
+            alignment: Alignment.centerLeft,
+            child: Text(is_edit ? 'Edit' : 'Delete'),
+          ),
         ],
       ),
     );
@@ -126,14 +102,18 @@ class Show {
       onTap: onTap,
       onSecondaryTapUp: (details) => my_controller.showFlyout(
         position: details.globalPosition,
-        builder: (context) => SizedBox(
-          height: factor * 6,
-          width: factor * 7,
-          child: Column(
-            children: [
-              makeField(),
-              makeField(is_edit: false),
-            ],
+        builder: (context) => FlyoutContent(
+          padding: EdgeInsets.zero,
+          useAcrylic: true,
+          child: SizedBox(
+            height: factor * 7 - 1,
+            width: factor * 8,
+            child: Column(
+              children: [
+                makeField(true),
+                makeField(false),
+              ],
+            ),
           ),
         ),
       ),
