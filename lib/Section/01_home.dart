@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:my_desktop_project/Section/src/commons.dart';
+import 'src/commons.dart';
 
 class Class {
   Class(this.name, this.description);

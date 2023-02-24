@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class TheTheme {
   static late final WindowsDeviceInfo info;
+  static late final WindowEffect my_effect;
 
   static const Win10_New = 10240;
   static const Win11_Old = 22000;
@@ -13,18 +14,22 @@ class TheTheme {
     info = await DeviceInfoPlugin().windowsInfo;
 
     // High than 22523 is Windows 11 22H2 -> tabbed
-    // ↑ Not using it now, because it's overkill
+    // ↑ Not using it as default, as it's overkill
     // Less than 22523 is Windows 11 22H1 -> mica
     // Less than 22000 is Windows 10 any  -> acrylic
     // Less than 10240 is Deprecated      -> solid
-    final effect = info.buildNumber >= Win11_Old
+    my_effect = info.buildNumber >= Win11_Old
         ? WindowEffect.mica
         : info.buildNumber >= Win10_New
         ? WindowEffect.acrylic
         : WindowEffect.solid;
 
-    await Window.setEffect(effect: effect);
+    await Window.setEffect(effect: my_effect);
   }
+
+  static bool get can_vibe => TheTheme.info.buildNumber > TheTheme.Win11_New;
+  static bool get can_mica => TheTheme.info.buildNumber > TheTheme.Win11_Old;
+  static bool get can_acry => TheTheme.info.buildNumber > TheTheme.Win10_New;
 }
 
 class TheSettings extends StatelessWidget {
@@ -40,8 +45,6 @@ class TheSettings extends StatelessWidget {
   final bool tabb_enabled;
   final void Function(bool?) dark_change;
   final void Function(bool?) tabb_change;
-
-  bool get shall_vibe => TheTheme.info.buildNumber > TheTheme.Win11_New && dark_enabled;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -59,7 +62,7 @@ class TheSettings extends StatelessWidget {
               child: const Text("Dark Mode")
           ),
         ),    // Dark Mode
-        if (shall_vibe)
+        if (TheTheme.can_vibe && dark_enabled)
           ListTile(
             trailing: ToggleSwitch(
               checked: tabb_enabled,
