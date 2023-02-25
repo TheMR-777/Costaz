@@ -39,8 +39,8 @@ class TheHeader extends StatelessWidget {
       icon: Row(
         children: [
           const CircleAvatar(
-            backgroundImage: AssetImage("Icons/Costaz-v0.png"),
-            radius: factor * 2,
+            backgroundImage: AssetImage("Icons/Costaz-v1.png"),
+            radius: factor * 2 + 5,
           ),  // Profile Picture
           const SizedBox(
             width: factor,
