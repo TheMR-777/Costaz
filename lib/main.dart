@@ -52,9 +52,9 @@ class _CostazState extends State<Costaz> {
           title: TheAppBar(),
         ),
         pane: NavigationPane(
-            size: const NavigationPaneSize(openMaxWidth: 250),
             selected: Costaz.my_page,
             onChanged: (i) => setState(() => Costaz.my_page = i),
+            header: const TheHeader(),
             items: [
               PaneItem(
                 icon: const Icon(FluentIcons.home),
@@ -74,20 +74,15 @@ class _CostazState extends State<Costaz> {
                 body: const ThePlayground(),
               ),    // Playground
               PaneItem(
-                icon: const Icon(FluentIcons.rewind),
-                title: const Text("Souvenir"),
-                body: const v0.DearStudents(),
-              ),
-              PaneItem(
                 icon: const Icon(FluentIcons.settings),
                 title: const Text("Settings"),
                 body: TheSettings(refresh: update),
               ),    // Settings
               PaneItem(
-                icon: const Icon(FluentIcons.accounts),
-                title: const Text("Account"),
-                body: Container(),
-              ),    // Account
+                icon: const Icon(FluentIcons.rewind),
+                title: const Text("Souvenir"),
+                body: const v0.DearStudents(),
+              ),    // Souvenir
             ],
         ),
       ),
