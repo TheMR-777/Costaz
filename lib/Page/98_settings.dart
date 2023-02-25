@@ -1,7 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:system_theme/system_theme.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class TheTheme {
   static var is_dark = true;
@@ -48,51 +48,64 @@ class TheTheme {
   }
 }
 
-class TheSettings extends StatefulWidget {
+class TheSettings extends StatelessWidget {
   const TheSettings({
     required this.refresh,
-    Key? key
-  }) : super(key: key);
-
+    super.key
+  });
   final VoidCallback refresh;
 
-  @override
-  State<TheSettings> createState() => _TheSettingsState();
-}
-
-class _TheSettingsState extends State<TheSettings> {
-  void _change_dark(bool val) => TheTheme.change_dark(widget.refresh, val);
-  void _change_vibe(bool val) => TheTheme.change_vibe(widget.refresh, val);
+  void _change_dark(bool val) => TheTheme.change_dark(refresh, val);
+  void _change_vibe(bool val) => TheTheme.change_vibe(refresh, val);
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.all(20),
     child: ListView(
       children: [
-        ListTile(
-          trailing: ToggleSwitch(
-            checked: TheTheme.is_dark,
-            onChanged: _change_dark,
-          ),
-          leading: const Icon(FluentIcons.clear_night),
-          title: GestureDetector(
-              onTap: () => _change_dark(!TheTheme.is_dark),
-              child: const Text("Dark Mode")
-          ),
-        ),    // Dark Mode
-        if (TheTheme.can_vibe && TheTheme.is_dark)
-          ListTile(
-            trailing: ToggleSwitch(
-              checked: TheTheme.do_vibe,
-              onChanged: _change_vibe,
-            ),
-            leading: Icon(TheTheme.do_vibe ? FluentIcons.favorite_star_fill : FluentIcons.favorite_star),
-            title: GestureDetector(
-                onTap: () => _change_vibe(!TheTheme.do_vibe),
-                child: const Text("Vibe Mode")
-            ),
-          ),  // Tabbed Effect
+        MySwitch(
+          title: "Dark Mode",
+          icon: FluentIcons.clear_night,
+          checked: TheTheme.is_dark,
+          onChanged: _change_dark,
+        ),  // Dark Mode
+        if (TheTheme.can_vibe && TheTheme.is_dark) MySwitch(
+          title: "Vibe Mode",
+          icon: TheTheme.do_vibe
+              ? FluentIcons.favorite_star_fill
+              : FluentIcons.favorite_star,
+          checked: TheTheme.do_vibe,
+          onChanged: _change_vibe,
+        ),
       ],
+    ),
+  );
+}
+
+class MySwitch extends StatelessWidget {
+  const MySwitch({
+    required this.title,
+    required this.icon,
+    required this.checked,
+    required this.onChanged,
+    Key? key
+  }) : super(key: key);
+
+  final String title;
+  final IconData icon;
+  final bool checked;
+  final void Function(bool) onChanged;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    trailing: ToggleSwitch(
+      checked: checked,
+      onChanged: onChanged,
+    ),
+    leading: Icon(icon),
+    title: GestureDetector(
+        onTap: () => onChanged(!checked),
+        child: Text(title)
     ),
   );
 }
