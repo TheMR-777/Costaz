@@ -7,7 +7,7 @@ class ThePlayground extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ScaffoldPage.withPadding(
     padding: const EdgeInsets.all(20),
-    content: Center(
+    content: const Center(
       child: ProgressRing(
         value: 55,
       )
