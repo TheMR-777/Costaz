@@ -38,7 +38,7 @@ class TheTheme {
 
   static void change_dark(VoidCallback refresh, bool val) {
     is_dark = val;
-    Window.setEffect(effect: WindowEffect.mica, dark: val);
+    Window.setEffect(effect: TheTheme.do_vibe ? WindowEffect.tabbed : my_effect, dark: val);
     refresh();
   }
   static void change_vibe(VoidCallback refresh, bool val) {
@@ -69,7 +69,7 @@ class TheSettings extends StatelessWidget {
           checked: TheTheme.is_dark,
           onChanged: _change_dark,
         ),  // Dark Mode
-        if (TheTheme.can_vibe && TheTheme.is_dark) MySwitch(
+        if (TheTheme.can_vibe) MySwitch(
           title: "Vibe Mode",
           icon: TheTheme.do_vibe
               ? FluentIcons.favorite_star_fill

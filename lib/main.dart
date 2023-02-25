@@ -43,10 +43,8 @@ class _CostazState extends State<Costaz> {
           ),
         ),
         accentColor: TheTheme.my_accent,
-        navigationPaneTheme: NavigationPaneThemeData(
-          backgroundColor: TheTheme.is_dark
-              ? Colors.transparent
-              : null,
+        navigationPaneTheme: const NavigationPaneThemeData(
+          backgroundColor: Colors.transparent,
         )
       ),
       home: NavigationView(
