@@ -154,23 +154,14 @@ class Student {
     });
   }
   static
-  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => showDialog<bool>(
-    context: context,
-    builder: (context) => ContentDialog(
-      title: const Text("Delete Student"),
-      content: const Text("Are you sure you want to delete this student?"),
-      actions: ActionBar(context, focus: "Delete"),
-    ),
-  ).then((value) {
-    if (value!) {
+  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => Show.DeleteDialog(
+    context,
+    name: "Student",
+    onDelete: () {
       SectionManager.sections[section_id].students.removeAt(index);
       refresh();
-      TheMessage.Delete(context, "Student");
-    }
-    else {
-      TheMessage.DeleteCancel(context);
-    }
-  });
+    },
+  );
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String name = my_name;
     String roll = roll_no;
@@ -243,29 +234,27 @@ class Section {
     String newSection = "";
     showDialog<bool>(
       context: context,
-      builder: (context) {
-        return ContentDialog(
-          title: const Text("Add a New Section"),
-          content: TextBox(
-            autofocus: true,
-            onChanged: (val) => newSection = val,
-            onSubmitted: (val) => Navigator.pop(context, true),
-            placeholder: "Section Name",
+      builder: (context) => ContentDialog(
+        title: const Text("Add a New Section"),
+        content: TextBox(
+          autofocus: true,
+          onChanged: (val) => newSection = val,
+          onSubmitted: (val) => Navigator.pop(context, true),
+          placeholder: "Section Name",
+        ),
+        actions: [
+          FilledButton(
+            style: button_pad,
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Add"),
           ),
-          actions: [
-            FilledButton(
-              style: button_pad,
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text("Add"),
-            ),
-            Button(
-              style: button_pad,
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Cancel"),
-            ),
-          ],
-        );
-      },
+          Button(
+            style: button_pad,
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
     ).then((value) {
       if (newSection.isNotEmpty) {
         if (value!) {
@@ -283,24 +272,14 @@ class Section {
     });
   }
   static
-  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => showDialog<bool>(
-    context: context,
-    builder: (context) => ContentDialog(
-      
-      title: const Text("Delete Section"),
-      content: const Text("Are you sure you want to delete this section?"),
-      actions: ActionBar(context, focus: "Delete"),
-    ),
-  ).then((value) {
-    if (value!) {
-      refresh();
+  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => Show.DeleteDialog(
+    context,
+    name: "Section",
+    onDelete: () {
       SectionManager.sections.removeAt(index);
-      TheMessage.Delete(context, "Section");
-    }
-    else {
-      TheMessage.DeleteCancel(context);
-    }
-  });
+      refresh();
+    },
+  );
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String name = title;
     showDialog<bool>(
@@ -443,6 +422,7 @@ class Session {
     final month_name = _monthNames[month - 1];
     return "$month_name, $year";
   }
+  static String only_date(DateTime date) => "${date.day}${date.month}${date.year}";
   bool get is_selected => formatted() == SessionManager.currentSession.formatted();
   ListTile makeDateTile({required VoidCallback onTap, bool selected = false}) => ListTile.selectable(
     selected: selected,
@@ -456,8 +436,8 @@ class Session {
     ),
     title: Text(formatted_short()),
     subtitle: Text(_weekDays[date.weekday - 1]),
-    trailing: is_selected ? null : date.day == DateTime.now().day
-        ? const Text("Today") : date.day == DateTime.now().day - 1
+    trailing: is_selected ? null : only_date(date) == only_date(DateTime.now())
+        ? const Text("Today") : only_date(date) == only_date(DateTime.now().subtract(const Duration(days: 1)))
         ? const Text("Yesterday") : null,
   );
   void update(BuildContext context, VoidCallback refresh) {

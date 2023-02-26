@@ -33,7 +33,7 @@ class TheHeader extends StatelessWidget {
       style: ButtonStyle(
         padding: ButtonState.all(const EdgeInsets.symmetric(
           horizontal: factor,
-          vertical: factor * 2 - 7,
+          vertical: factor * 2 - 11,
         )),
       ),
       icon: Row(

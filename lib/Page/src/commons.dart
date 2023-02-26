@@ -25,6 +25,23 @@ Container TheClickable({required Widget child, final bool width = true}) => Cont
 );
 
 class Show {
+  static Future<void> DeleteDialog(BuildContext context, {
+    required String name,
+    required VoidCallback onDelete,
+  }) => showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: Text("Delete $name"),
+      content: Text("Are you sure you want to delete this $name?"),
+      actions: ActionBar(context, focus: "Delete"),
+    ),
+  ).then((value) {
+    if (value!) {
+      onDelete();
+      TheMessage.Delete(context, name);
+    }
+  });
+
   static Widget SmartContextMenu(BuildContext context, {
     required VoidCallback onTap,
     required VoidCallback onEdit,
