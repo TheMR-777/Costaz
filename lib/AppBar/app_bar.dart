@@ -25,6 +25,11 @@ class TheAppBar extends StatelessWidget {
 class TheHeader extends StatelessWidget {
   const TheHeader({Key? key}) : super(key: key);
 
+  static const my_avatar = CircleAvatar(
+    backgroundImage: AssetImage("Icons/Costaz-v1.png"),
+    radius: factor * 2 + 5,
+  );
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: factor - 9),
@@ -37,29 +42,31 @@ class TheHeader extends StatelessWidget {
         )),
       ),
       icon: Row(
+        mainAxisAlignment: nav_bar_size > my_bar_lim
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.center,
         children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage("Icons/Costaz-v1.png"),
-            radius: factor * 2 + 5,
-          ),  // Profile Picture
-          const SizedBox(
-            width: factor,
-          ),      // Some Space
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                "TheMR",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: factor
-                ),
-              ),    // Class Name
-              Text(
-                "m.shahzad.ms72@gmail.com",
-                style: TextStyle(fontSize: factor - 3),
-              ),    // Description
-            ],
+          my_avatar,
+          if (nav_bar_size > my_bar_lim) Padding(
+            padding: const EdgeInsets.only(left: factor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "TheMR",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: factor
+                  ),
+                ),    // Class Name
+                Text(
+                  "m.shahzad.ms72@gmail.com",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: factor - 3),
+                ),    // Description
+              ],
+            ),
           ),              // Introduction
         ],
       ),

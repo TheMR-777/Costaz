@@ -2,6 +2,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'src/commons.dart';
 
 class TheTheme {
   static var is_dark = true;
@@ -77,6 +78,24 @@ class TheSettings extends StatelessWidget {
           checked: TheTheme.do_vibe,
           onChanged: _change_vibe,
         ),
+        const Divider(
+          style: DividerThemeData(
+            horizontalMargin: EdgeInsets.all(factor),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(FluentIcons.export_mirrored),
+          title: const Text("SideBar Width"),
+          trailing: Slider(
+            min: 200, max: 300,
+            value: nav_bar_size,
+            divisions: 5,
+            onChanged: (val) {
+              nav_bar_size = val;
+              refresh();
+            },
+          ),
+        )
       ],
     ),
   );

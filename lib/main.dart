@@ -52,6 +52,9 @@ class _CostazState extends State<Costaz> {
           title: TheAppBar(),
         ),
         pane: NavigationPane(
+            size: NavigationPaneSize(
+              openMaxWidth: nav_bar_size,
+            ),
             selected: Costaz.my_page,
             onChanged: (i) => setState(() => Costaz.my_page = i),
             header: const TheHeader(),

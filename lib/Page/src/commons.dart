@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
 final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
+const my_bar_lim = 260;
+var nav_bar_size = factor * factor;
 
 Button TheCancelButton(BuildContext context) => Button(
   onPressed: () => Navigator.pop(context, false),
