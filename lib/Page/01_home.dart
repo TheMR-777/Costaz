@@ -4,8 +4,8 @@ import 'src/commons.dart';
 class Class {
   Class(this.name, this.description);
 
-  String name = "N/A";
-  String description = "N/A";
+  String name;
+  String description;
 }
 
 class TheSweetHome extends StatefulWidget {
@@ -28,65 +28,46 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     Class("Algebra", "8th Semester"),
   ];
 
-  addClassDialogue(BuildContext context) async {
-    final result = await showDialog<Class>(
+  void add_with_dialogBox(BuildContext context) {
+    Class newClass = Class("", "");
+    showDialog<bool>(
       context: context,
       builder: (context) {
-        const my_spacing = SizedBox(height: factor);
-        Class newClass = Class("N/A", "N/A");
-        void returnClass() => Navigator.pop(context, newClass);
-
         return ContentDialog(
-          title: const Text("Add a New Class"),
+          title: const Text("Create a New Class"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextBox(
                 autofocus: true,
                 onChanged: (val) => newClass.name = val,
-                // Shift the focus to the next field when the user presses the Enter key
-                // onSubmitted: (val) => FocusScope.of(context).nextFocus(),
                 placeholder: "Name",
               ),    // Ask Name
               my_spacing,
               TextBox(
                 onChanged: (val) => newClass.description = val,
-                onSubmitted: (val) => returnClass(),
+                onSubmitted: (val) => Navigator.pop(context, true),
                 placeholder: "Description",
               ),    // Ask Description
             ],
           ),
-          actions: [
-            FilledButton(
-              onPressed: returnClass,
-              style: button_pad,
-              child: const Text("Add"),
-            ),  // Add Button
-            Button(
-              onPressed: () => Navigator.pop(context),
-              style: button_pad,
-              child: const Text("Cancel"),
-          ),        // Cancel Button
-          ],
+          actions: ActionBar(context),
         );
       },
-    );
-    if (result != null) {
-      setState(() => classes.add(result));
-      Show.TheInfoBar(
-        context,
-        title: "Success",
-        detail: "Class added!",
-      );
-    }
-    else {
-      Show.TheInfoBar(
-        context,
-        type: InfoBarSeverity.warning,
-        title: "Cancelled",
-        detail: "No changes made!",
-      );
-    }
+    ).then((value) {
+      if (newClass.name.isNotEmpty && newClass.description.isNotEmpty) {
+        if (value!) {
+          setState(() => classes.add(newClass));
+          TheMessage.Success(context);
+        }
+        else {
+          TheMessage.Failure(context);
+        }
+      }
+      else if (value!) {
+        TheMessage.Empty(context);
+      }
+    });
   }
 
   @override
@@ -111,7 +92,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
             Padding(
               padding: const EdgeInsets.only(right: factor),
               child: Button(
-                onPressed: () => addClassDialogue(context),
+                onPressed: () => add_with_dialogBox(context),
                 style: ButtonStyle(
                   padding: ButtonState.all(const EdgeInsets.symmetric(
                       vertical: factor + 5,
