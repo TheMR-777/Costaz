@@ -28,6 +28,12 @@ class _CostazState extends State<Costaz> {
   Widget build(BuildContext context) => FluentApp(
       debugShowCheckedModeBanner: false,
       theme: FluentThemeData(
+        infoBarTheme: const InfoBarThemeData(
+          padding: EdgeInsets.only(
+            left: factor,
+            right: factor + 5,
+          ),
+        ),
         brightness: TheTheme.is_dark ? Brightness.dark : null,
         dialogTheme: ContentDialogThemeData(
           padding: const EdgeInsets.all(factor * 2),
