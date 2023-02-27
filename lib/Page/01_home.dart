@@ -2,10 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'src/commons.dart';
 
 class Class {
-  Class(this.name, this.description);
+  Class();
+  Class.defined(this.name, this.description);
 
-  String name;
-  String description;
+  String name = "";
+  String description = "";
 }
 
 class TheSweetHome extends StatefulWidget {
@@ -18,18 +19,18 @@ class TheSweetHome extends StatefulWidget {
 class _TheSweetHomeState extends State<TheSweetHome> {
 
   static List<Class> classes = [
-    Class("Programming Fundamentals", "1st Semester"),
-    Class("Physics", "2nd Semester"),
-    Class("Mathematics", "3rd Semester"),
-    Class("Object Oriented Programming", "4th Semester"),
-    Class("Data Structures", "5th Semester"),
-    Class("Algorithms", "6th Semester"),
-    Class("Calculus", "7th Semester"),
-    Class("Algebra", "8th Semester"),
+    Class.defined("Programming Fundamentals", "1st Semester"),
+    Class.defined("Physics", "2nd Semester"),
+    Class.defined("Mathematics", "3rd Semester"),
+    Class.defined("Object Oriented Programming", "4th Semester"),
+    Class.defined("Data Structures", "5th Semester"),
+    Class.defined("Algorithms", "6th Semester"),
+    Class.defined("Calculus", "7th Semester"),
+    Class.defined("Algebra", "8th Semester"),
   ];
 
   void add_with_dialogBox(BuildContext context) {
-    Class newClass = Class("", "");
+    Class newClass = Class();
     showDialog<bool>(
       context: context,
       builder: (context) {
