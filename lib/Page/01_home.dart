@@ -1,13 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'src/commons.dart';
-
-class Class {
-  Class();
-  Class.defined(this.name, this.description);
-
-  String name = "";
-  String description = "";
-}
+import 'src/vertebrae.dart';
 
 class TheSweetHome extends StatefulWidget {
   const TheSweetHome({Key? key}) : super(key: key);
@@ -17,59 +10,7 @@ class TheSweetHome extends StatefulWidget {
 }
 
 class _TheSweetHomeState extends State<TheSweetHome> {
-
-  static List<Class> classes = [
-    Class.defined("Programming Fundamentals", "1st Semester"),
-    Class.defined("Physics", "2nd Semester"),
-    Class.defined("Mathematics", "3rd Semester"),
-    Class.defined("Object Oriented Programming", "4th Semester"),
-    Class.defined("Data Structures", "5th Semester"),
-    Class.defined("Algorithms", "6th Semester"),
-    Class.defined("Calculus", "7th Semester"),
-    Class.defined("Algebra", "8th Semester"),
-  ];
-
-  void add_with_dialogBox(BuildContext context) {
-    Class newClass = Class();
-    showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return ContentDialog(
-          title: const Text("Create a New Class"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextBox(
-                autofocus: true,
-                onChanged: (val) => newClass.name = val,
-                placeholder: "Name",
-              ),    // Ask Name
-              my_spacing,
-              TextBox(
-                onChanged: (val) => newClass.description = val,
-                onSubmitted: (val) => Navigator.pop(context, true),
-                placeholder: "Description",
-              ),    // Ask Description
-            ],
-          ),
-          actions: ActionBar(context),
-        );
-      },
-    ).then((value) {
-      if (newClass.name.isNotEmpty && newClass.description.isNotEmpty) {
-        if (value!) {
-          setState(() => classes.add(newClass));
-          TheMessage.Success(context);
-        }
-        else {
-          TheMessage.Failure(context);
-        }
-      }
-      else if (value!) {
-        TheMessage.Empty(context);
-      }
-    });
-  }
+  void update() => setState(() {});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -93,7 +34,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
             Padding(
               padding: const EdgeInsets.only(right: factor),
               child: Button(
-                onPressed: () => add_with_dialogBox(context),
+                onPressed: () => Class.adding_with_dialogBox(context, update),
                 style: ButtonStyle(
                   padding: ButtonState.all(const EdgeInsets.symmetric(
                       vertical: factor + 5,
@@ -112,23 +53,28 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: factor),
-            itemCount: classes.length,
-            itemBuilder: (context, index) => GestureDetector(
-              onSecondaryTap: () => print("Secondary Tap"),
-              child: Button(
-                onPressed: () => print("Primary Pressed"),
-                style: ButtonStyle(
-                  padding: ButtonState.all(const EdgeInsets.symmetric(
-                    horizontal: factor * 2,
-                    vertical: factor + 5,
-                  )),
+            itemCount: Class.classes.length,
+            itemBuilder: (context, index) {
+              Class currentClass = Class.classes[index];
+              return Show.TheContextMenu(
+                context,
+                onDelete: () => Class.delete_with_dialogBox(context, update, index),
+                onEdit: () => currentClass.update_with_dialogBox(context, update),
+                on: Button(
+                  onPressed: () => print("Primary Pressed"),
+                  style: ButtonStyle(
+                    padding: ButtonState.all(const EdgeInsets.symmetric(
+                      horizontal: factor * 2,
+                      vertical: factor + 5,
+                    )),
+                  ),
+                  child: TheClassTile(
+                    title: currentClass.name,
+                    subtitle: currentClass.description,
+                  ),
                 ),
-                child: TheClassTile(
-                  title: classes[index].name,
-                  subtitle: classes[index].description,
-                ),
-              ),
-            ),
+              );
+            },
             separatorBuilder: (context, index) => const SizedBox(height: factor),
           ),
         ),         // Class List
@@ -165,7 +111,10 @@ class TheClassTile extends StatelessWidget {
           ),    // Class Name
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(
+                color: FluentTheme.of(context).borderInputColor,
+                fontSize: 12
+            ),
           ),    // Description
         ],
       ),          // Introduction

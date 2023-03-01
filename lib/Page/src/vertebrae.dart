@@ -278,6 +278,7 @@ class Section {
     name: "Section",
     onDelete: () {
       SectionManager.sections.removeAt(index);
+      TheMessage.Delete(context, "Section");
       refresh();
     },
   );
@@ -609,4 +610,121 @@ class SessionManager {
       });
     }
   }
+}
+
+class Class {
+  Class();
+  Class.defined(this.name, this.description);
+
+  String name = "";
+  String description = "";
+
+  static List<Class> classes = [
+    Class.defined("Programming Fundamentals", "1st Semester"),
+    Class.defined("Physics", "2nd Semester"),
+    Class.defined("Mathematics", "3rd Semester"),
+    Class.defined("Object Oriented Programming", "4th Semester"),
+    Class.defined("Data Structures", "5th Semester"),
+    Class.defined("Algorithms", "6th Semester"),
+    Class.defined("Calculus", "7th Semester"),
+    Class.defined("Algebra", "8th Semester"),
+  ];
+
+  static
+  void adding_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    Class newClass = Class();
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ContentDialog(
+          title: const Text("Create a New Class"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextBox(
+                autofocus: true,
+                onChanged: (val) => newClass.name = val,
+                placeholder: "Name",
+              ),    // Ask Name
+              my_spacing,
+              TextBox(
+                onChanged: (val) => newClass.description = val,
+                onSubmitted: (val) => Navigator.pop(context, true),
+                placeholder: "Description",
+              ),    // Ask Description
+            ],
+          ),
+          actions: ActionBar(context),
+        );
+      },
+    ).then((value) {
+      if (newClass.name.isNotEmpty && newClass.description.isNotEmpty) {
+        if (value!) {
+          classes.add(newClass);
+          refresh();
+          TheMessage.Added(context, "Class");
+        }
+        else {
+          TheMessage.Failure(context);
+        }
+      }
+      else if (value!) {
+        TheMessage.Empty(context);
+      }
+    });
+  }
+  void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    String name = this.name;
+    String description = this.description;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Update Class"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => name = val,
+              placeholder: "Name",
+              initialValue: name,
+            ), // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => description = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Description",
+              initialValue: description,
+            ), // Ask Description
+          ],
+        ),
+        actions: ActionBar(context),
+      ),
+    ).then((value) {
+      if (name != this.name || description != this.description) {
+        if (name.isEmpty) {
+          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
+        }
+        else if (value!) {
+          this.name = name;
+          this.description = description;
+          refresh();
+          TheMessage.Success(context);
+        }
+        else {
+          TheMessage.Failure(context);
+        }
+      }
+    });
+  }
+  static
+  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => Show.DeleteDialog(
+    context,
+    name: "Class",
+    onDelete: () {
+      classes.removeAt(index);
+      refresh();
+      TheMessage.Delete(context, "Class");
+    },
+  );
 }
