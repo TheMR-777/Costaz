@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import '../Page/src/commons.dart';
-const my_title = "Costaz Scaffold";
 
 class TheAppBar extends StatelessWidget {
   const TheAppBar({Key? key}) : super(key: key);
@@ -9,7 +8,7 @@ class TheAppBar extends StatelessWidget {
   build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      const Text(my_title),
+      const Text("Costaz"),
       IconButton(
         onPressed: () {},
         style: ButtonStyle(

@@ -31,22 +31,23 @@ class _DearStudentsState extends State<DearStudents> {
             const SizedBox(
                 width: factor + 10
             ),  // Spacing
-            Button(
+            IconButton(
               onPressed: () => Section.adding_with_dialogBox(context, update),
               style: ButtonStyle(
                 padding: ButtonState.all(const EdgeInsets.symmetric(
                     vertical: factor,
                     horizontal: factor + 10
                 )),
+                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
               ),
-              child: Row(
+              icon: Row(
                 children: const [
                   Icon(FluentIcons.add),
                   SizedBox(width: factor + 10),
                   Text("New Section", style: TextStyle(fontSize: factor)),
                 ],
               ),
-            ),          // Add Section
+            ),          // New Section
           ],
         ),
       ),     // Session Info
@@ -161,7 +162,7 @@ class _TheDropDownState extends State<TheDropDown> {
       onEdit: () => currentSection.update_with_dialogBox(context, update),
       onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
       on: TheClickable(child: Text(currentSection.title)),
-    ),     // Worksheet Name
+    ),        // Worksheet Name
     content: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -189,14 +190,13 @@ class _TheDropDownState extends State<TheDropDown> {
           ),    // Rows (Elem)
         ),
         my_spacing,                    // Spacing
-        Button(
+        IconButton(
           onPressed: () => Student.adding_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
-            backgroundColor: ButtonState.all(Colors.transparent),
             border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
           ),
-          child: const Text("Add Student"),
+          icon: const Text("Add Student"),
         ),                   // Add Student
         my_spacing,                    // Spacing
       ],

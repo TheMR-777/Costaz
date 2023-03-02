@@ -54,8 +54,21 @@ class _CostazState extends State<Costaz> {
         )
       ),
       home: NavigationView(
-        appBar: const NavigationAppBar(
-          title: TheAppBar(),
+        appBar: NavigationAppBar(
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: IconButton(
+              onPressed: () => classController.previousPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOutCubic,
+              ),
+              style: ButtonStyle(
+                padding: ButtonState.all(const EdgeInsets.all(factor)),
+              ),
+              icon: const Icon(FluentIcons.back, size: factor - 1),
+            ),
+          ),      // Back Button
+          title: const TheAppBar(),   // App Bar
         ),
         pane: NavigationPane(
             size: NavigationPaneSize(
