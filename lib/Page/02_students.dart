@@ -242,7 +242,7 @@ class AttendanceRecord extends StatefulWidget {
 
 class _AttendanceRecordState extends State<AttendanceRecord> {
   Student get currentStudent => widget.state.currentSection.students[widget.index];
-  bool get bad_size => SessionManager.the_list.length > 4;
+  bool get bad_size => SessionManager.the_list.length > 5;
 
   void updateAttendance(int index, bool value) {
     setState(() => currentStudent.updateAttendance(
@@ -256,14 +256,14 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
     useAcrylic: true,
     child: Container(
       padding: const EdgeInsets.only(
+        top: factor,
+        //bottom: factor - 5,
         left: factor + 10,
-        top: factor + 10,
         right: factor + 10,
-        bottom: factor - 5,
       ),
       constraints: BoxConstraints(
         maxWidth: bad_size ? 300 : factor * factor,
-        maxHeight: factor * 24,
+        maxHeight: factor * 25,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
