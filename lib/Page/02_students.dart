@@ -255,12 +255,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
   Widget build(BuildContext context) => FlyoutContent(
     useAcrylic: true,
     child: Container(
-      padding: const EdgeInsets.only(
-        top: factor,
-        //bottom: factor - 5,
-        left: factor + 10,
-        right: factor + 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: factor + 10),
       constraints: BoxConstraints(
         maxWidth: bad_size ? 300 : factor * factor,
         maxHeight: factor * 25,
@@ -268,6 +263,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          my_spacing,       // Spacing
           Text(
               "Attendance Record",
               style: FluentTheme.of(context).typography.subtitle
