@@ -255,7 +255,12 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
   Widget build(BuildContext context) => FlyoutContent(
     useAcrylic: true,
     child: Container(
-      padding: const EdgeInsets.all(factor + 10),
+      padding: const EdgeInsets.only(
+        left: factor + 10,
+        top: factor + 10,
+        right: factor + 10,
+        bottom: factor - 5,
+      ),
       constraints: BoxConstraints(
         maxWidth: bad_size ? 300 : factor * factor,
         maxHeight: factor * 24,
