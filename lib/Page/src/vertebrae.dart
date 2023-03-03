@@ -408,7 +408,7 @@ class Session {
   Session(this.date);
 
   String export_details() => date.toString().split(" ").first;
-  String for_record() {
+  String for_records() {
     final day = date.day;
     final formatted_day = day < 10 ? "0$day" : day.toString();
     final month = date.month;

@@ -78,6 +78,7 @@ class _DearStudentsState extends State<DearStudents> {
   ) : the_content;
 }
 
+
 class TheDropDown extends StatefulWidget {
   const TheDropDown(this.update, this.number, {
     this.is_expand = false,
@@ -107,17 +108,13 @@ class _TheDropDownState extends State<TheDropDown> {
           on: TheClickable(child: Text(from[index])),
         ),
     );
+    FlyoutTarget makeRecordBar() {
+      final recordController = FlyoutController();
+      final record = studentAt(index).attendance_record
+          .where((element) => element)
+          .length / studentAt(index).attendance_record.length * 100;
 
-    final record = studentAt(index).attendance_record
-        .where((element) => element)
-        .length / studentAt(index).attendance_record.length * 100;
-
-    final recordController = FlyoutController();
-
-    return material.DataRow(cells: [
-      canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
-      canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
-      material.DataCell(FlyoutTarget(
+      return FlyoutTarget(
         controller: recordController,
         child: GestureDetector(
           onTap: () => recordController.showFlyout(
@@ -139,7 +136,13 @@ class _TheDropDownState extends State<TheDropDown> {
             ),
           ),
         ),
-      )),   // Attendance Record
+      );
+    }
+
+    return material.DataRow(cells: [
+      canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
+      canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
+      material.DataCell(makeRecordBar()),     // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
           glowColor: FluentTheme.of(context).accentColor.withOpacity(
@@ -155,7 +158,7 @@ class _TheDropDownState extends State<TheDropDown> {
             child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
           ),
         ),
-      )),    // Attendance
+      )),     // Attendance
     ]);
   }
 
@@ -222,6 +225,7 @@ class _TheDropDownState extends State<TheDropDown> {
   );
 }
 
+
 class AttendanceRecord extends StatefulWidget {
   const AttendanceRecord({
     required this.state,
@@ -237,46 +241,65 @@ class AttendanceRecord extends StatefulWidget {
 }
 
 class _AttendanceRecordState extends State<AttendanceRecord> {
+  Student get currentStudent => widget.state.currentSection.students[widget.index];
+  bool get bad_size => SessionManager.the_list.length > 4;
+
+  void updateAttendance(int index, bool value) {
+    setState(() => currentStudent.updateAttendance(
+        session_id: index, new_val: value
+    ));
+    widget.state.update();
+  }
+
   @override
   Widget build(BuildContext context) => FlyoutContent(
     useAcrylic: true,
     child: Container(
       padding: const EdgeInsets.all(factor + 10),
-      constraints: const BoxConstraints(
-        minWidth: factor * factor,
-        minHeight: 300,
+      constraints: BoxConstraints(
+        maxWidth: bad_size ? 300 : factor * factor,
+        maxHeight: factor * 24,
       ),
-      width: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Attendance Record", style: FluentTheme.of(context).typography.subtitle),
-          const SizedBox(height: factor + factor),
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: widget.state.studentAt(widget.index).attendance_record.length,
-            itemBuilder: (context_2, std_index) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  SessionManager.the_list[std_index].for_record(),
-                  style: FluentTheme.of(context_2).typography.body,
+          Text(
+              "Attendance Record",
+              style: FluentTheme.of(context).typography.subtitle
+),        // Title
+          my_spacing,       // Spacing
+          Flexible(
+            child: ListView.separated(
+              padding: bad_size
+                  ? const EdgeInsets.only(right: factor + 5)
+                  : null,
+              shrinkWrap: true,
+              itemCount: SessionManager.the_list.length,
+              itemBuilder: (context_2, rec_index) => GestureDetector(
+                onTap: () => updateAttendance(rec_index, !currentStudent.attendance_record[rec_index]),
+                child: Container(
+                  color: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: factor),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        SessionManager.the_list[rec_index].for_records(),
+                        style: FluentTheme.of(context_2).typography.body,
+                      ),        // Date
+                      Checkbox(
+                        onChanged: (value) => updateAttendance(rec_index, value!),
+                        checked: currentStudent.attendance_record[rec_index],
+                      ),    // Checkbox
+                    ],
+                  ),
                 ),
-                Checkbox(
-                  onChanged: (value) {
-                    setState(() => widget.state.studentAt(widget.index).attendance_record[std_index] = value!);
-                    widget.state.update();
-                  },
-                  checked: widget.state.studentAt(widget.index).attendance_record[std_index],
-                )
-              ],
-            ),
-            separatorBuilder: (context, index) => const Divider(
-              style: DividerThemeData(
-                  horizontalMargin: EdgeInsets.symmetric(vertical: factor)
+              ),
+              separatorBuilder: (context, index) => const Divider(
+                style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
               ),
             ),
-          ),
+          ),    // Records List
         ],
       ),
     ),
