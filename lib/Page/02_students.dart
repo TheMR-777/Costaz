@@ -112,16 +112,34 @@ class _TheDropDownState extends State<TheDropDown> {
         .where((element) => element)
         .length / studentAt(index).attendance_record.length * 100;
 
+    final recordController = FlyoutController();
+
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
       canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
-      material.DataCell(ProgressBar(
-        value: record,
-        backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
-        activeColor: record != 100
-            ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
-            : null,
-      )),
+      material.DataCell(FlyoutTarget(
+        controller: recordController,
+        child: GestureDetector(
+          onTap: () => recordController.showFlyout(
+            autoModeConfiguration: FlyoutAutoConfiguration(
+              preferredMode: FlyoutPlacementMode.bottomRight,
+            ),
+            builder: (context) => AttendanceRecord(
+              state: this,
+              index: index,
+            ),
+          ),
+          child: TheClickable(
+            child: ProgressBar(
+              value: record,
+              backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+              activeColor: record != 100
+                  ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
+                  : null,
+            ),
+          ),
+        ),
+      )),   // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
           glowColor: FluentTheme.of(context).accentColor.withOpacity(
@@ -137,7 +155,7 @@ class _TheDropDownState extends State<TheDropDown> {
             child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
           ),
         ),
-      )),
+      )),    // Attendance
     ]);
   }
 
@@ -201,5 +219,66 @@ class _TheDropDownState extends State<TheDropDown> {
         my_spacing,                    // Spacing
       ],
     ),                    // Student Fields
+  );
+}
+
+class AttendanceRecord extends StatefulWidget {
+  const AttendanceRecord({
+    required this.state,
+    required this.index,
+    Key? key
+  }) : super(key: key);
+
+  final _TheDropDownState state;
+  final int index;
+
+  @override
+  State<AttendanceRecord> createState() => _AttendanceRecordState();
+}
+
+class _AttendanceRecordState extends State<AttendanceRecord> {
+  @override
+  Widget build(BuildContext context) => FlyoutContent(
+    useAcrylic: true,
+    child: Container(
+      padding: const EdgeInsets.all(factor + 10),
+      constraints: const BoxConstraints(
+        minWidth: factor * factor,
+        minHeight: 300,
+      ),
+      width: 0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Attendance Record", style: FluentTheme.of(context).typography.subtitle),
+          const SizedBox(height: factor + factor),
+          ListView.separated(
+            shrinkWrap: true,
+            itemCount: widget.state.studentAt(widget.index).attendance_record.length,
+            itemBuilder: (context_2, std_index) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  SessionManager.the_list[std_index].for_record(),
+                  style: FluentTheme.of(context_2).typography.body,
+                ),
+                Checkbox(
+                  onChanged: (value) {
+                    setState(() => widget.state.studentAt(widget.index).attendance_record[std_index] = value!);
+                    widget.state.update();
+                  },
+                  checked: widget.state.studentAt(widget.index).attendance_record[std_index],
+                )
+              ],
+            ),
+            separatorBuilder: (context, index) => const Divider(
+              style: DividerThemeData(
+                  horizontalMargin: EdgeInsets.symmetric(vertical: factor)
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

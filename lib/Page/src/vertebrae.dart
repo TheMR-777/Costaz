@@ -408,6 +408,13 @@ class Session {
   Session(this.date);
 
   String export_details() => date.toString().split(" ").first;
+  String for_record() {
+    final day = date.day;
+    final formatted_day = day < 10 ? "0$day" : day.toString();
+    final month = date.month;
+    final month_name = _monthNames[month - 1];
+    return "$formatted_day $month_name";
+  }
   String formatted() {
     final day = date.day;
     final month = date.month;
