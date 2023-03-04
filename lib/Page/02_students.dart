@@ -224,8 +224,8 @@ class AttendanceRecord extends StatelessWidget {
           autoModeConfiguration: FlyoutAutoConfiguration(
             preferredMode: FlyoutPlacementMode.left,
           ),
-          builder: (context) => StatefulBuilder(
-            builder: (context, setState) {
+          builder: (_) => StatefulBuilder(
+            builder: (_, setState) {
               void updateAttendance(int index, bool value) {
                 setState(() => student.updateAttendance(
                     session_id: index, new_val: value
@@ -256,8 +256,8 @@ class AttendanceRecord extends StatelessWidget {
                               : null,
                           shrinkWrap: true,
                           itemCount: SessionManager.the_list.length,
-                          itemBuilder: (context_2, rec_index) => GestureDetector(
-                            onTap: () => updateAttendance(rec_index, !student.attendance_record[rec_index]),
+                          itemBuilder: (_, rec_idx) => GestureDetector(
+                            onTap: () => updateAttendance(rec_idx, !student.attendance_record[rec_idx]),
                             child: Container(
                               color: Colors.transparent,
                               padding: EdgeInsets.symmetric(
@@ -267,18 +267,18 @@ class AttendanceRecord extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    SessionManager.the_list[rec_index].for_records(),
-                                    style: FluentTheme.of(context_2).typography.body,
+                                    SessionManager.the_list[rec_idx].for_records(),
+                                    style: FluentTheme.of(context).typography.body,
                                   ),        // Date
                                   Checkbox(
-                                    onChanged: (value) => updateAttendance(rec_index, value!),
-                                    checked: student.attendance_record[rec_index],
+                                    onChanged: (value) => updateAttendance(rec_idx, value!),
+                                    checked: student.attendance_record[rec_idx],
                                   ),    // Checkbox
                                 ],
                               ),
                             ),
                           ),
-                          separatorBuilder: (context, index) => const Divider(
+                          separatorBuilder: (_, __) => const Divider(
                             style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
                           ),
                         ),
