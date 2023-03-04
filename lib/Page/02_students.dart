@@ -78,7 +78,6 @@ class _DearStudentsState extends State<DearStudents> {
   ) : the_content;
 }
 
-
 class TheDropDown extends StatefulWidget {
   const TheDropDown(this.update, this.number, {
     this.is_expand = false,
@@ -108,41 +107,15 @@ class _TheDropDownState extends State<TheDropDown> {
           on: TheClickable(child: Text(from[index])),
         ),
     );
-    FlyoutTarget makeRecordBar() {
-      final recordController = FlyoutController();
-      final record = studentAt(index).attendance_record
-          .where((element) => element)
-          .length / studentAt(index).attendance_record.length * 100;
-
-      return FlyoutTarget(
-        controller: recordController,
-        child: GestureDetector(
-          onTap: () => recordController.showFlyout(
-            autoModeConfiguration: FlyoutAutoConfiguration(
-              preferredMode: FlyoutPlacementMode.bottomRight,
-            ),
-            builder: (context) => AttendanceRecord(
-              state: this,
-              index: index,
-            ),
-          ),
-          child: TheClickable(
-            child: ProgressBar(
-              value: record,
-              backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
-              activeColor: record != 100
-                  ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
-                  : null,
-            ),
-          ),
-        ),
-      );
-    }
 
     return material.DataRow(cells: [
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
       canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
-      material.DataCell(makeRecordBar()),     // Attendance Record
+      material.DataCell(AttendanceRecord(
+        update: update,
+        index: index,
+        section: currentSection,
+      )),  // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
           glowColor: FluentTheme.of(context).accentColor.withOpacity(
@@ -158,7 +131,7 @@ class _TheDropDownState extends State<TheDropDown> {
             child: Text("  ${studentAt(index).is_currently_present ? "Pre" : " Ab"}sent  ")
           ),
         ),
-      )),     // Attendance
+      )),        // Attendance
     ]);
   }
 
@@ -225,84 +198,112 @@ class _TheDropDownState extends State<TheDropDown> {
   );
 }
 
-
-class AttendanceRecord extends StatefulWidget {
+class AttendanceRecord extends StatelessWidget {
   const AttendanceRecord({
-    required this.state,
     required this.index,
+    required this.update,
+    required this.section,
     Key? key
   }) : super(key: key);
 
-  final _TheDropDownState state;
+  final Section section;
   final int index;
+  final VoidCallback update;
+
+  Student get currentStudent => section.students[index];
+  bool get more_size => SessionManager.the_list.length > 5;
+  bool get crazy_size => SessionManager.the_list.length > 7;
 
   @override
-  State<AttendanceRecord> createState() => _AttendanceRecordState();
-}
+  Widget build(BuildContext context) {
+    final recordController = FlyoutController();
+    final record = currentStudent.attendance_record
+        .where((element) => element)
+        .length / currentStudent.attendance_record.length * 100;
 
-class _AttendanceRecordState extends State<AttendanceRecord> {
-  Student get currentStudent => widget.state.currentSection.students[widget.index];
-  bool get bad_size => SessionManager.the_list.length > 5;
-
-  void updateAttendance(int index, bool value) {
-    setState(() => currentStudent.updateAttendance(
-        session_id: index, new_val: value
-    ));
-    widget.state.update();
-  }
-
-  @override
-  Widget build(BuildContext context) => FlyoutContent(
-    useAcrylic: true,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: factor + 10),
-      constraints: BoxConstraints(
-        maxWidth: bad_size ? 300 : factor * factor,
-        maxHeight: factor * 25,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          my_spacing,       // Spacing
-          Text(
-              "Attendance Record",
-              style: FluentTheme.of(context).typography.subtitle
-),        // Title
-          my_spacing,       // Spacing
-          Flexible(
-            child: ListView.separated(
-              padding: bad_size
-                  ? const EdgeInsets.only(right: factor + 5)
-                  : null,
-              shrinkWrap: true,
-              itemCount: SessionManager.the_list.length,
-              itemBuilder: (context_2, rec_index) => GestureDetector(
-                onTap: () => updateAttendance(rec_index, !currentStudent.attendance_record[rec_index]),
+    return FlyoutTarget(
+      controller: recordController,
+      child: GestureDetector(
+        onTap: () => recordController.showFlyout(
+          autoModeConfiguration: FlyoutAutoConfiguration(
+            preferredMode: FlyoutPlacementMode.left,
+          ),
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) {
+              void updateAttendance(int index, bool value) {
+                setState(() => currentStudent.updateAttendance(
+                    session_id: index, new_val: value
+                ));
+                update();
+              }
+              return FlyoutContent(
+                useAcrylic: true,
                 child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(vertical: factor),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: const EdgeInsets.symmetric(horizontal: factor + 10),
+                  constraints: BoxConstraints(
+                    maxWidth: more_size ? 300 : factor * factor,
+                    maxHeight: factor * 25,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
+                      my_spacing,       // Spacing
                       Text(
-                        SessionManager.the_list[rec_index].for_records(),
-                        style: FluentTheme.of(context_2).typography.body,
-                      ),        // Date
-                      Checkbox(
-                        onChanged: (value) => updateAttendance(rec_index, value!),
-                        checked: currentStudent.attendance_record[rec_index],
-                      ),    // Checkbox
+                          "Attendance Record",
+                          style: FluentTheme.of(context).typography.subtitle
+                      ),        // Title
+                      my_spacing,       // Spacing
+                      Flexible(
+                        child: ListView.separated(
+                          padding: crazy_size
+                              ? const EdgeInsets.only(right: factor + 5)
+                              : null,
+                          shrinkWrap: true,
+                          itemCount: SessionManager.the_list.length,
+                          itemBuilder: (context_2, rec_index) => GestureDetector(
+                            onTap: () => updateAttendance(rec_index, !currentStudent.attendance_record[rec_index]),
+                            child: Container(
+                              color: Colors.transparent,
+                              padding: EdgeInsets.symmetric(
+                                vertical: factor / (more_size ? 2 : 1),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    SessionManager.the_list[rec_index].for_records(),
+                                    style: FluentTheme.of(context_2).typography.body,
+                                  ),        // Date
+                                  Checkbox(
+                                    onChanged: (value) => updateAttendance(rec_index, value!),
+                                    checked: currentStudent.attendance_record[rec_index],
+                                  ),    // Checkbox
+                                ],
+                              ),
+                            ),
+                          ),
+                          separatorBuilder: (context, index) => const Divider(
+                            style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+                          ),
+                        ),
+                      ),    // Records List
                     ],
                   ),
                 ),
-              ),
-              separatorBuilder: (context, index) => const Divider(
-                style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-              ),
-            ),
-          ),    // Records List
-        ],
+              );
+            },
+          ),
+        ),
+        child: TheClickable(
+          child: ProgressBar(
+            value: record,
+            backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+            activeColor: record != 100
+                ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
+                : null,
+          ),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
