@@ -112,9 +112,8 @@ class _TheDropDownState extends State<TheDropDown> {
       canToggleAttendance(from: currentSection.students.map((e) => e.roll_no).toList()),
       canToggleAttendance(from: currentSection.students.map((e) => e.my_name).toList()),
       material.DataCell(AttendanceRecord(
+        student: studentAt(index),
         update: update,
-        index: index,
-        section: currentSection,
       )),  // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
@@ -200,26 +199,23 @@ class _TheDropDownState extends State<TheDropDown> {
 
 class AttendanceRecord extends StatelessWidget {
   const AttendanceRecord({
-    required this.index,
+    required this.student,
     required this.update,
-    required this.section,
     Key? key
   }) : super(key: key);
 
-  final Section section;
-  final int index;
   final VoidCallback update;
+  final Student student;
 
-  Student get currentStudent => section.students[index];
-  bool get more_size => SessionManager.the_list.length > 5;
+  bool get large_size => SessionManager.the_list.length > 5;
   bool get crazy_size => SessionManager.the_list.length > 7;
 
   @override
   Widget build(BuildContext context) {
     final recordController = FlyoutController();
-    final record = currentStudent.attendance_record
+    final record = student.attendance_record
         .where((element) => element)
-        .length / currentStudent.attendance_record.length * 100;
+        .length / student.attendance_record.length * 100;
 
     return FlyoutTarget(
       controller: recordController,
@@ -231,7 +227,7 @@ class AttendanceRecord extends StatelessWidget {
           builder: (context) => StatefulBuilder(
             builder: (context, setState) {
               void updateAttendance(int index, bool value) {
-                setState(() => currentStudent.updateAttendance(
+                setState(() => student.updateAttendance(
                     session_id: index, new_val: value
                 ));
                 update();
@@ -241,7 +237,7 @@ class AttendanceRecord extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: factor + 10),
                   constraints: BoxConstraints(
-                    maxWidth: more_size ? 300 : factor * factor,
+                    maxWidth: large_size ? 300 : factor * factor,
                     maxHeight: factor * 25,
                   ),
                   child: Column(
@@ -261,11 +257,11 @@ class AttendanceRecord extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: SessionManager.the_list.length,
                           itemBuilder: (context_2, rec_index) => GestureDetector(
-                            onTap: () => updateAttendance(rec_index, !currentStudent.attendance_record[rec_index]),
+                            onTap: () => updateAttendance(rec_index, !student.attendance_record[rec_index]),
                             child: Container(
                               color: Colors.transparent,
                               padding: EdgeInsets.symmetric(
-                                vertical: factor / (more_size ? 2 : 1),
+                                vertical: factor / (large_size ? 2 : 1),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -276,7 +272,7 @@ class AttendanceRecord extends StatelessWidget {
                                   ),        // Date
                                   Checkbox(
                                     onChanged: (value) => updateAttendance(rec_index, value!),
-                                    checked: currentStudent.attendance_record[rec_index],
+                                    checked: student.attendance_record[rec_index],
                                   ),    // Checkbox
                                 ],
                               ),
