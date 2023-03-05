@@ -21,6 +21,7 @@ class TheTheme {
 
   static Future<void> loadDefault() async {
     await Window.initialize();                        // Initialize Window
+    await SystemTheme.accentColor.load();             // Initialize Accent
     is_dark = SystemTheme.isDarkMode;                 // Dark Mode
     info = await DeviceInfoPlugin().windowsInfo;      // Caching Build Info
 
