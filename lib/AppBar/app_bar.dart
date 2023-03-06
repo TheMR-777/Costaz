@@ -1,26 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import '../Page/src/commons.dart';
 
-class TheAppBar extends StatelessWidget {
-  const TheAppBar({Key? key}) : super(key: key);
-
-  @override
-  build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      const Text("Costaz"),
-      IconButton(
-        onPressed: () {},
-        style: ButtonStyle(
-          iconSize: ButtonState.all(17),
-          padding: ButtonState.all(const EdgeInsets.all(15)),
-        ),
-        icon: const Icon(FluentIcons.accounts),
-      ),
-    ],
-  );
-}
-
 class TheHeader extends StatelessWidget {
   const TheHeader({Key? key}) : super(key: key);
   static const my_name = "TheMR";

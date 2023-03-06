@@ -67,8 +67,8 @@ class _CostazState extends State<Costaz> {
               ),
               icon: const Icon(FluentIcons.back, size: factor - 1),
             ),
-          ),      // Back Button
-          title: const TheAppBar(),   // App Bar
+          ),         // Back Button
+          title: const Text("Costaz"),   // App Bar
         ),
         pane: NavigationPane(
             size: NavigationPaneSize(
