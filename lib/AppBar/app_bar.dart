@@ -55,7 +55,7 @@ class TheHeader extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   my_avatar,
-                  const SizedBox(height: factor),
+                  my_spacing,
                   const Text(
                     my_name,
                     style: TextStyle(
