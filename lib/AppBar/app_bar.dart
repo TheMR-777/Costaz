@@ -44,7 +44,10 @@ class TheHeader extends StatelessWidget {
             ),
             builder: (context) => FlyoutContent(
               useAcrylic: true,
-              padding: const EdgeInsets.all(factor),
+              padding: const EdgeInsets.symmetric(
+                horizontal: factor,
+                vertical: factor + 5,
+              ),
               constraints: BoxConstraints(
                   minWidth: nav_bar_size - factor,
               ),
@@ -64,7 +67,7 @@ class TheHeader extends StatelessWidget {
                     my_mail,
                     style: TextStyle(fontSize: factor - 3),
                   ),                  // My Email
-                  const SizedBox(height: factor),
+                  my_spacing,
                   ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: nav_bar_size * 0.8,
@@ -122,12 +125,12 @@ class TheHeader extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           fontSize: factor
                       ),
-                    ),    // Class Name
+                    ),    // My Name
                     Text(
                       my_mail,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: factor - 3),
-                    ),    // Description
+                    ),    // My Email
                   ],
                 ),
               ),              // Introduction
