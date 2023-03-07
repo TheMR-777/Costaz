@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:window_manager/window_manager.dart';
 import 'AppBar/app_bar.dart';
 import 'Page/01_home.dart';
 import 'Page/02_students.dart';
@@ -8,7 +9,6 @@ import 'Page/xx_students_v0_static.dart' as v0;
 import 'Page/src/commons.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();        // Initialize
   await TheTheme.loadDefault();                     // Load Theme
   runApp(const Costaz());                           // Run App
 }
@@ -67,8 +67,20 @@ class _CostazState extends State<Costaz> {
               ),
               icon: const Icon(FluentIcons.back, size: factor - 1),
             ),
-          ),         // Back Button
-          title: const Text("Costaz"),   // App Bar
+          ),              // Back Button
+          title: const DragToMoveArea(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text("Costaz  —  Teaching Assistant"),
+            ),
+          ),   // Costaz
+          actions: SizedBox(
+            width: factor * 15,
+            child: WindowCaption(
+              brightness: TheTheme.is_dark ? Brightness.dark : null,
+              backgroundColor: Colors.transparent,
+            ),
+          ),
         ),
         pane: NavigationPane(
             size: NavigationPaneSize(

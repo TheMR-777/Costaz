@@ -1,5 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'src/commons.dart';
@@ -20,23 +21,50 @@ class TheTheme {
   static bool get can_vibe => TheTheme.info.buildNumber >= TheTheme.Win11_New;
 
   static Future<void> loadDefault() async {
-    await Window.initialize();                        // Initialize Window
-    await SystemTheme.accentColor.load();             // Initialize Accent
-    is_dark = SystemTheme.isDarkMode;                 // Dark Mode
-    info = await DeviceInfoPlugin().windowsInfo;      // Caching Build Info
+    // Initialization
+    {
+      WidgetsFlutterBinding.ensureInitialized();          // Flutter
+      await WindowManager.instance.ensureInitialized();   // Title Bar
+      await Window.initialize();                          // Flutter Acrylic
+      await SystemTheme.accentColor.load();               // Accent
+      is_dark = SystemTheme.isDarkMode;                   // Dark Mode
+    }
 
-    // High than 22523 is Windows 11 22H2 -> tabbed
-    // ↑ Not using it as default, as it's overkill
-    // Less than 22523 is Windows 11 22H1 -> mica
-    // Less than 22000 is Windows 10 any  -> acrylic
-    // Less than 10240 is Deprecated      -> solid
-    m_default = can_mica
-        ? WindowEffect.mica : can_acry
-        ? WindowEffect.acrylic
-        : WindowEffect.solid;
-    the_current_effect = m_default;
+    // Title Bar settings
+    {
+      const my_size = Size(1280, 720);
+      const options = WindowOptions(
+        title: 'Costaz',
+        center: true,
+        size: my_size,
+        minimumSize: my_size,
+        titleBarStyle: TitleBarStyle.hidden,
+        skipTaskbar: false,
+      );
+      await windowManager.waitUntilReadyToShow(options, () async {
+        //await windowManager.setPreventClose(true);
+        //await windowManager.show();
+        await windowManager.focus();
+      });
+    }
 
-    await Window.setEffect(effect: the_current_effect, dark: is_dark);
+    // Load Effects
+    {
+      info = await DeviceInfoPlugin().windowsInfo;      // Caching Build Info
+
+      // High than 22523 is Windows 11 22H2 -> tabbed
+      // ↑ Not using it as default, as it's overkill
+      // Less than 22523 is Windows 11 22H1 -> mica
+      // Less than 22000 is Windows 10 any  -> acrylic
+      // Less than 10240 is Deprecated      -> solid
+      m_default = can_mica
+          ? WindowEffect.mica : can_acry
+          ? WindowEffect.acrylic
+          : WindowEffect.solid;
+      the_current_effect = m_default;
+
+      await Window.setEffect(effect: the_current_effect, dark: is_dark);
+    }
   }
 }
 
