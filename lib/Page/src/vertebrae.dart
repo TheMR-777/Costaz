@@ -642,28 +642,26 @@ class Class {
     Class newClass = Class();
     showDialog<bool>(
       context: context,
-      builder: (context) {
-        return ContentDialog(
-          title: const Text("Create a New Class"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextBox(
-                autofocus: true,
-                onChanged: (val) => newClass.name = val,
-                placeholder: "Name",
-              ),    // Ask Name
-              my_spacing,
-              TextBox(
-                onChanged: (val) => newClass.description = val,
-                onSubmitted: (val) => Navigator.pop(context, true),
-                placeholder: "Description",
-              ),    // Ask Description
-            ],
-          ),
-          actions: ActionBar(context),
-        );
-      },
+      builder: (context) => ContentDialog(
+        title: const Text("Create a New Class"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBox(
+              autofocus: true,
+              onChanged: (val) => newClass.name = val,
+              placeholder: "Name",
+            ),    // Ask Name
+            my_spacing,
+            TextBox(
+              onChanged: (val) => newClass.description = val,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Description",
+            ),    // Ask Description
+          ],
+        ),
+        actions: ActionBar(context, focus: "Create"),
+      ),
     ).then((value) {
       if (newClass.name.isNotEmpty && newClass.description.isNotEmpty) {
         if (value!) {
