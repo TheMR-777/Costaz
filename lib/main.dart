@@ -9,8 +9,9 @@ import 'Page/xx_students_v0_static.dart' as v0;
 import 'Page/src/commons.dart';
 
 void main() async {
-  await TheTheme.loadDefault();                     // Load Theme
-  runApp(const Costaz());                           // Run App
+  await TheTheme.loadDefault();    // Load Theme
+  runApp(const Costaz());          // Run App
+  await windowManager.show();      // Show Window
 }
 
 class Costaz extends StatefulWidget {
