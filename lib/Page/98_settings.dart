@@ -9,7 +9,8 @@ class TheTheme {
   static var is_dark = true;
   static late final WindowsDeviceInfo info;
   static late final WindowEffect m_default;
-  static WindowEffect the_current_effect = WindowEffect.solid;
+  static const no_effect = WindowEffect.solid;
+  static var the_current_effect = no_effect;
 
   static const Win10_New = 10240;
   static const Win11_Old = 22000;
@@ -80,8 +81,18 @@ class TheSettings extends StatelessWidget {
     Window.setEffect(effect: TheTheme.the_current_effect, dark: val);
     refresh();
   }
+  void _change_mica(bool val) {
+    TheTheme.the_current_effect = val ? TheTheme.m_default : WindowEffect.solid;
+    Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
+    refresh();
+  }
   void _change_vibe(bool val) {
     TheTheme.the_current_effect = val ? WindowEffect.tabbed : TheTheme.m_default;
+    Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
+    refresh();
+  }
+  void _change_classic(bool val) {
+    TheTheme.the_current_effect = val ? WindowEffect.acrylic : TheTheme.m_default;
     Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
     refresh();
   }
@@ -101,6 +112,12 @@ class TheSettings extends StatelessWidget {
           checked: TheTheme.is_dark,
           onChanged: _change_dark,
         ),                            // Dark Mode
+        if (TheTheme.can_mica) MySwitch(
+          title: "Default Effects",
+          icon: FluentIcons.graph_symbol,
+          checked: TheTheme.the_current_effect == TheTheme.m_default,
+          onChanged: _change_mica,
+        ),     // Default Effects
         if (TheTheme.can_vibe) MySwitch(
           title: "Vibe Mode",
           icon: TheTheme.the_current_effect == WindowEffect.tabbed
@@ -113,14 +130,7 @@ class TheSettings extends StatelessWidget {
           title: "Classic Mode",
           icon: FluentIcons.glasses,
           checked: TheTheme.the_current_effect == WindowEffect.acrylic,
-          onChanged: (val) {
-            TheTheme.the_current_effect = val ? WindowEffect.acrylic : TheTheme.m_default;
-            Window.setEffect(
-                effect: TheTheme.the_current_effect,
-                dark: TheTheme.is_dark
-            );
-            refresh();
-          },
+          onChanged: _change_classic,
         ),     // Classic Mode
         const Divider(
           style: DividerThemeData(
