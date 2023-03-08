@@ -76,6 +76,12 @@ class TheSettings extends StatelessWidget {
   });
   final VoidCallback refresh;
 
+  static const my_divider = Divider(
+    style: DividerThemeData(
+      horizontalMargin: EdgeInsets.all(factor),
+    ),
+  );
+
   void _change_dark(bool val) {
     TheTheme.is_dark = val;
     Window.setEffect(effect: TheTheme.the_current_effect, dark: val);
@@ -112,6 +118,7 @@ class TheSettings extends StatelessWidget {
           checked: TheTheme.is_dark,
           onChanged: _change_dark,
         ),                            // Dark Mode
+        my_divider,
         if (TheTheme.can_mica) MySwitch(
           title: "Default Effects",
           icon: FluentIcons.graph_symbol,
@@ -132,11 +139,7 @@ class TheSettings extends StatelessWidget {
           checked: TheTheme.the_current_effect == WindowEffect.acrylic,
           onChanged: _change_classic,
         ),     // Classic Mode
-        const Divider(
-          style: DividerThemeData(
-            horizontalMargin: EdgeInsets.all(factor),
-          ),
-        ),                       // Divider
+        my_divider,
         ListTile(
           leading: const Icon(FluentIcons.export_mirrored),
           title: const Text("SideBar Width"),
