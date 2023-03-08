@@ -16,7 +16,6 @@ void main() async {
 
 class Costaz extends StatefulWidget {
   const Costaz({Key? key}) : super(key: key);
-  static var my_page = 0;
 
   @override
   State<Costaz> createState() => _CostazState();
@@ -59,10 +58,10 @@ class _CostazState extends State<Costaz> {
           leading: Padding(
             padding: const EdgeInsets.only(left: 5),
             child: IconButton(
-              onPressed: () => classController.previousPage(
+              onPressed: current_page == 0 ? () => classController.previousPage(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOutCubic,
-              ),
+              ) : null,
               style: ButtonStyle(
                 padding: ButtonState.all(const EdgeInsets.all(factor)),
               ),
@@ -87,8 +86,8 @@ class _CostazState extends State<Costaz> {
             size: NavigationPaneSize(
               openMaxWidth: nav_bar_size,
             ),
-            selected: Costaz.my_page,
-            onChanged: (i) => setState(() => Costaz.my_page = i),
+            selected: current_page,
+            onChanged: (i) => setState(() => current_page = i),
             header: const TheHeader(),
             items: [
               PaneItem(

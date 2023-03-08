@@ -20,15 +20,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
   Widget build(BuildContext context) => CarouselSlider(
     carouselController: classController,
     options: CarouselOptions(
-      height: MediaQuery.of(context).size.height,
+      height: double.infinity,
       viewportFraction: 1,
       enableInfiniteScroll: false,
-      scrollDirection: Axis.horizontal,
       scrollPhysics: const NeverScrollableScrollPhysics(),
       // autoPlay: true,
       // autoPlayInterval: const Duration(seconds: 1),
       // autoPlayAnimationDuration: const Duration(milliseconds: 800),
-      autoPlayCurve: Curves.fastOutSlowIn,
+      // autoPlayCurve: Curves.fastOutSlowIn,
     ),
     items: [
       Padding(
@@ -72,30 +71,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
               child: ListView.separated(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, right: factor),
                 itemCount: Class.classes.length,
-                itemBuilder: (context, index) {
-                  Class currentClass = Class.classes[index];
-                  return Show.TheContextMenu(
-                    context,
-                    onDelete: () => Class.delete_with_dialogBox(context, update, index),
-                    onEdit: () => currentClass.update_with_dialogBox(context, update),
-                    on: Button(
-                      onPressed: () => classController.nextPage(
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeInOutCubicEmphasized
-                      ),
-                      style: ButtonStyle(
-                        padding: ButtonState.all(const EdgeInsets.symmetric(
-                          horizontal: factor * 2,
-                          vertical: factor + 5,
-                        )),
-                      ),
-                      child: TheClassTile(
-                        title: currentClass.name,
-                        subtitle: currentClass.description,
-                      ),
-                    ),
-                  );
-                },
+                itemBuilder: (context, index) => TheClassTile(update, index),
                 separatorBuilder: (context, index) => const SizedBox(height: factor),
               ),
             ),         // Class List
@@ -108,45 +84,64 @@ class _TheSweetHomeState extends State<TheSweetHome> {
 }
 
 class TheClassTile extends StatelessWidget {
-  const TheClassTile({
-    required this.title,
-    required this.subtitle,
-    super.key
-  });
+  const TheClassTile(
+    this.update,
+    this.index,
+    { super.key }
+  );
 
-  final String title, subtitle;
+  final VoidCallback update;
+  final int index;
+  Class get currentClass => Class.classes[index];
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      const Icon(
-        FluentIcons.bookmark_report,
-        size: 27,
-      ),      // Icon
-      const SizedBox(
-        width: factor + 20,
-      ),  // Some Space
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) => Show.TheContextMenu(
+    context,
+    onDelete: () => Class.delete_with_dialogBox(context, update, index),
+    onEdit: () => currentClass.update_with_dialogBox(context, update),
+    on: Button(
+      onPressed: () => classController.nextPage(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOutCubicEmphasized
+      ),
+      style: ButtonStyle(
+        padding: ButtonState.all(const EdgeInsets.symmetric(
+          horizontal: factor * 2,
+          vertical: factor + 5,
+        )),
+      ),
+      child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16),
-          ),    // Class Name
-          Text(
-            subtitle,
-            style: TextStyle(
-                color: FluentTheme.of(context).borderInputColor,
-                fontSize: 12
-            ),
-          ),    // Description
+          const Icon(
+            FluentIcons.bookmark_report,
+            size: factor + 12,
+          ),      // Icon
+          const SizedBox(
+            width: factor * 2 + 5,
+          ),  // Some Space
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                currentClass.name,
+                style: const TextStyle(fontSize: factor + 1),
+              ),    // Class Name
+              Text(
+                currentClass.description,
+                style: TextStyle(
+                    color: FluentTheme.of(context).borderInputColor,
+                    fontSize: factor - 3
+                ),
+              ),    // Description
+            ],
+          ),          // Introduction
+          const Spacer(),       // Max Space
+          const Icon(
+            FluentIcons.chevron_right,
+            size: factor + 3,
+          ),      // Icon
         ],
-      ),          // Introduction
-      const Spacer(),       // Max Space
-      const Icon(
-        FluentIcons.chevron_right,
-        size: factor + 3,
-      ),      // Icon
-    ],
+      ),
+    ),
   );
 }
