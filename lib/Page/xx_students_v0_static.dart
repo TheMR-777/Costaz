@@ -169,23 +169,23 @@ class _TheDropDownState extends State<TheDropDown> {
             mainAxisSize: MainAxisSize.min,
             children: [
               my_spacing,
-              TextBox(
+              TextFormBox(
                 autofocus: true,
                 onChanged: (val) => API.names[index] = val,
                 placeholder: "Name",
                 initialValue: API.names[index],
               ),    // Ask Name
               my_spacing,
-              TextBox(
+              TextFormBox(
                 onChanged: (val) => API.roll_no[index] = val,
-                onSubmitted: (val) => returnClass(),
+                onFieldSubmitted: (val) => returnClass(),
                 placeholder: "Roll No",
                 initialValue: API.roll_no[index],
               ),    // Ask Roll No
               my_spacing,
-              TextBox(
+              TextFormBox(
                 onChanged: (val) => API.cgpa_s[index] = val,
-                onSubmitted: (val) => returnClass(),
+                onFieldSubmitted: (val) => returnClass(),
                 placeholder: "CGPA",
                 initialValue: API.cgpa_s[index],
               ),    // Ask CGPA
@@ -334,7 +334,7 @@ class _TheDropDownState extends State<TheDropDown> {
       builder: (context) {
         return ContentDialog(
           title: const Text("Edit Section"),
-          content: TextBox(
+          content: TextFormBox(
             autofocus: true,
             onChanged: (value) => name = value,
             initialValue: name,

@@ -65,13 +65,13 @@ class Student {
             const Divider(),
             my_spacing,
             my_spacing,
-            TextBox(
+            TextFormBox(
               initialValue: prefix_name,
               onChanged: (val) => prefix_name = val,
               placeholder: "Prefix for Name",
             ),    // Ask Name Prefix
             my_spacing,
-            TextBox(
+            TextFormBox(
               autofocus: true,
               initialValue: prefix_roll,
               onChanged: (val) => prefix_roll = val,
@@ -121,17 +121,17 @@ class Student {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextBox(
+            TextFormBox(
               autofocus: true,
               initialValue: prefix_name,
               onChanged: (val) => name = val,
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
-            TextBox(
+            TextFormBox(
               onChanged: (val) => roll = val,
               initialValue: roll,
-              onSubmitted: (val) => Navigator.pop(context, true),
+              onFieldSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
           ],
@@ -173,16 +173,16 @@ class Student {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextBox(
+              TextFormBox(
                 autofocus: true,
                 onChanged: (val) => name = val,
                 placeholder: "Name",
                 initialValue: name,
               ), // Ask Name
               my_spacing,
-              TextBox(
+              TextFormBox(
                 onChanged: (val) => roll = val,
-                onSubmitted: (val) => Navigator.pop(context, true),
+                onFieldSubmitted: (val) => Navigator.pop(context, true),
                 placeholder: "Roll No",
                 initialValue: roll,
               ), // Ask Roll No
@@ -288,10 +288,10 @@ class Section {
       context: context,
       builder: (context) => ContentDialog(
         title: const Text("Edit Section"),
-        content: TextBox(
+        content: TextFormBox(
           autofocus: true,
           onChanged: (value) => name = value,
-          onSubmitted: (value) => Navigator.pop(context, true),
+          onFieldSubmitted: (value) => Navigator.pop(context, true),
           initialValue: name,
           placeholder: "Section Name",
         ),
@@ -688,16 +688,16 @@ class Class {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextBox(
+            TextFormBox(
               autofocus: true,
               onChanged: (val) => name = val,
               placeholder: "Name",
               initialValue: name,
             ), // Ask Name
             my_spacing,
-            TextBox(
+            TextFormBox(
               onChanged: (val) => description = val,
-              onSubmitted: (val) => Navigator.pop(context, true),
+              onFieldSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Description",
               initialValue: description,
             ), // Ask Description
