@@ -28,13 +28,18 @@ class _CostazState extends State<Costaz> {
   Widget build(BuildContext context) => FluentApp(
       debugShowCheckedModeBanner: false,
       theme: FluentThemeData(
+        accentColor: TheTheme.my_accent,
+        brightness: TheTheme.is_dark ? Brightness.dark : null,
+        buttonTheme: ButtonThemeData(
+          defaultButtonStyle: button_pad,
+          filledButtonStyle: button_pad,
+        ),
         infoBarTheme: const InfoBarThemeData(
           padding: EdgeInsets.only(
             left: factor,
             right: factor + 5,
           ),
         ),
-        brightness: TheTheme.is_dark ? Brightness.dark : null,
         dialogTheme: ContentDialogThemeData(
           padding: const EdgeInsets.all(factor * 2),
           titlePadding: const EdgeInsets.only(bottom: factor * 2),
@@ -48,7 +53,6 @@ class _CostazState extends State<Costaz> {
             horizontal: factor * 2,
           ),
         ),
-        accentColor: TheTheme.my_accent,
         navigationPaneTheme: NavigationPaneThemeData(
           backgroundColor: TheTheme.the_current_effect == TheTheme.no_effect
               ? null

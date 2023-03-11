@@ -245,12 +245,10 @@ class Section {
         ),
         actions: [
           FilledButton(
-            style: button_pad,
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Add"),
           ),
           Button(
-            style: button_pad,
             onPressed: () => Navigator.pop(context, false),
             child: const Text("Cancel"),
           ),
@@ -549,7 +547,6 @@ class SessionManager {
       ),
       actions: [
         Button(
-          style: button_pad,
           child: const Text("New Session"),
           onPressed: () => addCurrent(context, refresh: refresh),
         ),

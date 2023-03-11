@@ -8,13 +8,11 @@ var current_page = 0;
 
 Button TheCancelButton(BuildContext context) => Button(
   onPressed: () => Navigator.pop(context, false),
-  style: button_pad,
   child: const Text("Cancel"),
 );
 List<Widget> ActionBar(BuildContext context, {String focus = "Update"}) => [
   FilledButton(
     onPressed: () => Navigator.pop(context, true),
-    style: button_pad,
     child: Text(focus),
   ),
   TheCancelButton(context),
