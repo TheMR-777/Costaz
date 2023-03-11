@@ -33,20 +33,15 @@ class TheTheme {
 
     // Title Bar settings
     {
-      const my_size = Size(1280, 720);
       const options = WindowOptions(
         title: 'Costaz',
         center: true,
-        size: my_size,
-        minimumSize: my_size,
+        size: Size(1280, 720),
+        minimumSize: Size(800, 600),
         titleBarStyle: TitleBarStyle.hidden,
         skipTaskbar: false,
       );
-      await windowManager.waitUntilReadyToShow(options, () async {
-        //await windowManager.setPreventClose(true);
-        //await windowManager.show();
-        await windowManager.focus();
-      });
+      await windowManager.waitUntilReadyToShow(options, () async => await windowManager.focus());
     }
 
     // Load Effects
