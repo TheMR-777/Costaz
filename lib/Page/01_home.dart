@@ -51,7 +51,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                 Padding(
                   padding: const EdgeInsets.only(right: factor),
                   child: Button(
-                    onPressed: () => Class.adding_with_dialogBox(context, update),
+                    onPressed: () => Class.create_with_dialogBox(context, update),
                     style: ButtonStyle(
                       padding: ButtonState.all(const EdgeInsets.symmetric(
                           vertical: factor + 5,

@@ -95,7 +95,7 @@ class Student {
     });
   }
   static
-  void adding_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
+  void create_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
     String roll = prefix_roll;
     String name = "";
     showDialog<bool>(
@@ -231,7 +231,7 @@ class Section {
   ];
 
   static
-  void adding_with_dialogBox(BuildContext context, VoidCallback refresh) {
+  void create_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String newSection = "";
     showDialog<bool>(
       context: context,
@@ -635,7 +635,7 @@ class Class {
   ];
 
   static
-  void adding_with_dialogBox(BuildContext context, VoidCallback refresh) {
+  void create_with_dialogBox(BuildContext context, VoidCallback refresh) {
     Class newClass = Class();
     showDialog<bool>(
       context: context,

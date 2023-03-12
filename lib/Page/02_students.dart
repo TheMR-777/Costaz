@@ -14,6 +14,37 @@ class DearStudents extends StatefulWidget {
 class _DearStudentsState extends State<DearStudents> {
   static bool to_load = true;
   void update() => setState(() {});
+  BaseButton get new_section {
+    void onPressed() => Section.create_with_dialogBox(context, update);
+    final data = Row(
+      children: const [
+        Icon(FluentIcons.add),
+        SizedBox(width: factor + 10),
+        Text("New Section", style: TextStyle(fontSize: factor)),
+      ],
+    );
+    const pad = EdgeInsets.symmetric(
+      vertical: factor,
+      horizontal: factor + 10,
+    );
+
+    return SectionManager.sections.isEmpty
+        ? Button(
+            onPressed: onPressed,
+            style: ButtonStyle(
+              padding: ButtonState.all(pad),
+            ),
+            child: data,
+          )
+        : IconButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            padding: ButtonState.all(pad),
+            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+          ),
+          icon: data,
+        );
+  }
   Column get the_content => Column(
     children: [
       Padding(
@@ -31,23 +62,7 @@ class _DearStudentsState extends State<DearStudents> {
             const SizedBox(
                 width: factor + 10
             ),  // Spacing
-            IconButton(
-              onPressed: () => Section.adding_with_dialogBox(context, update),
-              style: ButtonStyle(
-                padding: ButtonState.all(const EdgeInsets.symmetric(
-                    vertical: factor,
-                    horizontal: factor + 10
-                )),
-                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
-              ),
-              icon: Row(
-                children: const [
-                  Icon(FluentIcons.add),
-                  SizedBox(width: factor + 10),
-                  Text("New Section", style: TextStyle(fontSize: factor)),
-                ],
-              ),
-            ),          // New Section
+            new_section,          // New Section
           ],
         ),
       ),     // Session Info
@@ -184,7 +199,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ),
         my_spacing,                    // Spacing
         IconButton(
-          onPressed: () => Student.adding_with_dialogBox(context, update, widget.number),
+          onPressed: () => Student.create_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
