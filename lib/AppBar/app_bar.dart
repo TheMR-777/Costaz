@@ -3,11 +3,12 @@ import '../Page/src/commons.dart';
 
 class TheHeader extends StatelessWidget {
   const TheHeader({Key? key}) : super(key: key);
+  static bool get over => nav_bar_size > my_bar_lim;
   static const my_name = "TheMR";
   static const my_mail = "m.shahzad.ms72@gmail.com";
-  static const my_avatar = CircleAvatar(
-    backgroundImage: AssetImage("Icons/Costaz-v1.png"),
-    radius: factor * 2 + 5,
+  static CircleAvatar get_avatar(double radius) => CircleAvatar(
+    backgroundImage: const AssetImage("Icons/Costaz-v1.png"),
+    radius: radius,
   );
 
   @override
@@ -34,7 +35,7 @@ class TheHeader extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  my_avatar,
+                  get_avatar(factor * 2 + (over ? factor : 5)),
                   my_spacing,
                   const Text(
                     my_name,
@@ -47,24 +48,27 @@ class TheHeader extends StatelessWidget {
                     my_mail,
                     style: TextStyle(fontSize: factor - 3),
                   ),                  // My Email
-                  my_spacing,
+                  if (over) Divider(
+                    size: nav_bar_size * 0.5,
+                    style: const DividerThemeData(
+                      horizontalMargin: EdgeInsets.symmetric(
+                        vertical: factor,
+                      )
+                    ),
+                  )
+                  else my_spacing,
                   ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: nav_bar_size * 0.8,
                     ),
-                    child: IconButton(
+                    child: Button(
                       onPressed: () {},
                       style: ButtonStyle(
-                        border: ButtonState.all(
-                          BorderSide(
-                            color: FluentTheme.of(context).resources.dividerStrokeColorDefault,
-                          ),
-                        ),
                         padding: ButtonState.all(const EdgeInsets.symmetric(
                           vertical: factor - 5,
                         )),
                       ),
-                      icon: Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(FluentIcons.sign_out),
@@ -92,7 +96,7 @@ class TheHeader extends StatelessWidget {
                 ? MainAxisAlignment.start
                 : MainAxisAlignment.center,
             children: [
-              my_avatar,
+              get_avatar(factor * 2 + (over ? 2 : 5)),
               if (nav_bar_size > my_bar_lim) Padding(
                 padding: const EdgeInsets.only(left: factor),
                 child: Column(
