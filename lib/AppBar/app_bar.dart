@@ -21,7 +21,7 @@ class TheHeader extends StatelessWidget {
         child: IconButton(
           onPressed: () => account_controller.showFlyout(
             autoModeConfiguration: FlyoutAutoConfiguration(
-              preferredMode: FlyoutPlacementMode.bottomLeft,
+              preferredMode: FlyoutPlacementMode.bottomRight,
             ),
             builder: (context) => FlyoutContent(
               useAcrylic: true,
