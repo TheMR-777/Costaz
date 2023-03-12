@@ -56,7 +56,7 @@ class TheTheme {
       m_default = can_mica
           ? WindowEffect.mica : can_acry
           ? WindowEffect.acrylic
-          : WindowEffect.solid;
+          : no_effect;
       the_current_effect = m_default;
 
       await Window.setEffect(effect: the_current_effect, dark: is_dark);
