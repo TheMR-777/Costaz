@@ -16,14 +16,14 @@ class _DearStudentsState extends State<DearStudents> {
   void update() => setState(() {});
   BaseButton get new_section {
     void onPressed() => Section.create_with_dialogBox(context, update);
-    final data = Row(
+    final my_data = Row(
       children: const [
         Icon(FluentIcons.add),
         SizedBox(width: factor + 10),
         Text("New Section", style: TextStyle(fontSize: factor)),
       ],
     );
-    const pad = EdgeInsets.symmetric(
+    const m_space = EdgeInsets.symmetric(
       vertical: factor,
       horizontal: factor + 10,
     );
@@ -32,17 +32,17 @@ class _DearStudentsState extends State<DearStudents> {
         ? Button(
             onPressed: onPressed,
             style: ButtonStyle(
-              padding: ButtonState.all(pad),
+              padding: ButtonState.all(m_space),
             ),
-            child: data,
+            child: my_data,
           )
         : IconButton(
           onPressed: onPressed,
           style: ButtonStyle(
-            padding: ButtonState.all(pad),
+            padding: ButtonState.all(m_space),
             border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
           ),
-          icon: data,
+          icon: my_data,
         );
   }
   Column get the_content => Column(
