@@ -26,7 +26,6 @@ class _CostazState extends State<Costaz> {
 
   @override
   Widget build(BuildContext context) => FluentApp(
-      debugShowCheckedModeBanner: false,
       theme: FluentThemeData(
         accentColor: TheTheme.my_accent,
         brightness: TheTheme.is_dark ? Brightness.dark : null,
@@ -77,7 +76,7 @@ class _CostazState extends State<Costaz> {
           title: const DragToMoveArea(
             child: Align(
               alignment: AlignmentDirectional.centerStart,
-              child: Text("Costaz  —  Teaching Assistant"),
+              child: Text("Costaz"),
             ),
           ),   // Costaz
           actions: SizedBox(

@@ -341,12 +341,12 @@ class SectionManager {
         if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
       }
     }
-    print(Section.top_row);
-    print(SessionManager.the_list
-        .map((e) => e.date.toString()
-        .split(" ").first)
-        .toList()
-    );
+    // print(Section.top_row);
+    // print(SessionManager.the_list
+    //     .map((e) => e.date.toString()
+    //     .split(" ").first)
+    //     .toList()
+    // );
 
     // Section Loading
     final cache_sections = <Section>[];
@@ -357,8 +357,8 @@ class SectionManager {
           .then((value) => value.skip(1)
           .toList());
 
-      print("");
-      print(worksheet.title);
+      // print("");
+      // print(worksheet.title);
       final mySection = Section()..title = worksheet.title;
 
       // Student Loading
@@ -367,7 +367,7 @@ class SectionManager {
         final myRoll = student_data[1];
         final Record = List.generate(SessionManager.the_list.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
         mySection.students.add(Student.withRecord(myName, myRoll, Record));
-        print("$Record: $student_data");
+        // print("$Record: $student_data");
       }
       cache_sections.add(mySection);
     }
