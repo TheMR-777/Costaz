@@ -163,7 +163,7 @@ class TheMessage {
     detail: "New details applied!",
   );
 
-  static void Added(BuildContext context, String name) => Show.TheInfoBar(
+  static void Created(BuildContext context, String name) => Show.TheInfoBar(
     context,
     title: "Added",
     detail: "New $name Created",

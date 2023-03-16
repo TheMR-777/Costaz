@@ -82,16 +82,14 @@ class Student {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (prefix_roll != Student.prefix_roll || prefix_name != Student.prefix_name) {
-        if (value!) {
-          Student.prefix_roll = prefix_roll;
-          Student.prefix_name = prefix_name;
-          TheMessage.Success(context);
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (prefix_roll == Student.prefix_roll && prefix_name == Student.prefix_name) return;
+      if (!value!) {
+        TheMessage.Failure(context); return;
       }
+
+      Student.prefix_roll = prefix_roll;
+      Student.prefix_name = prefix_name;
+      TheMessage.Success(context);
     });
   }
   static
@@ -139,19 +137,16 @@ class Student {
         actions: ActionBar(context, focus: "Add"),
       ),
     ).then((value) {
-      if (name.isNotEmpty && roll.isNotEmpty) {
-        if (value!) {
-          SectionManager.sections[section_id].students.add(Student(roll, name));
-          refresh();
-          TheMessage.Added(context, "Student");
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (name.isEmpty || roll.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
       }
-      else if (value!) {
-        TheMessage.Empty(context);
+      if (!value!) {
+        TheMessage.Failure(context); return;
       }
+
+      SectionManager.sections[section_id].students.add(Student(roll, name));
+      refresh();
+      TheMessage.Created(context, "Student");
     });
   }
   static
@@ -191,20 +186,18 @@ class Student {
           actions: ActionBar(context),
         ),
     ).then((value) {
-      if (name != my_name || roll != roll_no) {
-        if (name.isEmpty || roll.isEmpty) {
-          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
-        }
-        else if (value!) {
-          my_name = name;
-          roll_no = roll;
-          refresh();
-          TheMessage.Success(context);
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (name == my_name && roll == roll_no) return;
+      if (name.isEmpty || roll.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
       }
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      my_name = name;
+      roll_no = roll;
+      refresh();
+      TheMessage.Success(context);
     });
   }
 }
@@ -255,19 +248,16 @@ class Section {
         ],
       ),
     ).then((value) {
-      if (newSection.isNotEmpty) {
-        if (value!) {
-          TheMessage.Added(context, "Section");
-          SectionManager.sections.add(Section()..title = newSection);
-          refresh();
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (newSection.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
       }
-      else if (value!) {
-        TheMessage.Empty(context);
+      if (!value!) {
+        TheMessage.Failure(context); return;
       }
+
+      SectionManager.sections.add(Section()..title = newSection);
+      refresh();
+      TheMessage.Created(context, "Section");
     });
   }
   static
@@ -296,19 +286,17 @@ class Section {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (name != title) {
-        if (name.isEmpty) {
-          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
-        }
-        else if (value!) {
-          title = name;
-          refresh();
-          TheMessage.Success(context);
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (name == title) return;
+      if (name.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
       }
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      title = name;
+      refresh();
+      TheMessage.Success(context);
     });
   }
 }
@@ -567,7 +555,7 @@ class SessionManager {
       );
     }
     else {
-      TheMessage.Added(context, "Session");
+      TheMessage.Created(context, "Session");
       the_list.add(current_session);
       update_selected();
       for (final section in SectionManager.sections) {
@@ -660,19 +648,16 @@ class Class {
         actions: ActionBar(context, focus: "Create"),
       ),
     ).then((value) {
-      if (newClass.name.isNotEmpty && newClass.description.isNotEmpty) {
-        if (value!) {
-          classes.add(newClass);
-          refresh();
-          TheMessage.Added(context, "Class");
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (newClass.name.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
       }
-      else if (value!) {
-        TheMessage.Empty(context);
+      if (!value!) {
+        TheMessage.Failure(context); return;
       }
+
+      classes.add(newClass);
+      refresh();
+      TheMessage.Created(context, "Class");
     });
   }
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
@@ -703,20 +688,18 @@ class Class {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (name != this.name || description != this.description) {
-        if (name.isEmpty) {
-          (value! ? TheMessage.Empty : TheMessage.Failure)(context);
-        }
-        else if (value!) {
-          this.name = name;
-          this.description = description;
-          refresh();
-          TheMessage.Success(context);
-        }
-        else {
-          TheMessage.Failure(context);
-        }
+      if (name == this.name && description == this.description) return;
+      if (name.isEmpty) {
+        (value! ? TheMessage.Empty : TheMessage.Failure)(context); return;
       }
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      this.name = name;
+      this.description = description;
+      refresh();
+      TheMessage.Success(context);
     });
   }
   static
