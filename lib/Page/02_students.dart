@@ -81,7 +81,7 @@ class _DearStudentsState extends State<DearStudents> {
   @override
   Widget build(BuildContext context) => to_load
   ? FutureBuilder<bool>(
-    future: SectionManager.load(),
+    future: SectionManager.load(null),
     builder: (context, snapshot) => snapshot.hasData
       ? () {
         to_load = false;

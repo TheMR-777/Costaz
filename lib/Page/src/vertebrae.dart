@@ -19,13 +19,10 @@ class src {
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/i-am-testing-it%40costaz-desktop-project.iam.gserviceaccount.com"
   }
   ''';
-  static const def_sheet_ID =
-      //"1hgf72DPliAk59721Eezl6AoZPRkL7XyZDvHoXuq9GFI"
-      "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
-  ;
+
+  static const the_sample_sheet = "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk";
+
   static final gsheet_handle = GSheets(src.credentials);
-  static final default_sheet = gsheet_handle.spreadsheet(src.def_sheet_ID);
-  static final default_works = default_sheet.then((value) => value.worksheetByIndex(1));
 }
 
 class Student {
@@ -307,8 +304,8 @@ class SectionManager {
     // Section()..title = "Afternoon",
     // Section()..title = "Evening",
   ];
-  static Future<bool> load() async {
-    final my_sheet = await src.default_sheet;
+  static Future<bool> load(String? id) async {
+    final my_sheet = await src.gsheet_handle.spreadsheet(id ?? src.the_sample_sheet);
 
     // Loading Settings
     for (final row in await my_sheet.sheets.last.values.allRows())
@@ -606,14 +603,21 @@ class SessionManager {
 
 class Class {
   Class();
-  Class.defined(this.name, this.description);
+  Class.defined(this.name, this.description, {this.sheet_id});
 
   String name = "";
   String description = "";
+  String? sheet_id;
 
   static List<Class> classes = [
-    Class.defined("Programming Fundamentals", "1st Semester"),
-    Class.defined("Physics", "2nd Semester"),
+    Class.defined(
+      "Programming Fundamentals", "1st Semester",
+      sheet_id: "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
+    ),
+    Class.defined(
+      "Physics", "2nd Semester",
+      sheet_id: "1JaoWhLODlQU_lEI0oyFvXdfRDS6a2vyDHKy8f1TrseY"
+    ),
     Class.defined("Mathematics", "3rd Semester"),
     Class.defined("Object Oriented Programming", "4th Semester"),
     Class.defined("Data Structures", "5th Semester"),
