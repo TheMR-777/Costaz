@@ -82,14 +82,16 @@ class _DearStudentsState extends State<DearStudents> {
   Widget build(BuildContext context) => to_load
   ? FutureBuilder<bool>(
     future: SectionManager.load(),
-    builder: (context_2, snapshot) => snapshot.hasData
-        ? () {
-          to_load = false;
-          return the_content;
-        }()
-        : snapshot.hasError
-          ? Text("${snapshot.error}")
-          : const Center(child: ProgressRing()),
+    builder: (context, snapshot) => snapshot.hasData
+      ? () {
+        to_load = false;
+        return the_content;
+      }()
+      : Center(
+        child: snapshot.hasError
+          ? Text(snapshot.error.toString())
+          : const ProgressRing(),
+      )
   ) : the_content;
 }
 
