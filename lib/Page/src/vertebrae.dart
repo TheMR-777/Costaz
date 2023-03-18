@@ -472,6 +472,7 @@ class Class {
       }
 
       sections.add(Section()..title = newSection);
+      open_drop_down = sections.length - 1;
       refresh();
       TheMessage.Created(context, "Section");
     });
