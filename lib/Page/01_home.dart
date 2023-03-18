@@ -102,7 +102,7 @@ class TheClassTile extends StatelessWidget {
     on: Button(
       onPressed: () {
         Class.current_class_i = index;
-        if (!Class.selected.to_load) SessionManager.update_selected();
+        if (!Class.selected.i_should_fetch) SessionManager.update_selected();
         classController.nextPage(
           duration: const Duration(milliseconds: 800),
           curve: Curves.easeInOutCubicEmphasized

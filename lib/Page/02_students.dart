@@ -5,7 +5,6 @@ import 'src/commons.dart';
 
 class DearStudents extends StatefulWidget {
   const DearStudents({Key? key}) : super(key: key);
-  static int expanded_menu = 0;
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
@@ -71,7 +70,7 @@ class _DearStudentsState extends State<DearStudents> {
           itemCount: my_class.sections.length,
           itemBuilder: (context_2, index) => TheDropDown(
             update, index,
-            is_expand: index == DearStudents.expanded_menu,
+            is_expand: index == my_class.open_drop_down,
           ),
         ),
       ),    // Section List
@@ -79,7 +78,7 @@ class _DearStudentsState extends State<DearStudents> {
   );
 
   @override
-  Widget build(BuildContext context) => my_class.to_load
+  Widget build(BuildContext context) => my_class.i_should_fetch
   ? FutureBuilder<bool>(
     future: my_class.load(
         my_class.my_sheet_id.isEmpty
@@ -155,18 +154,16 @@ class _TheDropDownState extends State<TheDropDown> {
 
   @override
   Widget build(BuildContext context) => Expander(
-    onStateChanged: (value) => setState(() => DearStudents.expanded_menu = widget.number),
+    onStateChanged: (value) => setState(() => my_class.open_drop_down = widget.number),
     initiallyExpanded: widget.is_expand,
     trailing: Padding(
       padding: const EdgeInsets.only(right: factor),
-      child: currentSection.students.isNotEmpty
-          ? ProgressBar(
+      child: currentSection.students.isNotEmpty ? ProgressBar(
               value: (currentSection.students.where((element) => element.is_currently_present).length / currentSection.students.length) * 100,
               activeColor: currentSection.students.where((element) => element.is_currently_present).length != currentSection.students.length
                   ? FluentTheme.of(context).resources.textFillColorTertiary
                   : null,
-          )   // Present Count
-          : const Icon(FluentIcons.education),   // Education Icon
+          ) : null
     ),
     leading: const Icon(FluentIcons.people),                // People Icon
     header: Show.TheContextMenu(

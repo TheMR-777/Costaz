@@ -375,11 +375,12 @@ class Class {
 
   String prefix_roll = "BSCS_F19_";
   String prefix_name = "";
+  var open_drop_down = 0;
+  var i_should_fetch = true;
 
   List<String> my_column = [];
   List<Section> sections = [];
   List<Session> sessions = [];
-  bool to_load = true;
   Future<bool> load(String id) async {
     final my_sheet = await src.gsheet_handle.spreadsheet(id);
 
@@ -435,7 +436,7 @@ class Class {
     sections = cache_sections;
 
     SessionManager.update_selected();
-    to_load = false;
+    i_should_fetch = false;
     return true;
   }
 
