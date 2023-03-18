@@ -27,7 +27,7 @@ class src {
 
 class Student {
   Student(this.roll_no, this.my_name) {
-    attendance_record = List.generate(SessionManager.the_list.length, (index) => false);
+    attendance_record = List.generate(SessionManager.targeted_sessions.length, (index) => false);
   }
   Student.withRecord(this.roll_no, this.my_name, this.attendance_record);
 
@@ -35,126 +35,11 @@ class Student {
   String my_name = "N/A";
   List<bool> attendance_record = [];
 
-  static String prefix_roll = "BSCS_F19_";
-  static String prefix_name = "";
-
   bool get is_currently_present => attendance_record[SessionManager.selected];
 
   void toggleAttendance({required int session_id}) => attendance_record[session_id] = !attendance_record[session_id];
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
-  static
-  void prefix_with_dialogBox(BuildContext context) {
-    String prefix_roll = Student.prefix_roll;
-    String prefix_name = Student.prefix_name;
-    showDialog<bool>(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: const Text("Setting Prefix"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "Prefixes are only used while adding a new student",
-            ),  // Note
-            my_spacing,
-            my_spacing,
-            const Divider(),
-            my_spacing,
-            my_spacing,
-            TextFormBox(
-              initialValue: prefix_name,
-              onChanged: (val) => prefix_name = val,
-              placeholder: "Prefix for Name",
-            ),    // Ask Name Prefix
-            my_spacing,
-            TextFormBox(
-              autofocus: true,
-              initialValue: prefix_roll,
-              onChanged: (val) => prefix_roll = val,
-              placeholder: "Prefix for Roll Number",
-            ),    // Ask Roll No Prefix
-          ],
-        ),
-        actions: ActionBar(context),
-      ),
-    ).then((value) {
-      if (prefix_roll == Student.prefix_roll && prefix_name == Student.prefix_name) return;
-      if (!value!) {
-        TheMessage.Failure(context); return;
-      }
-
-      Student.prefix_roll = prefix_roll;
-      Student.prefix_name = prefix_name;
-      TheMessage.Success(context);
-    });
-  }
-  static
-  void create_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
-    String roll = prefix_roll;
-    String name = "";
-    showDialog<bool>(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text("Add Student"),      // Title Text
-            OutlinedButton(
-              style: ButtonStyle(
-                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
-                padding: ButtonState.all(const EdgeInsets.symmetric(
-                    vertical: factor,
-                    horizontal: factor * 2
-                )),
-              ),
-              onPressed: () => Student.prefix_with_dialogBox(context),
-              child: const Icon(FluentIcons.increase_indent, size: factor + 5),
-            )       // Prefix Button
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormBox(
-              autofocus: true,
-              initialValue: prefix_name,
-              onChanged: (val) => name = val,
-              placeholder: "Name",
-            ),    // Ask Name
-            my_spacing,
-            TextFormBox(
-              onChanged: (val) => roll = val,
-              initialValue: roll,
-              onFieldSubmitted: (val) => Navigator.pop(context, true),
-              placeholder: "Roll Number",
-            ),    // Ask Roll No
-          ],
-        ),
-        actions: ActionBar(context, focus: "Add"),
-      ),
-    ).then((value) {
-      if (name.isEmpty || roll.isEmpty) {
-        if (value!) TheMessage.Empty(context); return;
-      }
-      if (!value!) {
-        TheMessage.Failure(context); return;
-      }
-
-      SectionManager.sections[section_id].students.add(Student(roll, name));
-      refresh();
-      TheMessage.Created(context, "Student");
-    });
-  }
-  static
-  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => Show.DeleteDialog(
-    context,
-    name: "Student",
-    onDelete: () {
-      SectionManager.sections[section_id].students.removeAt(index);
-      refresh();
-    },
-  );
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String name = my_name;
     String roll = roll_no;
@@ -200,73 +85,9 @@ class Student {
 }
 
 class Section {
-  static var top_row = [
-    // "Roll No",
-    // "Name",
-    // "Record",
-    // "Attendance",
-  ];
-
   String title = "N/A";
-  List<Student> students = [
-    // Student("BSCS_F19_M_63", "TheMR", "3.72", true),
-    // Student("BSCS_F19_M_64", "John Wick", "4.00", true),
-    // Student("BSCS_F19_M_65", "Dr. Who", "2.71", false),
-    // Student("BSCS_F19_M_66", "Boogeyman", "3.00", true),
-    // Student("BSCS_F19_M_67", "Highway Man", "3.50", false),
-    // Student("BSCS_F19_M_68", "Mr Strange", "2.00", true),
-    // Student("BSCS_F19_M_69", "Adam Smasher", "3.53", false),
-    // Student("BSCS_F19_M_70", "The Silence", "3.24", true),
-    // Student("BSCS_F19_M_71", "Dominic", "3.11", false),
-  ];
+  List<Student> students = [];
 
-  static
-  void create_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String newSection = "";
-    showDialog<bool>(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: const Text("Add a New Section"),
-        content: TextBox(
-          autofocus: true,
-          onChanged: (val) => newSection = val,
-          onSubmitted: (val) => Navigator.pop(context, true),
-          placeholder: "Section Name",
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Add"),
-          ),
-          Button(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    ).then((value) {
-      if (newSection.isEmpty) {
-        if (value!) TheMessage.Empty(context); return;
-      }
-      if (!value!) {
-        TheMessage.Failure(context); return;
-      }
-
-      SectionManager.sections.add(Section()..title = newSection);
-      refresh();
-      TheMessage.Created(context, "Section");
-    });
-  }
-  static
-  void delete_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => Show.DeleteDialog(
-    context,
-    name: "Section",
-    onDelete: () {
-      SectionManager.sections.removeAt(index);
-      TheMessage.Delete(context, "Section");
-      refresh();
-    },
-  );
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
     String name = title;
     showDialog<bool>(
@@ -295,70 +116,6 @@ class Section {
       refresh();
       TheMessage.Success(context);
     });
-  }
-}
-
-class SectionManager {
-  static List<Section> sections = [
-    // Section()..title = "Morning",
-    // Section()..title = "Afternoon",
-    // Section()..title = "Evening",
-  ];
-  static Future<bool> load(String? id) async {
-    final my_sheet = await src.gsheet_handle.spreadsheet(id ?? src.the_sample_sheet);
-
-    // Loading Settings
-    for (final row in await my_sheet.sheets.last.values.allRows())
-    {
-      if (row.first == "TopRow:") {
-        Section.top_row = row.skip(1)
-            .where((element) => element.isNotEmpty)
-            .toList();
-      }
-      else if (row.first == "Sessions:")
-      {
-        SessionManager.the_list = row.skip(1)
-            .where((element) => element.isNotEmpty)
-            .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
-            .toList();
-
-        // If no sessions are found, add a new one
-        if (SessionManager.the_list.isEmpty) SessionManager.the_list.add(Session(DateTime.now()));
-      }
-    }
-    // print(Section.top_row);
-    // print(SessionManager.the_list
-    //     .map((e) => e.date.toString()
-    //     .split(" ").first)
-    //     .toList()
-    // );
-
-    // Section Loading
-    final cache_sections = <Section>[];
-    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
-      final worksheet = my_sheet.sheets[i];
-      final rows_data = await worksheet.values
-          .allRows()
-          .then((value) => value.skip(1)
-          .toList());
-
-      // print("");
-      // print(worksheet.title);
-      final mySection = Section()..title = worksheet.title;
-
-      // Student Loading
-      for (final student_data in rows_data) {
-        final myName = student_data[0];
-        final myRoll = student_data[1];
-        final Record = List.generate(SessionManager.the_list.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
-        mySection.students.add(Student.withRecord(myName, myRoll, Record));
-        // print("$Record: $student_data");
-      }
-      cache_sections.add(mySection);
-    }
-    SectionManager.sections = cache_sections;
-
-    return true;
   }
 }
 
@@ -472,19 +229,13 @@ class Session {
 }
 
 class SessionManager {
-  static List<Session> the_list = [
-    Session(DateTime(2023, 2, 5)),
-    Session(DateTime(2023, 2, 3)),
-    Session(DateTime(2023, 1, 31)),
-    Session(DateTime(2023, 1, 29)),
-    Session(DateTime.now().subtract(const Duration(days: 1))),
-  ];
+  static get targeted_sessions => Class.selected.sessions;
 
-  static int _selected = the_list.length - 1;
-  static void update_selected({int? to}) => _selected = to ?? the_list.length - 1;
+  static int _selected = targeted_sessions.length - 1;
+  static void update_selected({int? to}) => _selected = to ?? targeted_sessions.length - 1;
   static int get selected => _selected;
 
-  static Session get currentSession => the_list[selected];
+  static Session get currentSession => targeted_sessions[selected];
   static ListTile currentTile(BuildContext context, VoidCallback refresh) => currentSession.makeDateTile(onTap: () => showDialog(
     context: context,
     builder: (context) => ContentDialog(
@@ -496,7 +247,7 @@ class SessionManager {
       content: Card(
         child: ListView.separated(
           shrinkWrap: true,
-          itemCount: SessionManager.the_list.length,
+          itemCount: targeted_sessions.length,
           itemBuilder: (context_2, index) => Row(
             children: [
               const SizedBox(
@@ -504,12 +255,12 @@ class SessionManager {
               ),  // Padding
               SizedBox(
                 width: 300 - factor,
-                child: the_list[index].makeDateTile(
+                child: targeted_sessions[index].makeDateTile(
                   selected: index == selected,
                   onTap: () {
                     update_selected(to: index);
                     refresh();
-                    Show.TheInfoBar(context, title: "Loaded", detail: the_list[index].formatted());
+                    Show.TheInfoBar(context, title: "Loaded", detail: targeted_sessions[index].formatted());
                     Navigator.pop(context);
                   },
                 ),
@@ -542,7 +293,7 @@ class SessionManager {
 
   static void addCurrent(BuildContext context, {VoidCallback? refresh}) {
     final current_session = Session(DateTime.now());
-    final already_exists = the_list.any((session) => session.formatted() == current_session.formatted());
+    final already_exists = targeted_sessions.any((session) => session.formatted() == current_session.formatted());
     if (already_exists) {
       Show.TheInfoBar(
         context,
@@ -553,11 +304,11 @@ class SessionManager {
     }
     else {
       TheMessage.Created(context, "Session");
-      the_list.add(current_session);
+      targeted_sessions.add(current_session);
       update_selected();
-      for (final section in SectionManager.sections) {
+      for (final section in targeted_sessions) {
         for (final student in section.students) {
-          if (student.attendance_record.length < the_list.length) {
+          if (student.attendance_record.length < targeted_sessions.length) {
             student.attendance_record.add(false);
           }
         }
@@ -567,7 +318,7 @@ class SessionManager {
     }
   }
   static void removeAt(BuildContext context, int index, {VoidCallback? refresh}) {
-    if (the_list.length == 1) {
+    if (targeted_sessions.length == 1) {
       Show.TheInfoBar(
         context,
         title: "Cancelled",
@@ -586,8 +337,8 @@ class SessionManager {
       ).then((value) {
         if (value!) {
           TheMessage.Delete(context, "Session");
-          the_list.removeAt(index);
-          for (final section in SectionManager.sections) {
+          targeted_sessions.removeAt(index);
+          for (final section in targeted_sessions) {
             for (final student in section.students) {
               student.attendance_record.removeAt(index);
             }
@@ -603,21 +354,12 @@ class SessionManager {
 
 class Class {
   Class();
-  Class.defined(this.name, this.description, {this.sheet_id});
+  Class.defined(this.class_title, this.description);
 
-  String name = "";
-  String description = "";
-  String? sheet_id;
-
+  static int current_class_i = 0;
   static List<Class> classes = [
-    Class.defined(
-      "Programming Fundamentals", "1st Semester",
-      sheet_id: "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk"
-    ),
-    Class.defined(
-      "Physics", "2nd Semester",
-      sheet_id: "1JaoWhLODlQU_lEI0oyFvXdfRDS6a2vyDHKy8f1TrseY"
-    ),
+    Class.defined("Programming", "1st Semester")..my_sheet_id = "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk",
+    Class.defined("Physics", "2nd Semester")..my_sheet_id = "1JaoWhLODlQU_lEI0oyFvXdfRDS6a2vyDHKy8f1TrseY",
     Class.defined("Mathematics", "3rd Semester"),
     Class.defined("Object Oriented Programming", "4th Semester"),
     Class.defined("Data Structures", "5th Semester"),
@@ -625,6 +367,233 @@ class Class {
     Class.defined("Calculus", "7th Semester"),
     Class.defined("Algebra", "8th Semester"),
   ];
+  static Class get selected => classes[current_class_i];
+
+  String class_title = "";
+  String description = "";
+  String my_sheet_id = "";
+
+  String prefix_roll = "BSCS_F19_";
+  String prefix_name = "";
+
+  List<String> my_column = [];
+  List<Section> sections = [];
+  List<Session> sessions = [];
+  bool to_load = true;
+  Future<bool> load(String id) async {
+    final my_sheet = await src.gsheet_handle.spreadsheet(id);
+
+    // Loading Settings
+    for (final row in await my_sheet.sheets.last.values.allRows())
+    {
+      if (row.first == "TopRow:") {
+        my_column = row.skip(1)
+            .where((element) => element.isNotEmpty)
+            .toList();
+      }
+      else if (row.first == "Sessions:")
+      {
+        sessions = row.skip(1)
+            .where((element) => element.isNotEmpty)
+            .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
+            .toList();
+
+        // If no sessions are found, add a new one
+        if (sessions.isEmpty) sessions.add(Session(DateTime.now()));
+      }
+    }
+    print(my_column);
+    print(sessions
+        .map((e) => e.date.toString()
+        .split(" ").first)
+        .toList()
+    );
+
+    // Section Loading
+    final cache_sections = <Section>[];
+    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+      final worksheet = my_sheet.sheets[i];
+      final rows_data = await worksheet.values
+          .allRows()
+          .then((value) => value.skip(1)
+          .toList());
+
+      print("");
+      print(worksheet.title);
+      final mySection = Section()..title = worksheet.title;
+
+      // Student Loading
+      for (final student_data in rows_data) {
+        final myName = student_data[0];
+        final myRoll = student_data[1];
+        final Record = List.generate(sessions.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
+        mySection.students.add(Student.withRecord(myName, myRoll, Record));
+        print("$Record: $student_data");
+      }
+      cache_sections.add(mySection);
+    }
+    sections = cache_sections;
+
+    SessionManager.update_selected();
+    to_load = false;
+    return true;
+  }
+
+  void create_section_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    String newSection = "";
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Add a New Section"),
+        content: TextBox(
+          autofocus: true,
+          onChanged: (val) => newSection = val,
+          onSubmitted: (val) => Navigator.pop(context, true),
+          placeholder: "Section Name",
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Add"),
+          ),
+          Button(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (newSection.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
+      }
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      sections.add(Section()..title = newSection);
+      refresh();
+      TheMessage.Created(context, "Section");
+    });
+  }
+  void delete_section_with_dialogBox(BuildContext context, VoidCallback refresh, int index) => Show.DeleteDialog(
+    context,
+    name: "Section",
+    onDelete: () {
+      sections.removeAt(index);
+      TheMessage.Delete(context, "Section");
+      refresh();
+    },
+  );
+
+  void setting_prefix_with_dialogBox(BuildContext context) {
+    String p_roll = prefix_roll;
+    String p_name = prefix_name;
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text("Setting Prefix"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Prefixes are only used while adding a new student",
+            ),  // Note
+            my_spacing,
+            my_spacing,
+            const Divider(),
+            my_spacing,
+            my_spacing,
+            TextFormBox(
+              initialValue: p_name,
+              onChanged: (val) => p_name = val,
+              placeholder: "Prefix for Name",
+            ),    // Ask Name Prefix
+            my_spacing,
+            TextFormBox(
+              autofocus: true,
+              initialValue: p_roll,
+              onChanged: (val) => p_roll = val,
+              placeholder: "Prefix for Roll Number",
+            ),    // Ask Roll No Prefix
+          ],
+        ),
+        actions: ActionBar(context),
+      ),
+    ).then((value) {
+      if (p_roll == prefix_roll && p_name == prefix_name) return;
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      prefix_roll = p_roll;
+      prefix_name = p_name;
+      TheMessage.Success(context);
+    });
+  }
+  void create_student_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
+    String roll = prefix_roll;
+    String name = "";
+    showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Add Student"),      // Title Text
+            OutlinedButton(
+              style: ButtonStyle(
+                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+                padding: ButtonState.all(const EdgeInsets.symmetric(
+                    vertical: factor,
+                    horizontal: factor * 2
+                )),
+              ),
+              onPressed: () => setting_prefix_with_dialogBox(context),
+              child: const Icon(FluentIcons.increase_indent, size: factor + 5),
+            )       // Prefix Button
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormBox(
+              autofocus: true,
+              initialValue: prefix_name,
+              onChanged: (val) => name = val,
+              placeholder: "Name",
+            ),    // Ask Name
+            my_spacing,
+            TextFormBox(
+              onChanged: (val) => roll = val,
+              initialValue: roll,
+              onFieldSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Roll Number",
+            ),    // Ask Roll No
+          ],
+        ),
+        actions: ActionBar(context, focus: "Add"),
+      ),
+    ).then((value) {
+      if (name.isEmpty || roll.isEmpty) {
+        if (value!) TheMessage.Empty(context); return;
+      }
+      if (!value!) {
+        TheMessage.Failure(context); return;
+      }
+
+      sections[section_id].students.add(Student(roll, name));
+      refresh();
+      TheMessage.Created(context, "Student");
+    });
+  }
+  void delete_student_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id, int index) => Show.DeleteDialog(
+    context,
+    name: "Student",
+    onDelete: () {
+      sections[section_id].students.removeAt(index);
+      refresh();
+    },
+  );
 
   static
   void create_with_dialogBox(BuildContext context, VoidCallback refresh) {
@@ -638,7 +607,7 @@ class Class {
           children: [
             TextBox(
               autofocus: true,
-              onChanged: (val) => newClass.name = val,
+              onChanged: (val) => newClass.class_title = val,
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
@@ -652,7 +621,7 @@ class Class {
         actions: ActionBar(context, focus: "Create"),
       ),
     ).then((value) {
-      if (newClass.name.isEmpty) {
+      if (newClass.class_title.isEmpty) {
         if (value!) TheMessage.Empty(context); return;
       }
       if (!value!) {
@@ -665,8 +634,8 @@ class Class {
     });
   }
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String name = this.name;
-    String description = this.description;
+    String name = class_title;
+    String subtitle = description;
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -682,17 +651,17 @@ class Class {
             ), // Ask Name
             my_spacing,
             TextFormBox(
-              onChanged: (val) => description = val,
+              onChanged: (val) => subtitle = val,
               onFieldSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Description",
-              initialValue: description,
+              initialValue: subtitle,
             ), // Ask Description
           ],
         ),
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (name == this.name && description == this.description) return;
+      if (name == class_title && subtitle == description) return;
       if (name.isEmpty) {
         (value! ? TheMessage.Empty : TheMessage.Failure)(context); return;
       }
@@ -700,8 +669,8 @@ class Class {
         TheMessage.Failure(context); return;
       }
 
-      this.name = name;
-      this.description = description;
+      class_title = name;
+      description = subtitle;
       refresh();
       TheMessage.Success(context);
     });

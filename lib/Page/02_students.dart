@@ -12,10 +12,10 @@ class DearStudents extends StatefulWidget {
 }
 
 class _DearStudentsState extends State<DearStudents> {
-  static bool to_load = true;
+  final my_class = Class.selected;
   void update() => setState(() {});
   BaseButton get new_section {
-    void onPressed() => Section.create_with_dialogBox(context, update);
+    void onPressed() => my_class.create_section_with_dialogBox(context, update);
     final my_data = Row(
       children: const [
         Icon(FluentIcons.add),
@@ -28,7 +28,7 @@ class _DearStudentsState extends State<DearStudents> {
       horizontal: factor + 10,
     );
 
-    return SectionManager.sections.isEmpty
+    return my_class.sections.isEmpty
         ? Button(
             onPressed: onPressed,
             style: ButtonStyle(
@@ -68,7 +68,7 @@ class _DearStudentsState extends State<DearStudents> {
       ),     // Session Info
       Expanded(
         child: ListView.builder(
-          itemCount: SectionManager.sections.length,
+          itemCount: my_class.sections.length,
           itemBuilder: (context_2, index) => TheDropDown(
             update, index,
             is_expand: index == DearStudents.expanded_menu,
@@ -79,14 +79,15 @@ class _DearStudentsState extends State<DearStudents> {
   );
 
   @override
-  Widget build(BuildContext context) => to_load
+  Widget build(BuildContext context) => my_class.to_load
   ? FutureBuilder<bool>(
-    future: SectionManager.load(null),
+    future: my_class.load(
+        my_class.my_sheet_id.isEmpty
+            ? Class.classes.first.my_sheet_id
+            : my_class.my_sheet_id
+    ),
     builder: (context, snapshot) => snapshot.hasData
-      ? () {
-        to_load = false;
-        return the_content;
-      }()
+      ? the_content
       : Center(
         child: snapshot.hasError
           ? Text(snapshot.error.toString())
@@ -110,8 +111,9 @@ class TheDropDown extends StatefulWidget {
 }
 
 class _TheDropDownState extends State<TheDropDown> {
+  final my_class = Class.selected;
   void update() => setState(() {});
-  Section get currentSection => SectionManager.sections[widget.number];
+  Section get currentSection => my_class.sections[widget.number];
   Student studentAt(int index) => currentSection.students[index];
 
   material.DataRow makeTableEntry(BuildContext context, final int index) {
@@ -120,7 +122,7 @@ class _TheDropDownState extends State<TheDropDown> {
           context,
           onTap: () => setState(() => studentAt(index).toggleAttendance(session_id: SessionManager.selected)),
           onEdit: () => studentAt(index).update_with_dialogBox(context, update),
-          onDelete: () => Student.delete_with_dialogBox(context, update, widget.number, index),
+          onDelete: () => my_class.delete_student_with_dialogBox(context, update, widget.number, index),
           on: TheClickable(child: Text(from[index])),
         ),
     );
@@ -170,7 +172,7 @@ class _TheDropDownState extends State<TheDropDown> {
     header: Show.TheContextMenu(
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
-      onDelete: () => Section.delete_with_dialogBox(context, widget.update, widget.number),
+      onDelete: () => my_class.delete_section_with_dialogBox(context, widget.update, widget.number),
       on: TheClickable(child: Text(currentSection.title)),
     ),        // Worksheet Name
     content: Column(
@@ -180,7 +182,7 @@ class _TheDropDownState extends State<TheDropDown> {
         if (currentSection.students.isNotEmpty)
           material.DataTable(
             columns: List.generate(
-              Section.top_row.length,
+              my_class.my_column.length,
               (index) => material.DataColumn(
                 label: GestureDetector(
                   onTap: () => setState(() => currentSection.students.sort(
@@ -190,7 +192,7 @@ class _TheDropDownState extends State<TheDropDown> {
                         : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
                         : 0
                   )),
-                  child: TheClickable(child: Text(Section.top_row[index]), width: false),
+                  child: TheClickable(child: Text(my_class.my_column[index]), width: false),
                 ),
               ),
             ), // Headers
@@ -201,7 +203,7 @@ class _TheDropDownState extends State<TheDropDown> {
         ),
         my_spacing,                    // Spacing
         IconButton(
-          onPressed: () => Student.create_with_dialogBox(context, update, widget.number),
+          onPressed: () => my_class.create_student_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
@@ -224,8 +226,8 @@ class AttendanceRecord extends StatelessWidget {
   final VoidCallback update;
   final Student student;
 
-  bool get large_size => SessionManager.the_list.length > 5;
-  bool get crazy_size => SessionManager.the_list.length > 7;
+  bool get large_size => Class.selected.sessions.length > 5;
+  bool get crazy_size => Class.selected.sessions.length > 7;
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +274,7 @@ class AttendanceRecord extends StatelessWidget {
                               ? const EdgeInsets.only(right: factor + 5)
                               : null,
                           shrinkWrap: true,
-                          itemCount: SessionManager.the_list.length,
+                          itemCount: Class.selected.sessions.length,
                           itemBuilder: (_, rec_idx) => GestureDetector(
                             onTap: () => updateAttendance(rec_idx, !student.attendance_record[rec_idx]),
                             child: Container(
@@ -284,7 +286,7 @@ class AttendanceRecord extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    SessionManager.the_list[rec_idx].for_records(),
+                                    Class.selected.sessions[rec_idx].for_records(),
                                     style: FluentTheme.of(context).typography.body,
                                   ),        // Date
                                   Checkbox(

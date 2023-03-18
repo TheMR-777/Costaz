@@ -100,10 +100,14 @@ class TheClassTile extends StatelessWidget {
     onDelete: () => Class.delete_with_dialogBox(context, update, index),
     onEdit: () => currentClass.update_with_dialogBox(context, update),
     on: Button(
-      onPressed: () => classController.nextPage(
+      onPressed: () {
+        Class.current_class_i = index;
+        if (!Class.selected.to_load) SessionManager.update_selected();
+        classController.nextPage(
           duration: const Duration(milliseconds: 800),
           curve: Curves.easeInOutCubicEmphasized
-      ),
+        );
+      },
       style: ButtonStyle(
         padding: ButtonState.all(const EdgeInsets.symmetric(
           horizontal: factor * 2,
@@ -123,7 +127,7 @@ class TheClassTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                currentClass.name,
+                currentClass.class_title,
                 style: const TextStyle(fontSize: factor + 1),
               ),    // Class Name
               Text(
