@@ -82,7 +82,7 @@ class _DearStudentsState extends State<DearStudents> {
   ? FutureBuilder<bool>(
     future: my_class.load(
         my_class.my_sheet_id.isEmpty
-            ? Class.classes.first.my_sheet_id
+            ? Class.default_one
             : my_class.my_sheet_id
     ),
     builder: (context, snapshot) => snapshot.hasData

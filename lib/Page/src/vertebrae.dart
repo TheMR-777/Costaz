@@ -368,12 +368,13 @@ class Class {
     Class.defined("Algebra", "8th Semester"),
   ];
   static Class get selected => classes[current_class_i];
+  static String default_one = "1L85rCcuVKXJ0hiaBypqUpnrmSycfe4I-LTsVGquFiRQ";
 
   String class_title = "";
   String description = "";
   String my_sheet_id = "";
 
-  String prefix_roll = "BSCS_F19_";
+  String prefix_roll = "";
   String prefix_name = "";
   var open_drop_down = 0;
   var i_should_fetch = true;
@@ -385,24 +386,28 @@ class Class {
     final my_sheet = await src.gsheet_handle.spreadsheet(id);
 
     // Loading Settings
-    for (final row in await my_sheet.sheets.last.values.allRows())
-    {
+    for (final row in await my_sheet.sheets.last.values.allRows()) {
       if (row.first == "TopRow:") {
         my_column = row.skip(1)
             .where((element) => element.isNotEmpty)
             .toList();
       }
-      else if (row.first == "Sessions:")
-      {
+      else if (row.first == "Sessions:") {
         sessions = row.skip(1)
             .where((element) => element.isNotEmpty)
             .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
             .toList();
-
-        // If no sessions are found, add a new one
-        if (sessions.isEmpty) sessions.add(Session(DateTime.now()));
       }
     }
+
+    // If no sessions are found, add a new one
+    if (sessions.isEmpty) sessions.add(Session(DateTime.now()));
+
+    // If no column is found, add a default one
+    if (my_column.isEmpty) {
+      my_column = ["Roll Number", "Name", "Record", "Attendance"];
+    }
+
     print(my_column);
     print(sessions
         .map((e) => e.date.toString()
@@ -435,6 +440,7 @@ class Class {
     }
     sections = cache_sections;
 
+    // Finalizing
     SessionManager.update_selected();
     i_should_fetch = false;
     return true;
