@@ -494,6 +494,8 @@ class Class {
   );
 
   void setting_prefix_with_dialogBox(BuildContext context) {
+    final _01 = FocusNode();
+    final _02 = FocusNode();
     String p_roll = prefix_roll;
     String p_name = prefix_name;
     showDialog<bool>(
@@ -512,15 +514,19 @@ class Class {
             my_spacing,
             my_spacing,
             TextFormBox(
+              focusNode: _01,
               initialValue: p_name,
               onChanged: (val) => p_name = val,
+              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(_02),
               placeholder: "Prefix for Name",
             ),    // Ask Name Prefix
             my_spacing,
             TextFormBox(
+              focusNode: _02,
               autofocus: true,
               initialValue: p_roll,
               onChanged: (val) => p_roll = val,
+              onFieldSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Prefix for Roll Number",
             ),    // Ask Roll No Prefix
           ],
@@ -539,6 +545,8 @@ class Class {
     });
   }
   void create_student_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
+    final _01 = FocusNode();
+    final _02 = FocusNode();
     String roll = prefix_roll;
     String name = "";
     showDialog<bool>(
@@ -565,13 +573,16 @@ class Class {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormBox(
+              focusNode: _01,
               autofocus: true,
               initialValue: prefix_name,
               onChanged: (val) => name = val,
+              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(_02),
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
             TextFormBox(
+              focusNode: _02,
               onChanged: (val) => roll = val,
               initialValue: roll,
               onFieldSubmitted: (val) => Navigator.pop(context, true),
@@ -605,6 +616,8 @@ class Class {
 
   static
   void create_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    final _01 = FocusNode();
+    final _02 = FocusNode();
     Class newClass = Class();
     showDialog<bool>(
       context: context,
@@ -614,12 +627,15 @@ class Class {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextBox(
+              focusNode: _01,
               autofocus: true,
               onChanged: (val) => newClass.class_title = val,
+              onSubmitted: (value) => FocusScope.of(context).requestFocus(_02),
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
             TextBox(
+              focusNode: _02,
               onChanged: (val) => newClass.description = val,
               onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Description",
@@ -642,6 +658,8 @@ class Class {
     });
   }
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    final _01 = FocusNode();
+    final _02 = FocusNode();
     String name = class_title;
     String subtitle = description;
     showDialog<bool>(
@@ -652,13 +670,16 @@ class Class {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormBox(
+              focusNode: _01,
               autofocus: true,
               onChanged: (val) => name = val,
+              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(_02),
               placeholder: "Name",
               initialValue: name,
             ), // Ask Name
             my_spacing,
             TextFormBox(
+              focusNode: _02,
               onChanged: (val) => subtitle = val,
               onFieldSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Description",
