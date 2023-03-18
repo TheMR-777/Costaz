@@ -41,6 +41,8 @@ class Student {
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
+    final _01 = FocusNode();
+    final _02 = FocusNode();
     String name = my_name;
     String roll = roll_no;
     showDialog<bool>(
@@ -51,13 +53,16 @@ class Student {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormBox(
+                focusNode: _01,
                 autofocus: true,
                 onChanged: (val) => name = val,
+                onFieldSubmitted: (val) => _02.requestFocus(),
                 placeholder: "Name",
                 initialValue: name,
               ), // Ask Name
               my_spacing,
               TextFormBox(
+                focusNode: _02,
                 onChanged: (val) => roll = val,
                 onFieldSubmitted: (val) => Navigator.pop(context, true),
                 placeholder: "Roll No",
