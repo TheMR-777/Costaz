@@ -234,7 +234,7 @@ class Session {
 }
 
 class SessionManager {
-  static get targeted_sessions => Class.selected.sessions;
+  static List<Session> get targeted_sessions => Class.selected.sessions;
 
   static int _selected = targeted_sessions.length - 1;
   static void update_selected({int? to}) => _selected = to ?? targeted_sessions.length - 1;
@@ -311,7 +311,7 @@ class SessionManager {
       TheMessage.Created(context, "Session");
       targeted_sessions.add(current_session);
       update_selected();
-      for (final section in targeted_sessions) {
+      for (final section in Class.selected.sections) {
         for (final student in section.students) {
           if (student.attendance_record.length < targeted_sessions.length) {
             student.attendance_record.add(false);
@@ -343,7 +343,7 @@ class SessionManager {
         if (value!) {
           TheMessage.Delete(context, "Session");
           targeted_sessions.removeAt(index);
-          for (final section in targeted_sessions) {
+          for (final section in Class.selected.sections) {
             for (final student in section.students) {
               student.attendance_record.removeAt(index);
             }
@@ -365,7 +365,7 @@ class Class {
   static List<Class> classes = [
     Class.defined("Programming", "1st Semester")..my_sheet_id = "1Ynpwr8fLrKMKCI7oIUFMiJPueifYGBhorC7F9r8FAKk",
     Class.defined("Physics", "2nd Semester")..my_sheet_id = "1JaoWhLODlQU_lEI0oyFvXdfRDS6a2vyDHKy8f1TrseY",
-    Class.defined("Mathematics", "3rd Semester"),
+    Class.defined("Mathematics", "3rd Semester")..my_sheet_id = "1fcFNDsPhAqu7sQaDIPkaKJXyHuaVMu9qIk95t19Ll54",
     Class.defined("Object Oriented Programming", "4th Semester"),
     Class.defined("Data Structures", "5th Semester"),
     Class.defined("Algorithms", "6th Semester"),
@@ -387,8 +387,10 @@ class Class {
   List<String> my_column = [];
   List<Section> sections = [];
   List<Session> sessions = [];
-  Future<bool> load(String id) async {
-    final my_sheet = await src.gsheet_handle.spreadsheet(id);
+  Future<bool> load() async {
+    final my_sheet = await src.gsheet_handle.spreadsheet(
+      my_sheet_id.isEmpty ? default_one : my_sheet_id,
+    );
 
     // Loading Settings
     for (final row in await my_sheet.sheets.last.values.allRows()) {

@@ -80,11 +80,7 @@ class _DearStudentsState extends State<DearStudents> {
   @override
   Widget build(BuildContext context) => my_class.i_should_fetch
   ? FutureBuilder<bool>(
-    future: my_class.load(
-        my_class.my_sheet_id.isEmpty
-            ? Class.default_one
-            : my_class.my_sheet_id
-    ),
+    future: my_class.load(),
     builder: (context, snapshot) => snapshot.hasData
       ? the_content
       : Center(
