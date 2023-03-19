@@ -506,7 +506,7 @@ class Class {
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text("Setting Prefix"),
+        title: const Text("Prefix Settings"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -520,7 +520,6 @@ class Class {
             my_spacing,
             TextBox(
               focusNode: Focus3,
-              autofocus: true,
               controller: p_name,
               onSubmitted: (value) => FocusScope.of(context).requestFocus(Focus4),
               placeholder: "Prefix for Name",
