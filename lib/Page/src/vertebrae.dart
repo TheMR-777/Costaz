@@ -44,8 +44,8 @@ class Student {
   void updateAttendance({required int session_id, required new_val}) => attendance_record[session_id] = new_val;
 
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String name = my_name;
-    String roll = roll_no;
+    final name = TextEditingController(text: my_name);
+    final roll = TextEditingController(text: roll_no);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -53,37 +53,35 @@ class Student {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormBox(
+              TextBox(
+                controller: name,
                 focusNode: src.F1,
                 autofocus: true,
-                onChanged: (val) => name = val,
-                onFieldSubmitted: (val) => src.F2.requestFocus(),
+                onSubmitted: (val) => src.F2.requestFocus(),
                 placeholder: "Name",
-                initialValue: name,
               ), // Ask Name
               my_spacing,
-              TextFormBox(
+              TextBox(
+                controller: roll,
                 focusNode: src.F2,
-                onChanged: (val) => roll = val,
-                onFieldSubmitted: (val) => Navigator.pop(context, true),
+                onSubmitted: (val) => Navigator.pop(context, true),
                 placeholder: "Roll No",
-                initialValue: roll,
               ), // Ask Roll No
             ],
           ),
           actions: ActionBar(context),
         ),
     ).then((value) {
-      if (name == my_name && roll == roll_no) return;
-      if (name.isEmpty || roll.isEmpty) {
+      if (name.text == my_name && roll.text == roll_no) return;
+      if (name.text.isEmpty || roll.text.isEmpty) {
         if (value!) TheMessage.Empty(context); return;
       }
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      my_name = name;
-      roll_no = roll;
+      my_name = name.text;
+      roll_no = roll.text;
       refresh();
       TheMessage.Success(context);
     });
@@ -95,30 +93,29 @@ class Section {
   List<Student> students = [];
 
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String name = title;
+    final name = TextEditingController(text: title);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
         title: const Text("Edit Section"),
-        content: TextFormBox(
+        content: TextBox(
+          controller: name,
           autofocus: true,
-          onChanged: (value) => name = value,
-          onFieldSubmitted: (value) => Navigator.pop(context, true),
-          initialValue: name,
+          onSubmitted: (value) => Navigator.pop(context, true),
           placeholder: "Section Name",
         ),
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (name == title) return;
-      if (name.isEmpty) {
+      if (name.text == title) return;
+      if (name.text.isEmpty) {
         if (value!) TheMessage.Empty(context); return;
       }
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      title = name;
+      title = name.text;
       refresh();
       TheMessage.Success(context);
     });
@@ -455,14 +452,14 @@ class Class {
   }
 
   void create_section_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String newSection = "";
+    final newSection = TextEditingController();
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
         title: const Text("Add a New Section"),
         content: TextBox(
           autofocus: true,
-          onChanged: (val) => newSection = val,
+          controller: newSection,
           onSubmitted: (val) => Navigator.pop(context, true),
           placeholder: "Section Name",
         ),
@@ -478,14 +475,14 @@ class Class {
         ],
       ),
     ).then((value) {
-      if (newSection.isEmpty) {
+      if (newSection.text.isEmpty) {
         if (value!) TheMessage.Empty(context); return;
       }
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      sections.add(Section()..title = newSection);
+      sections.add(Section()..title = newSection.text);
       open_drop_down = sections.length - 1;
       refresh();
       TheMessage.Created(context, "Section");
@@ -502,10 +499,8 @@ class Class {
   );
 
   void setting_prefix_with_dialogBox(BuildContext context, TextEditingController roll, TextEditingController name) {
-    final F3 = FocusNode();
-    final F4 = FocusNode();
-    // String p_roll = prefix_roll;
-    // String p_name = prefix_name;
+    final Focus3 = FocusNode();
+    final Focus4 = FocusNode();
     final p_roll = TextEditingController(text: prefix_roll);
     final p_name = TextEditingController(text: prefix_name);
     showDialog<bool>(
@@ -524,15 +519,15 @@ class Class {
             my_spacing,
             my_spacing,
             TextBox(
-              focusNode: F3,
+              focusNode: Focus3,
               autofocus: true,
               controller: p_name,
-              onSubmitted: (value) => FocusScope.of(context).requestFocus(F4),
+              onSubmitted: (value) => FocusScope.of(context).requestFocus(Focus4),
               placeholder: "Prefix for Name",
             ),    // Ask Name Prefix
             my_spacing,
             TextBox(
-              focusNode: F4,
+              focusNode: Focus4,
               autofocus: true,
               controller: p_roll,
               onSubmitted: (val) => Navigator.pop(context, true),
@@ -554,8 +549,8 @@ class Class {
     });
   }
   void create_student_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
-    var c1_roll = TextEditingController(text: prefix_roll);
-    var c2_name = TextEditingController(text: prefix_name);
+    final c1_roll = TextEditingController(text: prefix_roll);
+    final c2_name = TextEditingController(text: prefix_name);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -665,8 +660,8 @@ class Class {
     });
   }
   void update_with_dialogBox(BuildContext context, VoidCallback refresh) {
-    String name = class_title;
-    String subtitle = description;
+    final c1_name = TextEditingController(text: class_title);
+    final c2_subtitle = TextEditingController(text: description);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -674,37 +669,35 @@ class Class {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormBox(
+            TextBox(
               focusNode: src.F1,
               autofocus: true,
-              onChanged: (val) => name = val,
-              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(src.F2),
+              controller: c1_name,
+              onSubmitted: (value) => FocusScope.of(context).requestFocus(src.F2),
               placeholder: "Name",
-              initialValue: name,
             ), // Ask Name
             my_spacing,
-            TextFormBox(
+            TextBox(
               focusNode: src.F2,
-              onChanged: (val) => subtitle = val,
-              onFieldSubmitted: (val) => Navigator.pop(context, true),
+              controller: c2_subtitle,
+              onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Description",
-              initialValue: subtitle,
             ), // Ask Description
           ],
         ),
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (name == class_title && subtitle == description) return;
-      if (name.isEmpty) {
+      if (c1_name.text == class_title && c2_subtitle.text == description) return;
+      if (c1_name.text.isEmpty) {
         (value! ? TheMessage.Empty : TheMessage.Failure)(context); return;
       }
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      class_title = name;
-      description = subtitle;
+      class_title = c1_name.text;
+      description = c2_subtitle.text;
       refresh();
       TheMessage.Success(context);
     });
