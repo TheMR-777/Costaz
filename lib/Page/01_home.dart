@@ -129,7 +129,7 @@ class TheClassTile extends StatelessWidget {
                 ? FluentTheme.of(context).accentColor.defaultBrushFor(
                 FluentTheme.of(context).brightness
             ) : null,
-          ),      // Icon
+          ),            // Icon
           const SizedBox(
             width: factor * 2 + 5,
           ),  // Some Space
@@ -139,14 +139,15 @@ class TheClassTile extends StatelessWidget {
               Text(
                 currentClass.class_title,
                 style: const TextStyle(fontSize: factor + 1),
-              ),    // Class Name
-              Text(
-                currentClass.description,
-                style: TextStyle(
-                    color: FluentTheme.of(context).borderInputColor,
-                    fontSize: factor - 3
-                ),
-              ),    // Description
+              ),        // Class Name
+              if (currentClass.description.isNotEmpty)
+                Text(
+                  currentClass.description,
+                  style: TextStyle(
+                      color: FluentTheme.of(context).borderInputColor,
+                      fontSize: factor - 3
+                  ),
+                ),      // Description
             ],
           ),          // Introduction
           const Spacer(),       // Max Space
