@@ -93,9 +93,6 @@ class TheClassTile extends StatelessWidget {
   final VoidCallback update;
   final int index;
   Class get currentClass => Class.classes[index];
-  Color accentColor(BuildContext context) => FluentTheme.of(context).accentColor.defaultBrushFor(
-      FluentTheme.of(context).brightness
-  );
 
   @override
   Widget build(BuildContext context) => Show.TheContextMenu(
@@ -122,13 +119,9 @@ class TheClassTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             FluentIcons.bookmark_report,
             size: factor + 12,
-            color: Class.current_class_i == index
-                ? FluentTheme.of(context).accentColor.defaultBrushFor(
-                FluentTheme.of(context).brightness
-            ) : null,
           ),            // Icon
           const SizedBox(
             width: factor * 2 + 5,
