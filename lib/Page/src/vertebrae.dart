@@ -501,9 +501,13 @@ class Class {
     },
   );
 
-  void setting_prefix_with_dialogBox(BuildContext context) {
-    String p_roll = prefix_roll;
-    String p_name = prefix_name;
+  void setting_prefix_with_dialogBox(BuildContext context, TextEditingController roll, TextEditingController name) {
+    final F3 = FocusNode();
+    final F4 = FocusNode();
+    // String p_roll = prefix_roll;
+    // String p_name = prefix_name;
+    final p_roll = TextEditingController(text: prefix_roll);
+    final p_name = TextEditingController(text: prefix_name);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -519,20 +523,19 @@ class Class {
             const Divider(),
             my_spacing,
             my_spacing,
-            TextFormBox(
-              focusNode: src.F1,
-              initialValue: p_name,
-              onChanged: (val) => p_name = val,
-              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(src.F2),
+            TextBox(
+              focusNode: F3,
+              autofocus: true,
+              controller: p_name,
+              onSubmitted: (value) => FocusScope.of(context).requestFocus(F4),
               placeholder: "Prefix for Name",
             ),    // Ask Name Prefix
             my_spacing,
-            TextFormBox(
-              focusNode: src.F2,
+            TextBox(
+              focusNode: F4,
               autofocus: true,
-              initialValue: p_roll,
-              onChanged: (val) => p_roll = val,
-              onFieldSubmitted: (val) => Navigator.pop(context, true),
+              controller: p_roll,
+              onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Prefix for Roll Number",
             ),    // Ask Roll No Prefix
           ],
@@ -540,19 +543,19 @@ class Class {
         actions: ActionBar(context),
       ),
     ).then((value) {
-      if (p_roll == prefix_roll && p_name == prefix_name) return;
+      if (p_roll.text == prefix_roll && p_name.text == prefix_name) return;
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      prefix_roll = p_roll;
-      prefix_name = p_name;
+      roll.text = prefix_roll = p_roll.text;
+      name.text = prefix_name = p_name.text;
       TheMessage.Success(context);
     });
   }
   void create_student_with_dialogBox(BuildContext context, VoidCallback refresh, int section_id) {
-    String roll = prefix_roll;
-    String name = "";
+    var c1_roll = TextEditingController(text: prefix_roll);
+    var c2_name = TextEditingController(text: prefix_name);
     showDialog<bool>(
       context: context,
       builder: (context) => ContentDialog(
@@ -568,7 +571,11 @@ class Class {
                     horizontal: factor * 2
                 )),
               ),
-              onPressed: () => setting_prefix_with_dialogBox(context),
+              onPressed: () => setting_prefix_with_dialogBox(
+                context,
+                c1_roll,
+                c2_name,
+              ),
               child: const Icon(FluentIcons.increase_indent, size: factor + 5),
             )       // Prefix Button
           ],
@@ -576,20 +583,18 @@ class Class {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormBox(
+            TextBox(
               focusNode: src.F1,
               autofocus: true,
-              initialValue: prefix_name,
-              onChanged: (val) => name = val,
-              onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(src.F2),
+              controller: c2_name,
+              onSubmitted: (value) => FocusScope.of(context).requestFocus(src.F2),
               placeholder: "Name",
             ),    // Ask Name
             my_spacing,
-            TextFormBox(
+            TextBox(
               focusNode: src.F2,
-              onChanged: (val) => roll = val,
-              initialValue: roll,
-              onFieldSubmitted: (val) => Navigator.pop(context, true),
+              controller: c1_roll,
+              onSubmitted: (val) => Navigator.pop(context, true),
               placeholder: "Roll Number",
             ),    // Ask Roll No
           ],
@@ -597,14 +602,14 @@ class Class {
         actions: ActionBar(context, focus: "Add"),
       ),
     ).then((value) {
-      if (name.isEmpty || roll.isEmpty) {
+      if (c2_name.text.isEmpty || c1_roll.text.isEmpty) {
         if (value!) TheMessage.Empty(context); return;
       }
       if (!value!) {
         TheMessage.Failure(context); return;
       }
 
-      sections[section_id].students.add(Student(roll, name));
+      sections[section_id].students.add(Student(c1_roll.text, c2_name.text));
       refresh();
       TheMessage.Created(context, "Student");
     });
