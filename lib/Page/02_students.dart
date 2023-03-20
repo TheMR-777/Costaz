@@ -303,12 +303,16 @@ class AttendanceRecord extends StatelessWidget {
           ),
         ),
         child: TheClickable(
-          child: ProgressBar(
-            value: record,
-            backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
-            activeColor: record != 100
-                ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
-                : null,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(right: factor),
+            child: ProgressBar(
+              value: record,
+              backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+              activeColor: record != 100
+                  ? FluentTheme.of(context).resources.textFillColorTertiary.withOpacity(0.4)
+                  : null,
+            ),
           ),
         ),
       ),
