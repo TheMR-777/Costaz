@@ -104,9 +104,10 @@ class _CostazState extends State<Costaz> {
                 icon: const Icon(FluentIcons.education),
                 title: const Text("Students"),
                 body: const DearStudents(),
-              )
+              ),    // Recent Page
             ],
             footerItems: [
+              PaneItemSeparator(),
               PaneItem(
                 icon: const Icon(FluentIcons.play),
                 title: const Text("Playground"),
