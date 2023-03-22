@@ -15,6 +15,25 @@ class TheSweetHome extends StatefulWidget {
 
 class _TheSweetHomeState extends State<TheSweetHome> {
   void update() => setState(() {});
+  BaseButton get add_button {
+    void onPressed() => Class.create_with_dialogBox(context, update);
+    final my_style = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(
+          vertical: factor + 5,
+          horizontal: factor * 2
+      )));
+    const my_data = Icon(FluentIcons.add, size: factor * 2);
+
+    return !is_dark_mode && Class.classes.isEmpty
+        ? IconButton(
+            onPressed: onPressed,
+            style: my_style.copyWith(
+              border: ButtonState.all(BorderSide(color: FluentTheme.of(context).accentColor)),
+              foregroundColor: ButtonState.all(FluentTheme.of(context).accentColor)
+            ),
+            icon: my_data,
+        )
+        : Button(onPressed: onPressed, style: my_style, child: my_data);
+  }
 
   @override
   Widget build(BuildContext context) => CarouselSlider(
@@ -50,21 +69,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                 ),  // "Classes"
                 Padding(
                   padding: const EdgeInsets.only(right: factor),
-                  child: Button(
-                    onPressed: () => Class.create_with_dialogBox(context, update),
-                    style: ButtonStyle(
-                      padding: ButtonState.all(const EdgeInsets.symmetric(
-                          vertical: factor + 5,
-                          horizontal: factor * 2
-                      )),
-                      iconSize: ButtonState.all(factor * 2),
-                      border: !is_dark_mode && Class.classes.isEmpty
-                          ? ButtonState.all(BorderSide(
-                        color: FluentTheme.of(context).accentColor
-                      )) : null,
-                    ),
-                    child: const Icon(FluentIcons.add),
-                  ),
+                  child: add_button,
                 ),     // Add Button
               ],
             ),              // Classes ++
