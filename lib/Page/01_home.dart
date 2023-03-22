@@ -58,6 +58,10 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                           horizontal: factor * 2
                       )),
                       iconSize: ButtonState.all(factor * 2),
+                      border: !is_dark_mode && Class.classes.isEmpty
+                          ? ButtonState.all(BorderSide(
+                        color: FluentTheme.of(context).accentColor
+                      )) : null,
                     ),
                     child: const Icon(FluentIcons.add),
                   ),
@@ -113,9 +117,7 @@ class TheClassTile extends StatelessWidget {
           horizontal: factor * 2,
           vertical: factor + 5,
         )),
-        border: FluentTheme.of(context).brightness == Brightness.dark
-            ? ButtonState.all(const BorderSide(color: Colors.transparent))
-            : null,
+        border: is_dark_mode ? ButtonState.all(const BorderSide(color: Colors.transparent)) : null,
       ),
       child: Row(
         children: [

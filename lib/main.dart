@@ -9,7 +9,7 @@ import 'Page/xx_students_v0_static.dart' as v0;
 import 'Page/src/commons.dart';
 
 void main() async {
-  await TheTheme.loadDefault();    // Load Theme
+  await TheTheme.init();           // Load Theme
   runApp(const Costaz());          // Run App
   windowManager.show();            // Show Window
 }
@@ -28,7 +28,7 @@ class _CostazState extends State<Costaz> {
   Widget build(BuildContext context) => FluentApp(
       theme: FluentThemeData(
         accentColor: TheTheme.my_accent,
-        brightness: TheTheme.is_dark ? Brightness.dark : null,
+        brightness: is_dark_mode ? Brightness.dark : null,
         buttonTheme: ButtonThemeData(
           defaultButtonStyle: button_pad,
           filledButtonStyle: button_pad,
@@ -43,7 +43,7 @@ class _CostazState extends State<Costaz> {
           padding: const EdgeInsets.all(factor * 2),
           titlePadding: const EdgeInsets.only(bottom: factor * 2),
           titleStyle: TextStyle(
-            color: TheTheme.is_dark ? Colors.white : Colors.black,
+            color: is_dark_mode ? Colors.white : Colors.black,
             fontSize: factor + 10,
             fontWeight: FontWeight.w500,
           ),
@@ -82,7 +82,7 @@ class _CostazState extends State<Costaz> {
           actions: SizedBox(
             width: factor * 15,
             child: WindowCaption(
-              brightness: TheTheme.is_dark ? Brightness.dark : null,
+              brightness: is_dark_mode ? Brightness.dark : null,
               backgroundColor: Colors.transparent,
             ),
           ),

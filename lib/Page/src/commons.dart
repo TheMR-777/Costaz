@@ -5,6 +5,7 @@ final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetr
 const my_bar_lim = 260;
 var nav_bar_size = factor * factor;
 var current_page = 0;
+var is_dark_mode = true;
 
 Button TheCancelButton(BuildContext context) => Button(
   onPressed: () => Navigator.pop(context, false),

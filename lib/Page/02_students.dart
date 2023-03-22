@@ -131,9 +131,7 @@ class _TheDropDownState extends State<TheDropDown> {
       )),  // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
-          glowColor: FluentTheme.of(context).accentColor.withOpacity(
-              FluentTheme.of(context).brightness == Brightness.dark ? 0.01 : 0.005
-          ),
+          glowColor: FluentTheme.of(context).accentColor.withOpacity(is_dark_mode ? 0.01 : 0.005),
           primaryBorder: BorderSide(color: FluentTheme.of(context).accentColor),
         ),
         child: Checkbox(

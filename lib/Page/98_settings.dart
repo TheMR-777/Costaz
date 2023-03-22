@@ -6,7 +6,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'src/commons.dart';
 
 class TheTheme {
-  static var is_dark = true;
   static late final WindowsDeviceInfo info;
   static late final WindowEffect m_default;
   static const no_effect = WindowEffect.solid;
@@ -21,14 +20,14 @@ class TheTheme {
   static bool get can_mica => TheTheme.info.buildNumber >= TheTheme.Win11_Old;
   static bool get can_vibe => TheTheme.info.buildNumber >= TheTheme.Win11_New;
 
-  static Future<void> loadDefault() async {
+  static Future<void> init() async {
     // Initialization
     {
       WidgetsFlutterBinding.ensureInitialized();          // Flutter
       await WindowManager.instance.ensureInitialized();   // Title Bar
       await Window.initialize();                          // Flutter Acrylic
       await SystemTheme.accentColor.load();               // Accent
-      is_dark = SystemTheme.isDarkMode;                   // Dark Mode
+      is_dark_mode = SystemTheme.isDarkMode;              // Dark Mode
     }
 
     // Title Bar settings
@@ -59,7 +58,7 @@ class TheTheme {
           : no_effect;
       the_current_effect = m_default;
 
-      await Window.setEffect(effect: the_current_effect, dark: is_dark);
+      await Window.setEffect(effect: the_current_effect, dark: is_dark_mode);
     }
   }
 }
@@ -78,23 +77,23 @@ class TheSettings extends StatelessWidget {
   );
 
   void _change_dark(bool val) {
-    TheTheme.is_dark = val;
+    is_dark_mode = val;
     Window.setEffect(effect: TheTheme.the_current_effect, dark: val);
     refresh();
   }
   void _change_mica(bool val) {
     TheTheme.the_current_effect = val ? TheTheme.m_default : WindowEffect.solid;
-    Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
+    Window.setEffect(effect: TheTheme.the_current_effect, dark: is_dark_mode);
     refresh();
   }
   void _change_vibe(bool val) {
     TheTheme.the_current_effect = val ? WindowEffect.tabbed : TheTheme.m_default;
-    Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
+    Window.setEffect(effect: TheTheme.the_current_effect, dark: is_dark_mode);
     refresh();
   }
   void _change_classic(bool val) {
     TheTheme.the_current_effect = val ? WindowEffect.acrylic : TheTheme.m_default;
-    Window.setEffect(effect: TheTheme.the_current_effect, dark: TheTheme.is_dark);
+    Window.setEffect(effect: TheTheme.the_current_effect, dark: is_dark_mode);
     refresh();
   }
   void _change_size(double val) {
@@ -110,7 +109,7 @@ class TheSettings extends StatelessWidget {
         MySwitch(
           title: "Dark Mode",
           icon: FluentIcons.clear_night,
-          checked: TheTheme.is_dark,
+          checked: is_dark_mode,
           onChanged: _change_dark,
         ),                            // Dark Mode
         my_divider,

@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:gsheets/gsheets.dart';
-import '../98_settings.dart';
 import 'commons.dart';
 
 class src {
@@ -189,7 +188,7 @@ class Session {
     title: Text(formatted_short()),
     subtitle: Text(_weekDays[date.weekday - 1],
       style: TextStyle(
-        color: (TheTheme.is_dark ? Colors.white : Colors.black).withOpacity(0.6),
+        color: (is_dark_mode ? Colors.white : Colors.black).withOpacity(0.6),
       ),
     ),
     trailing: is_selected ? null : only_date(date) == only_date(DateTime.now())
