@@ -17,7 +17,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
   void update() => setState(() {});
   BaseButton get add_button {
     void onPressed() => Class.create_with_dialogBox(context, update);
-    final my_style = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(
+    final m_style = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(
           vertical: factor + 5,
           horizontal: factor * 2
       )));
@@ -26,13 +26,13 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     return !is_dark_mode && Class.classes.isEmpty
         ? IconButton(
             onPressed: onPressed,
-            style: my_style.copyWith(
+            style: m_style.copyWith(
               border: ButtonState.all(BorderSide(color: FluentTheme.of(context).accentColor)),
               foregroundColor: ButtonState.all(FluentTheme.of(context).accentColor)
             ),
             icon: my_data,
         )
-        : Button(onPressed: onPressed, style: my_style, child: my_data);
+        : Button(onPressed: onPressed, style: m_style, child: my_data);
   }
 
   @override
@@ -43,10 +43,6 @@ class _TheSweetHomeState extends State<TheSweetHome> {
       viewportFraction: 1,
       enableInfiniteScroll: false,
       scrollPhysics: const NeverScrollableScrollPhysics(),
-      // autoPlay: true,
-      // autoPlayInterval: const Duration(seconds: 1),
-      // autoPlayAnimationDuration: const Duration(milliseconds: 800),
-      // autoPlayCurve: Curves.fastOutSlowIn,
     ),
     items: [
       Padding(

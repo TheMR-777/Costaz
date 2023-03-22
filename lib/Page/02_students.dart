@@ -27,19 +27,26 @@ class _DearStudentsState extends State<DearStudents> {
       horizontal: factor + 10,
     );
 
-    return my_class.sections.isEmpty
+    return !is_dark_mode ^ my_class.sections.isEmpty
         ? Button(
             onPressed: onPressed,
             style: ButtonStyle(
               padding: ButtonState.all(m_space),
             ),
             child: my_data,
-          )
+        )
         : IconButton(
           onPressed: onPressed,
           style: ButtonStyle(
             padding: ButtonState.all(m_space),
-            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+            border: ButtonState.all(
+              BorderSide(
+                color: is_dark_mode
+                  ? FluentTheme.of(context).resources.dividerStrokeColorDefault
+                  : FluentTheme.of(context).accentColor
+              )
+            ),
+            foregroundColor: ButtonState.all(!is_dark_mode ? FluentTheme.of(context).accentColor : null),
           ),
           icon: my_data,
         );
