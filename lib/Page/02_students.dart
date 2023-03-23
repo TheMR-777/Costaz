@@ -30,9 +30,7 @@ class _DearStudentsState extends State<DearStudents> {
     return !is_dark_mode ^ my_class.sections.isEmpty
         ? Button(
             onPressed: onPressed,
-            style: ButtonStyle(
-              padding: ButtonState.all(m_space),
-            ),
+            style: ButtonStyle(padding: ButtonState.all(m_space)),
             child: my_data,
         )
         : IconButton(
