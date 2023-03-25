@@ -73,12 +73,10 @@ class _DearStudentsState extends State<DearStudents> {
         ),
         actions: [
           FilledButton(
-            style: button_pad,
             onPressed: returnSection,
             child: const Text("Add"),
           ),
           Button(
-            style: button_pad,
             onPressed: cancelSection,
             child: const Text("Cancel"),
           ),
@@ -194,12 +192,10 @@ class _TheDropDownState extends State<TheDropDown> {
           actions: [
             FilledButton(
               onPressed: () => setState(() => returnClass()),
-              style: button_pad,
               child: const Text("Update"),
             ),  // Update Button
             Button(
               onPressed: cancelClass,
-              style: button_pad,
               child: const Text("Cancel"),
             ),        // Cancel Button
           ],
@@ -240,12 +236,10 @@ class _TheDropDownState extends State<TheDropDown> {
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
             child: const Text("Add"),
           ),  // Add Button
           Button(
             onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
             child: const Text("Cancel"),
           ),        // Cancel Button
         ],
@@ -282,13 +276,11 @@ class _TheDropDownState extends State<TheDropDown> {
       actions: [
         FilledButton(
           onPressed: () => Navigator.pop(context, true),
-          style: button_pad,
           child: const Text("Delete"),
         ),
         Button(
           autofocus: true,
           onPressed: () => Navigator.pop(context, false),
-          style: button_pad,
           child: const Text("Cancel"),
         ),
       ],
@@ -343,12 +335,10 @@ class _TheDropDownState extends State<TheDropDown> {
           actions: [
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              style: button_pad,
               child: const Text("Edit"),
             ),
             Button(
               onPressed: () => Navigator.pop(context, false),
-              style: button_pad,
               child: const Text("Cancel"),
             ),
           ],
@@ -385,13 +375,11 @@ class _TheDropDownState extends State<TheDropDown> {
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: button_pad,
             child: const Text("Delete"),
           ),
           Button(
             autofocus: true,
             onPressed: () => Navigator.pop(context, false),
-            style: button_pad,
             child: const Text("Cancel"),
           ),
         ],
