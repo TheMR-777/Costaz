@@ -53,7 +53,9 @@ class MyIDEAs extends StatelessWidget {
   const MyIDEAs({Key? key}) : super(key: key);
   static const my_spacing = SizedBox(height: 20);
   static const my_feature = [
-    "analytics_logo for Report Generation Entry in Context Menu",
+    "Result Management System",
+    "'analytics_logo' for Report Generation Entry in Context Menu",
+    "New Design for Session Management",
     "More soon...",
   ];
 
@@ -85,9 +87,16 @@ class MyIDEAs extends StatelessWidget {
             child: ListView.separated(
               shrinkWrap: true,
               itemCount: my_feature.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: const Icon(FluentIcons.to_do_logo_outline),
-                title: Text(my_feature[index]),
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    const Icon(FluentIcons.to_do_logo_outline),
+                    const SizedBox(width: 20),
+                    Text(my_feature[index]),
+                  ],
+                ),
               ),
               separatorBuilder: (context, index) => const Divider(
                 style: DividerThemeData(
