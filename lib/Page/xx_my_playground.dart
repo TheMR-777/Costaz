@@ -6,13 +6,6 @@ class ThePlayground extends StatelessWidget {
 
   static final controller = CarouselController();
   static const my_padding = EdgeInsets.all(20);
-  static const my_spacing = SizedBox(height: 20);
-  static const my_feature = [
-    "analytics_logo for Report Generation Entry in Context Menu",
-    "analytics_logo for Report Generation Entry in Context Menu",
-    "analytics_logo for Report Generation Entry in Context Menu",
-    "More soon...",
-  ];
 
   @override
   Widget build(BuildContext context) => CarouselSlider(
@@ -51,31 +44,60 @@ class ThePlayground extends StatelessWidget {
           ],
         ),
       ),
-      ScaffoldPage(
-        padding: my_padding,
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              "Upcoming Features",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            my_spacing,
-            Text(
-              "Here are some of the features that I am planning to add in the future.",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 50),
-          ],
-        ),
-      ),
+      const MyIDEAs(),
     ],
+  );
+}
+
+class MyIDEAs extends StatelessWidget {
+  const MyIDEAs({Key? key}) : super(key: key);
+  static const my_spacing = SizedBox(height: 20);
+  static const my_feature = [
+    "analytics_logo for Report Generation Entry in Context Menu",
+    "More soon...",
+  ];
+
+  @override
+  Widget build(BuildContext context) => ScaffoldPage(
+    padding: ThePlayground.my_padding,
+    content: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Upcoming Features",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w500,
+          ),
+        ),        // Title
+        my_spacing,
+        const Text(
+          "Here are some of the features that I am planning to add in the future.",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
+        ),        // Subtitle
+        const SizedBox(height: 30),
+        Flexible(
+          child: Card(
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: my_feature.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: const Icon(FluentIcons.to_do_logo_outline),
+                title: Text(my_feature[index]),
+              ),
+              separatorBuilder: (context, index) => const Divider(
+                style: DividerThemeData(
+                  horizontalMargin: EdgeInsets.symmetric(vertical: 10)
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
