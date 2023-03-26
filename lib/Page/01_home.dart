@@ -125,7 +125,7 @@ class TheClassTile extends StatelessWidget {
           const Icon(
             FluentIcons.bookmark_report,
             size: factor + 12,
-          ),            // Icon
+          ),      // Icon
           const SizedBox(
             width: factor * 2 + 5,
           ),  // Some Space
