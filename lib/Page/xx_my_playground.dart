@@ -53,10 +53,10 @@ class MyIDEAs extends StatelessWidget {
   const MyIDEAs({Key? key}) : super(key: key);
   static const my_spacing = SizedBox(height: 20);
   static const my_feature = [
+    "Using Table instead of DataTable in 'Student' Page",
+    "New Design for Session Management",
     "Result Management System",
     "'analytics_logo' for Report Generation Entry in Context Menu",
-    "New Design for Session Management",
-    "More soon...",
   ];
 
   @override
