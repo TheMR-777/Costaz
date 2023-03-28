@@ -122,10 +122,13 @@ class TheClassTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            FluentIcons.bookmark_report,
-            size: factor + 12,
-          ),      // Icon
+          Image.asset(
+            "Icons/my-class.png",
+            width: factor * 2.5,
+            color: FluentTheme.of(context).accentColor.defaultBrushFor(
+              FluentTheme.of(context).brightness
+            ),
+          ),
           const SizedBox(
             width: factor * 2 + 5,
           ),  // Some Space
