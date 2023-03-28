@@ -128,7 +128,7 @@ class TheClassTile extends StatelessWidget {
             color: FluentTheme.of(context).accentColor.defaultBrushFor(
               FluentTheme.of(context).brightness
             ),
-          ),
+          ),     // Custom Icon
           const SizedBox(
             width: factor * 2 + 5,
           ),  // Some Space
@@ -150,10 +150,11 @@ class TheClassTile extends StatelessWidget {
             ],
           ),          // Introduction
           const Spacer(),       // Max Space
-          const Icon(
+          Icon(
             FluentIcons.chevron_right,
             size: factor + 3,
-          ),      // Icon
+            color: FluentTheme.of(context).borderInputColor,
+          ),            // Trail Icon
         ],
       ),
     ),
