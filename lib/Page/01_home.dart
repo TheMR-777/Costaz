@@ -34,6 +34,7 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         )
         : Button(onPressed: onPressed, style: m_style, child: my_data);
   }
+  static const local_factor = factor + 20;
 
   @override
   Widget build(BuildContext context) => CarouselSlider(
@@ -47,9 +48,8 @@ class _TheSweetHomeState extends State<TheSweetHome> {
     items: [
       Padding(
         padding: const EdgeInsets.only(
-          top: factor + 20,
-          left: factor + 20,
-          right: factor + 20,
+          top: local_factor,
+          left: local_factor,
         ),
         child: Column(
           children: [
@@ -64,20 +64,20 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                   ),
                 ),  // "Classes"
                 Padding(
-                  padding: const EdgeInsets.only(right: factor),
+                  padding: const EdgeInsets.only(right: local_factor),
                   child: add_button,
                 ),     // Add Button
               ],
             ),              // Classes ++
             const SizedBox(
-                height: factor + 20
+                height: local_factor
             ),   // Some Space
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.only(top: 10, bottom: 10, right: factor),
+                padding: const EdgeInsets.only(bottom: factor, right: local_factor),
                 itemCount: Class.classes.length,
                 itemBuilder: (context, index) => TheClassTile(update, index),
-                separatorBuilder: (context, index) => const SizedBox(height: factor),
+                separatorBuilder: (context, index) => my_spacing,
               ),
             ),         // Class List
           ],
