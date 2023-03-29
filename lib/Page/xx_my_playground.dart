@@ -44,17 +44,13 @@ class ThePlayground extends StatelessWidget {
           ],
         ),
       ),
-
-      // Loading ProgressBar with "Just a Moment..." Text
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            ProgressBar(),
-            SizedBox(height: 20),
-            Text("Just a Moment..."),
-          ],
-        ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          ProgressBar(),
+          SizedBox(height: 20),
+          Text("Just a Moment..."),
+        ],
       ),
       const MyIDEAs(),
     ],
