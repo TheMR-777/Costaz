@@ -91,7 +91,14 @@ class _DearStudentsState extends State<DearStudents> {
       : Center(
         child: snapshot.hasError
           ? Text(snapshot.error.toString())
-          : const ProgressRing(),
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                ProgressBar(),
+                SizedBox(height: factor + 5),
+                Text("Just a Moment..."),
+              ],
+            ),
       )
   ) : the_content;
 }

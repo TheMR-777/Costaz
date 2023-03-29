@@ -11,7 +11,7 @@ class ThePlayground extends StatelessWidget {
   Widget build(BuildContext context) => CarouselSlider(
     carouselController: controller,
     options: CarouselOptions(
-      initialPage: 1,
+      // initialPage: 2,
       // autoPlayInterval: const Duration(seconds: 1),
       // autoPlayAnimationDuration: const Duration(milliseconds: 800),
       // autoPlayCurve: Curves.fastOutSlowIn,
@@ -41,6 +41,18 @@ class ThePlayground extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+          ],
+        ),
+      ),
+
+      // Loading ProgressBar with "Just a Moment..." Text
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            ProgressBar(),
+            SizedBox(height: 20),
+            Text("Just a Moment..."),
           ],
         ),
       ),
