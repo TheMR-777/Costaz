@@ -73,11 +73,15 @@ class _TheSweetHomeState extends State<TheSweetHome> {
                 height: local_factor
             ),   // Some Space
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(bottom: factor, right: local_factor),
+              child: ListView.builder(
+                padding: const EdgeInsets.only(right: local_factor),
                 itemCount: Class.classes.length,
-                itemBuilder: (context, index) => TheClassTile(update, index),
-                separatorBuilder: (context, index) => my_spacing,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    TheClassTile(update, index),
+                    my_spacing,
+                  ],
+                ),
               ),
             ),         // Class List
           ],
