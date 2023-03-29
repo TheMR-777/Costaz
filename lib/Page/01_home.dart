@@ -104,58 +104,68 @@ class TheClassTile extends StatelessWidget {
     context,
     onDelete: () => Class.delete_with_dialogBox(context, update, index),
     onEdit: () => currentClass.update_with_dialogBox(context, update),
-    on: Button(
-      onPressed: () {
-        Class.current_class_i = index;
-        if (!Class.selected.i_should_fetch) SessionManager.update_selected();
-        classController.nextPage(
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOutCubicEmphasized
-        );
-      },
-      style: ButtonStyle(
-        padding: ButtonState.all(const EdgeInsets.symmetric(
-          horizontal: factor * 2,
-          vertical: factor + 5,
-        )),
-        border: is_dark_mode ? ButtonState.all(const BorderSide(color: Colors.transparent)) : null,
+    on: FocusTheme(
+      data: FocusThemeData(
+        renderOutside: false,
+        primaryBorder: BorderSide(
+          color: FluentTheme.of(context).accentColor.defaultBrushFor(
+            FluentTheme.of(context).brightness
+          ),
+        )
       ),
-      child: Row(
-        children: [
-          Image.asset(
-            "Icons/my-class.png",
-            width: factor * 2.5,
-            color: FluentTheme.of(context).accentColor.defaultBrushFor(
-              FluentTheme.of(context).brightness
-            ),
-          ),     // Custom Icon
-          const SizedBox(
-            width: factor * 2 + 5,
-          ),  // Some Space
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                currentClass.class_title,
-                style: const TextStyle(fontSize: factor + 1),
-              ),        // Class Name
-              if (currentClass.description.isNotEmpty)
+      child: Button(
+        onPressed: () {
+          Class.current_class_i = index;
+          if (!Class.selected.i_should_fetch) SessionManager.update_selected();
+          classController.nextPage(
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOutCubicEmphasized
+          );
+        },
+        style: ButtonStyle(
+          padding: ButtonState.all(const EdgeInsets.symmetric(
+            horizontal: factor * 2,
+            vertical: factor + 5,
+          )),
+          border: is_dark_mode ? ButtonState.all(const BorderSide(color: Colors.transparent)) : null,
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              "Icons/my-class.png",
+              width: factor * 2.5,
+              color: FluentTheme.of(context).accentColor.defaultBrushFor(
+                FluentTheme.of(context).brightness
+              ),
+            ),     // Custom Icon
+            const SizedBox(
+              width: factor * 2 + 5,
+            ),  // Some Space
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  currentClass.description,
-                  style: TextStyle(
-                      color: FluentTheme.of(context).borderInputColor,
-                      fontSize: factor - 3
-                  ),
-                ),      // Description
-            ],
-          ),          // Introduction
-          const Spacer(),       // Max Space
-          Icon(
-            FluentIcons.chevron_right,
-            size: factor + 3,
-            color: FluentTheme.of(context).borderInputColor,
-          ),            // Trail Icon
-        ],
+                  currentClass.class_title,
+                  style: const TextStyle(fontSize: factor + 1),
+                ),        // Class Name
+                if (currentClass.description.isNotEmpty)
+                  Text(
+                    currentClass.description,
+                    style: TextStyle(
+                        color: FluentTheme.of(context).borderInputColor,
+                        fontSize: factor - 3
+                    ),
+                  ),      // Description
+              ],
+            ),          // Introduction
+            const Spacer(),       // Max Space
+            Icon(
+              FluentIcons.chevron_right,
+              size: factor + 3,
+              color: FluentTheme.of(context).borderInputColor,
+            ),            // Trail Icon
+          ],
+        ),
       ),
     ),
   );
