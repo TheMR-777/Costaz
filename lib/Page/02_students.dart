@@ -94,7 +94,9 @@ class _DearStudentsState extends State<DearStudents> {
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                ProgressBar(),
+                ProgressBar(
+                  backgroundColor: Colors.transparent,
+                ),
                 SizedBox(height: factor + 5),
                 Text("Just a Moment..."),
               ],

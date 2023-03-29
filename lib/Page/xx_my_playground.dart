@@ -11,7 +11,7 @@ class ThePlayground extends StatelessWidget {
   Widget build(BuildContext context) => CarouselSlider(
     carouselController: controller,
     options: CarouselOptions(
-      // initialPage: 2,
+      initialPage: 1,
       // autoPlayInterval: const Duration(seconds: 1),
       // autoPlayAnimationDuration: const Duration(milliseconds: 800),
       // autoPlayCurve: Curves.fastOutSlowIn,
@@ -47,7 +47,9 @@ class ThePlayground extends StatelessWidget {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
-          ProgressBar(),
+          ProgressBar(
+            backgroundColor: Colors.transparent,
+          ),
           SizedBox(height: 20),
           Text("Just a Moment..."),
         ],
@@ -61,6 +63,7 @@ class MyIDEAs extends StatelessWidget {
   const MyIDEAs({Key? key}) : super(key: key);
   static const my_spacing = SizedBox(height: 20);
   static const my_feature = [
+    "Useful Tips on Loading Page",
     "Using Table instead of DataTable in 'Student' Page",
     "New Design for Session Management",
     "Result Management System",
