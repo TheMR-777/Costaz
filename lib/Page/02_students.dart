@@ -232,7 +232,6 @@ class AttendanceRecord extends StatelessWidget {
   final Student student;
 
   bool get large_size => Class.selected.sessions.length > 5;
-  bool get crazy_size => Class.selected.sessions.length > 7;
 
   @override
   Widget build(BuildContext context) {
@@ -262,10 +261,10 @@ class AttendanceRecord extends StatelessWidget {
                   top: factor + 10,
                   bottom: factor - 5,
                   left: factor * 2 + 5,
-                  right: crazy_size ? 0 : factor * 2 + 5,
+                  right: large_size ? 0 : factor * 2 + 5,
                 ),
                 constraints: BoxConstraints(
-                  maxWidth: factor * factor + 20 + (crazy_size ? 75 : 0),
+                  maxWidth: factor * factor + 20 + (large_size ? 75 : 0),
                   maxHeight: factor * 25,
                 ),
                 child: Column(
@@ -273,7 +272,7 @@ class AttendanceRecord extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          right: crazy_size ? factor * 2 + 5 : 0
+                          right: large_size ? factor * 2 + 5 : 0
                       ),
                       child: Text(
                         "Attendance Record",
@@ -283,7 +282,7 @@ class AttendanceRecord extends StatelessWidget {
                     my_spacing,       // Spacing
                     Flexible(
                       child: ListView.separated(
-                        padding: crazy_size
+                        padding: large_size
                             ? const EdgeInsets.only(right: factor + 20)
                             : null,
                         shrinkWrap: true,
@@ -301,7 +300,7 @@ class AttendanceRecord extends StatelessWidget {
                                 Text(
                                   Class.selected.sessions[rec_idx].for_records()
                                 ),                      // The Date
-                                if (crazy_size) Text(
+                                if (large_size) Text(
                                     Session.weekDays[Class.selected.sessions[rec_idx].date.weekday - 1]
                                 ),      // The Day
                                 Checkbox(

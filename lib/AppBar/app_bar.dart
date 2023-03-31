@@ -15,7 +15,7 @@ class TheHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final account_controller = FlyoutController();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: factor - 9),
+      padding: const EdgeInsets.only(right: factor - 9),
       child: FlyoutTarget(
         controller: account_controller,
         child: IconButton(
