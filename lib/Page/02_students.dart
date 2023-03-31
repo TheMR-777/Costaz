@@ -259,9 +259,12 @@ class AttendanceRecord extends StatelessWidget {
               return FlyoutContent(
                 useAcrylic: true,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: factor + 10),
+                  padding: EdgeInsets.only(
+                      left: factor + 10,
+                      right: !crazy_size ? factor + 10 : 0,
+                  ),
                   constraints: BoxConstraints(
-                    maxWidth: large_size ? 300 : factor * factor,
+                    maxWidth: factor * factor + (large_size ? 75 : 0),
                     maxHeight: factor * 25,
                   ),
                   child: Column(
@@ -269,14 +272,14 @@ class AttendanceRecord extends StatelessWidget {
                     children: [
                       my_spacing,       // Spacing
                       Text(
-                          "Attendance Record",
-                          style: FluentTheme.of(context).typography.subtitle
+                        "Attendance Record",
+                        style: FluentTheme.of(context).typography.subtitle
                       ),        // Title
                       my_spacing,       // Spacing
                       Flexible(
                         child: ListView.separated(
                           padding: crazy_size
-                              ? const EdgeInsets.only(right: factor + 5)
+                              ? const EdgeInsets.only(right: factor + 10)
                               : null,
                           shrinkWrap: true,
                           itemCount: Class.selected.sessions.length,
@@ -291,13 +294,15 @@ class AttendanceRecord extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    Class.selected.sessions[rec_idx].for_records(),
-                                    style: FluentTheme.of(context).typography.body,
-                                  ),        // Date
+                                    Class.selected.sessions[rec_idx].for_records()
+                                  ),                      // The Date
+                                  if (crazy_size) Text(
+                                      Session.weekDays[Class.selected.sessions[rec_idx].date.weekday - 1]
+                                  ),      // The Day
                                   Checkbox(
                                     onChanged: (value) => updateAttendance(rec_idx, value!),
                                     checked: student.attendance_record[rec_idx],
-                                  ),    // Checkbox
+                                  ),                  // Checkbox
                                 ],
                               ),
                             ),

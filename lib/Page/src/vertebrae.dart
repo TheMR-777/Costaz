@@ -122,7 +122,7 @@ class Section {
 }
 
 class Session {
-  static const _weekDays = [
+  static const weekDays = [
     'Monday',
     'Tuesday',
     'Wednesday',
@@ -164,7 +164,7 @@ class Session {
     final weekday = date.weekday;
     final day_suffix = day == 1 ? "st" : day == 2 ? "nd" : day == 3 ? "rd" : "th";
     final month_name = _monthNames[month - 1];
-    final weekday_name = _weekDays[weekday - 1];
+    final weekday_name = weekDays[weekday - 1];
     return "$weekday_name, $day$day_suffix $month_name $year";
   }
   String formatted_short() {
@@ -186,7 +186,7 @@ class Session {
       ),
     ),
     title: Text(formatted_short()),
-    subtitle: Text(_weekDays[date.weekday - 1],
+    subtitle: Text(weekDays[date.weekday - 1],
       style: TextStyle(
         color: (is_dark_mode ? Colors.white : Colors.black).withOpacity(0.6),
       ),
