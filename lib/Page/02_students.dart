@@ -258,62 +258,66 @@ class AttendanceRecord extends StatelessWidget {
               }
               return FlyoutContent(
                 useAcrylic: true,
-                child: Container(
-                  padding: EdgeInsets.only(
-                      left: factor + 10,
-                      right: !crazy_size ? factor + 10 : 0,
-                  ),
-                  constraints: BoxConstraints(
-                    maxWidth: factor * factor + (large_size ? 75 : 0),
-                    maxHeight: factor * 25,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      my_spacing,       // Spacing
-                      Text(
+                padding: EdgeInsets.only(
+                  top: factor + 10,
+                  bottom: factor - 5,
+                  left: factor * 2 + 5,
+                  right: crazy_size ? 0 : factor * 2 + 5,
+                ),
+                constraints: BoxConstraints(
+                  maxWidth: factor * factor + 20 + (crazy_size ? 75 : 0),
+                  maxHeight: factor * 25,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: crazy_size ? factor * 2 + 5 : 0
+                      ),
+                      child: Text(
                         "Attendance Record",
                         style: FluentTheme.of(context).typography.subtitle
-                      ),        // Title
-                      my_spacing,       // Spacing
-                      Flexible(
-                        child: ListView.separated(
-                          padding: crazy_size
-                              ? const EdgeInsets.only(right: factor + 10)
-                              : null,
-                          shrinkWrap: true,
-                          itemCount: Class.selected.sessions.length,
-                          itemBuilder: (_, rec_idx) => GestureDetector(
-                            onTap: () => updateAttendance(rec_idx, !student.attendance_record[rec_idx]),
-                            child: Container(
-                              color: Colors.transparent,
-                              padding: EdgeInsets.symmetric(
-                                vertical: factor / (large_size ? 2 : 1),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    Class.selected.sessions[rec_idx].for_records()
-                                  ),                      // The Date
-                                  if (crazy_size) Text(
-                                      Session.weekDays[Class.selected.sessions[rec_idx].date.weekday - 1]
-                                  ),      // The Day
-                                  Checkbox(
-                                    onChanged: (value) => updateAttendance(rec_idx, value!),
-                                    checked: student.attendance_record[rec_idx],
-                                  ),                  // Checkbox
-                                ],
-                              ),
+                      ),
+                    ),        // Title
+                    my_spacing,       // Spacing
+                    Flexible(
+                      child: ListView.separated(
+                        padding: crazy_size
+                            ? const EdgeInsets.only(right: factor + 20)
+                            : null,
+                        shrinkWrap: true,
+                        itemCount: Class.selected.sessions.length,
+                        itemBuilder: (_, rec_idx) => GestureDetector(
+                          onTap: () => updateAttendance(rec_idx, !student.attendance_record[rec_idx]),
+                          child: Container(
+                            color: Colors.transparent,
+                            padding: EdgeInsets.symmetric(
+                              vertical: factor / (large_size ? 2 : 1),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  Class.selected.sessions[rec_idx].for_records()
+                                ),                      // The Date
+                                if (crazy_size) Text(
+                                    Session.weekDays[Class.selected.sessions[rec_idx].date.weekday - 1]
+                                ),      // The Day
+                                Checkbox(
+                                  onChanged: (value) => updateAttendance(rec_idx, value!),
+                                  checked: student.attendance_record[rec_idx],
+                                ),                  // Checkbox
+                              ],
                             ),
                           ),
-                          separatorBuilder: (_, __) => const Divider(
-                            style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-                          ),
                         ),
-                      ),    // Records List
-                    ],
-                  ),
+                        separatorBuilder: (_, __) => const Divider(
+                          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+                        ),
+                      ),
+                    ),    // Records List
+                  ],
                 ),
               );
             },
