@@ -257,34 +257,25 @@ class AttendanceRecord extends StatelessWidget {
               }
               return FlyoutContent(
                 useAcrylic: true,
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   top: factor + 10,
                   bottom: factor - 5,
-                  left: factor * 2 + 5,
-                  right: large_size ? 0 : factor * 2 + 5,
                 ),
                 constraints: BoxConstraints(
-                  maxWidth: factor * factor + 20 + (large_size ? 75 : 0),
+                  maxWidth: factor * (factor + 1) + 5 + (large_size ? 75 : 0),
                   maxHeight: factor * 25,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                          right: large_size ? factor * 2 + 5 : 0
-                      ),
-                      child: Text(
-                        "Attendance Record",
-                        style: FluentTheme.of(context).typography.subtitle
-                      ),
+                    Text(
+                      "Attendance Record",
+                      style: FluentTheme.of(context).typography.subtitle
                     ),        // Title
                     my_spacing,       // Spacing
                     Flexible(
                       child: ListView.separated(
-                        padding: large_size
-                            ? const EdgeInsets.only(right: factor + 20)
-                            : null,
+                        padding: const EdgeInsets.symmetric(horizontal: factor * 2 + 5),
                         shrinkWrap: true,
                         itemCount: Class.selected.sessions.length,
                         itemBuilder: (_, rec_idx) => GestureDetector(
