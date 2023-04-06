@@ -245,17 +245,9 @@ class SessionManager {
         maxHeight: factor * 50,
         maxWidth: factor * 30,
       ),
-      title: Align(
+      title: const Align(
           alignment: Alignment.center,
-          child: Column(
-            children: const [
-              Text("Load a Session"),
-              SizedBox(
-                height: factor * 2,
-              ),
-              Divider()
-            ],
-          )
+          child: Text("Load a Session")
       ),
       content: ListView.builder(
         shrinkWrap: true,
