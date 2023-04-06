@@ -7,6 +7,10 @@ var nav_bar_size = factor * factor;
 var current_page = 0;
 var is_dark_mode = true;
 
+Text Italy(String text) => Text(
+  text,
+  style: const TextStyle(fontStyle: FontStyle.italic),
+);
 Button TheCancelButton(BuildContext context) => Button(
   onPressed: () => Navigator.pop(context, false),
   child: const Text("Cancel"),

@@ -192,8 +192,8 @@ class Session {
       ),
     ),
     trailing: is_selected ? null : only_date(date) == only_date(DateTime.now())
-        ? const Text("Today") : only_date(date) == only_date(DateTime.now().subtract(const Duration(days: 1)))
-        ? const Text("Yesterday") : null,
+        ? Italy("Today") : only_date(date) == only_date(DateTime.now().subtract(const Duration(days: 1)))
+        ? Italy("Yesterday") : null,
   );
   void update(BuildContext context, VoidCallback refresh) {
     DateTime intermediate = date;
@@ -245,42 +245,44 @@ class SessionManager {
         maxHeight: factor * 50,
         maxWidth: factor * 30,
       ),
-      title: const Text("Load a Session"),
-      content: Card(
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemCount: targeted_sessions.length,
-          itemBuilder: (context_2, index) => Row(
-            children: [
-              const SizedBox(
-                  width: factor - 10
-              ),  // Padding
+      title: Align(
+          alignment: Alignment.center,
+          child: Column(
+            children: const [
+              Text("Load a Session"),
               SizedBox(
-                width: 300 - factor,
-                child: targeted_sessions[index].makeDateTile(
-                  selected: index == selected,
-                  onTap: () {
-                    update_selected(to: index);
-                    refresh();
-                    Show.TheInfoBar(context, title: "Loaded", detail: targeted_sessions[index].formatted());
-                    Navigator.pop(context);
-                  },
-                ),
-              ),        // Date Tile
-              const Spacer(),       // Spacer
-              IconButton(
-                style: ButtonStyle(
-                  padding: ButtonState.all(const EdgeInsets.all(factor)),
-                ),
-                icon: const Icon(FluentIcons.delete, size: factor + 7),
-                onPressed: () => SessionManager.removeAt(context, index, refresh: refresh),
-              ),      // Delete Button
-              const SizedBox(
-                  width: factor
-              ),  // Padding
+                height: factor * 2,
+              ),
+              Divider()
             ],
-          ),
-          separatorBuilder: (context, index) => const Divider(),
+          )
+      ),
+      content: ListView.builder(
+        shrinkWrap: true,
+        itemCount: targeted_sessions.length,
+        itemBuilder: (context_2, index) => Row(
+          children: [
+            SizedBox(
+              width: 342,
+              child: targeted_sessions[index].makeDateTile(
+                selected: index == selected,
+                onTap: () {
+                  update_selected(to: index);
+                  refresh();
+                  Show.TheInfoBar(context, title: "Loaded", detail: targeted_sessions[index].formatted());
+                  Navigator.pop(context);
+                },
+              ),
+            ),        // Date Tile
+            const Spacer(),       // Spacer
+            IconButton(
+              style: ButtonStyle(
+                padding: ButtonState.all(const EdgeInsets.all(factor)),
+              ),
+              icon: const Icon(FluentIcons.delete, size: factor + 7),
+              onPressed: () => SessionManager.removeAt(context, index, refresh: refresh),
+            ),      // Delete Button
+          ],
         ),
       ),
       actions: [
