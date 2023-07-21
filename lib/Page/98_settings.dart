@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:window_manager/window_manager.dart';
@@ -27,7 +28,7 @@ class TheTheme {
       await WindowManager.instance.ensureInitialized();   // Title Bar
       await Window.initialize();                          // Flutter Acrylic
       await SystemTheme.accentColor.load();               // Accent
-      is_dark_mode = SystemTheme.isDarkMode;              // Dark Mode
+      is_dark_mode = SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
     }
 
     // Title Bar settings

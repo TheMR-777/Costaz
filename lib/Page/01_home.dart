@@ -156,7 +156,7 @@ class TheClassTile extends StatelessWidget {
                   Text(
                     currentClass.description,
                     style: TextStyle(
-                        color: FluentTheme.of(context).borderInputColor,
+                        color: FluentTheme.of(context).resources.controlStrongStrokeColorDefault,
                         fontSize: factor - 3
                     ),
                   ),      // Description
@@ -166,7 +166,7 @@ class TheClassTile extends StatelessWidget {
             Icon(
               FluentIcons.chevron_right,
               size: factor + 3,
-              color: FluentTheme.of(context).borderInputColor,
+              color: FluentTheme.of(context).resources.controlStrongStrokeColorDefault,
             ),            // Trail Icon
           ],
         ),
