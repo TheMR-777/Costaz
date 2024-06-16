@@ -22,12 +22,25 @@ List<Widget> ActionBar(BuildContext context, {String focus = "Update"}) => [
   ),
   TheCancelButton(context),
 ];
-Container TheClickable({required Widget child, final bool width = true}) => Container(
+
+// Container TheClickable({required Widget child, final bool width = true}) => Container(
+//     color: Colors.transparent,
+//     height: double.infinity,
+//     width: width ? double.infinity : null,
+//     alignment: Alignment.centerLeft,
+//     child: child
+// );
+
+Widget TheClickable({required Widget child}) => ConstrainedBox(
+  constraints: const BoxConstraints(
+    maxHeight: double.infinity,
+    maxWidth: double.infinity,
+  ),
+  child: Container(
     color: Colors.transparent,
-    height: double.infinity,
-    width: width ? double.infinity : null,
     alignment: Alignment.centerLeft,
-    child: child
+    child: child,
+  ),
 );
 
 class Show {

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ThePlayground extends StatelessWidget {
-  const ThePlayground({Key? key}) : super(key: key);
+  const ThePlayground({super.key});
 
   static final controller = CarouselController();
   static const my_padding = EdgeInsets.all(20);
@@ -19,12 +19,12 @@ class ThePlayground extends StatelessWidget {
       enableInfiniteScroll: false,
       scrollDirection: Axis.horizontal,
     ),
-    items: [
+    items: const [
       ScaffoldPage(
         padding: my_padding,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "Welcome to the Playground",
               style: TextStyle(
@@ -46,7 +46,7 @@ class ThePlayground extends StatelessWidget {
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           ProgressBar(
             backgroundColor: Colors.transparent,
           ),
@@ -54,13 +54,13 @@ class ThePlayground extends StatelessWidget {
           Text("Just a Moment..."),
         ],
       ),
-      const MyIDEAs(),
+      MyIDEAs(),
     ],
   );
 }
 
 class MyIDEAs extends StatelessWidget {
-  const MyIDEAs({Key? key}) : super(key: key);
+  const MyIDEAs({super.key});
   static const my_spacing = SizedBox(height: 20);
   static const my_feature = [
     "Useful Tips on Loading Page",

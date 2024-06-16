@@ -551,7 +551,11 @@ class Class {
             const Text("Add Student"),      // Title Text
             OutlinedButton(
               style: ButtonStyle(
-                border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+                shape: ButtonState.all(
+                  RoundedRectangleBorder(
+                    side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
+                  ),
+                ),
                 padding: ButtonState.all(const EdgeInsets.symmetric(
                     vertical: factor,
                     horizontal: factor * 2

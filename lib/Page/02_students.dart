@@ -4,7 +4,7 @@ import 'src/vertebrae.dart';
 import 'src/commons.dart';
 
 class DearStudents extends StatefulWidget {
-  const DearStudents({Key? key}) : super(key: key);
+  const DearStudents({super.key});
 
   @override
   State<DearStudents> createState() => _DearStudentsState();
@@ -15,8 +15,8 @@ class _DearStudentsState extends State<DearStudents> {
   void update() => setState(() {});
   BaseButton get new_section {
     void onPressed() => my_class.create_section_with_dialogBox(context, update);
-    final my_data = Row(
-      children: const [
+    const my_data = Row(
+      children: [
         Icon(FluentIcons.add),
         SizedBox(width: factor + 10),
         Text("New Section", style: TextStyle(fontSize: factor)),
@@ -37,12 +37,14 @@ class _DearStudentsState extends State<DearStudents> {
           onPressed: onPressed,
           style: ButtonStyle(
             padding: ButtonState.all(m_space),
-            border: ButtonState.all(
-              BorderSide(
-                color: is_dark_mode
-                  ? FluentTheme.of(context).resources.dividerStrokeColorDefault
-                  : FluentTheme.of(context).accentColor
-              )
+            shape: ButtonState.all(
+              RoundedRectangleBorder(
+                side: BorderSide(
+                    color: is_dark_mode
+                        ? FluentTheme.of(context).resources.dividerStrokeColorDefault
+                        : FluentTheme.of(context).accentColor
+                ),
+              ),
             ),
             foregroundColor: ButtonState.all(!is_dark_mode ? FluentTheme.of(context).accentColor : null),
           ),
@@ -91,9 +93,9 @@ class _DearStudentsState extends State<DearStudents> {
       : Center(
         child: snapshot.hasError
           ? Text(snapshot.error.toString())
-          : Column(
+          : const Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 ProgressBar(
                   backgroundColor: Colors.transparent,
                 ),
@@ -186,6 +188,7 @@ class _TheDropDownState extends State<TheDropDown> {
       children: [
         if (currentSection.students.isNotEmpty)
           material.DataTable(
+            dividerThickness: 0.1,
             columns: List.generate(
               my_class.my_column.length,
               (index) => material.DataColumn(
@@ -197,7 +200,7 @@ class _TheDropDownState extends State<TheDropDown> {
                         : index == 3 ? a.is_currently_present == b.is_currently_present ? 0 : a.is_currently_present ? -1 : 1
                         : 0
                   )),
-                  child: TheClickable(child: Text(my_class.my_column[index]), width: false),
+                  child: TheClickable(child: Text(my_class.my_column[index])),
                 ),
               ),
             ), // Headers
@@ -211,7 +214,11 @@ class _TheDropDownState extends State<TheDropDown> {
           onPressed: () => my_class.create_student_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
-            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+            shape: ButtonState.all(
+              RoundedRectangleBorder(
+                side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
+              ),
+            ),
           ),
           icon: const Text("Add Student"),
         ),                   // Add Student
@@ -225,8 +232,8 @@ class AttendanceRecord extends StatelessWidget {
   const AttendanceRecord({
     required this.student,
     required this.update,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   final VoidCallback update;
   final Student student;

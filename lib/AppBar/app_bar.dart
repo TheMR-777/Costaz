@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../Page/src/commons.dart';
 
 class TheHeader extends StatelessWidget {
-  const TheHeader({Key? key}) : super(key: key);
+  const TheHeader({super.key});
   static bool get over => nav_bar_size > my_bar_lim;
   static const my_name = "TheMR";
   static const my_mail = "m.shahzad.ms72@gmail.com";
@@ -68,9 +68,9 @@ class TheHeader extends StatelessWidget {
                           vertical: factor - 5,
                         )),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(FluentIcons.sign_out),
                           SizedBox(width: factor),
                           Text(
@@ -97,11 +97,11 @@ class TheHeader extends StatelessWidget {
                 : MainAxisAlignment.center,
             children: [
               get_avatar(factor * 2 + (over ? 2 : 5)),
-              if (nav_bar_size > my_bar_lim) Padding(
-                padding: const EdgeInsets.only(left: factor),
+              if (nav_bar_size > my_bar_lim) const Padding(
+                padding: EdgeInsets.only(left: factor),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       my_name,
                       overflow: TextOverflow.ellipsis,

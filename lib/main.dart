@@ -15,7 +15,7 @@ void main() async {
 }
 
 class Costaz extends StatefulWidget {
-  const Costaz({Key? key}) : super(key: key);
+  const Costaz({super.key});
 
   @override
   State<Costaz> createState() => _CostazState();

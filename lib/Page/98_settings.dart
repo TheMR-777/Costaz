@@ -156,8 +156,8 @@ class MySwitch extends StatelessWidget {
     required this.icon,
     required this.checked,
     required this.onChanged,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   final String title;
   final IconData icon;

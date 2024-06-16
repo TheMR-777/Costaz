@@ -26,7 +26,7 @@ class API {
 }
 
 class DearStudents extends StatefulWidget {
-  const DearStudents({Key? key}) : super(key: key);
+  const DearStudents({super.key});
   static int expanded_menu = 0;
 
   @override
@@ -488,7 +488,11 @@ class _TheDropDownState extends State<TheDropDown> {
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             backgroundColor: ButtonState.all(Colors.transparent),
-            border: ButtonState.all(BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault)),
+            shape: ButtonState.all(
+              RoundedRectangleBorder(
+                side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
+              ),
+            ),
           ),
           child: const Text("Add Student"),
         ),                   // Add Student

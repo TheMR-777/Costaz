@@ -7,7 +7,7 @@ import 'src/vertebrae.dart';
 final classController = CarouselController();
 
 class TheSweetHome extends StatefulWidget {
-  const TheSweetHome({Key? key}) : super(key: key);
+  const TheSweetHome({super.key});
 
   @override
   State<TheSweetHome> createState() => _TheSweetHomeState();
@@ -27,7 +27,13 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         ? IconButton(
             onPressed: onPressed,
             style: m_style.copyWith(
-              border: ButtonState.all(BorderSide(color: FluentTheme.of(context).accentColor)),
+              shape: ButtonState.all(
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: FluentTheme.of(context).accentColor,
+                  ),
+                ),
+              ),
               foregroundColor: ButtonState.all(FluentTheme.of(context).accentColor)
             ),
             icon: my_data,
@@ -131,7 +137,10 @@ class TheClassTile extends StatelessWidget {
             horizontal: factor * 2,
             vertical: factor + 5,
           )),
-          border: is_dark_mode ? ButtonState.all(const BorderSide(color: Colors.transparent)) : null,
+          shape: is_dark_mode ? ButtonState.all(const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(factor - 10)),
+            side: BorderSide(color: Colors.transparent),
+          )) : null,
         ),
         child: Row(
           children: [
