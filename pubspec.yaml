@@ -28,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
    - Icons/
+   - lib/client_secret.json
 
 flutter_icons:
   windows:
