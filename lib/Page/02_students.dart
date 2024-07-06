@@ -26,19 +26,24 @@ class _DearStudentsState extends State<DearStudents> {
       vertical: factor,
       horizontal: factor + 10,
     );
+    final m_style = ButtonStyle(padding: ButtonState.all(m_space));
+    final my_side = RoundedRectangleBorder(borderRadius: BorderRadius.circular(factor - 10));
 
     return !is_dark_mode ^ my_class.sections.isEmpty
         ? Button(
             onPressed: onPressed,
-            style: ButtonStyle(padding: ButtonState.all(m_space)),
+            style: m_style.copyWith(
+              shape: ButtonState.all(
+                  my_side.copyWith(side: const BorderSide(color: Colors.transparent)),
+              ),
+            ),
             child: my_data,
         )
         : IconButton(
           onPressed: onPressed,
-          style: ButtonStyle(
-            padding: ButtonState.all(m_space),
+          style: m_style.copyWith(
             shape: ButtonState.all(
-              RoundedRectangleBorder(
+              my_side.copyWith(
                 side: BorderSide(
                     color: is_dark_mode
                         ? FluentTheme.of(context).resources.dividerStrokeColorDefault
@@ -216,12 +221,13 @@ class _TheDropDownState extends State<TheDropDown> {
             padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
             shape: ButtonState.all(
               RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(factor - 10),
                 side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
               ),
             ),
           ),
           icon: const Text("Add Student"),
-        ),                   // Add Student
+        ),               // Add Student
         my_spacing,                    // Spacing
       ],
     ),                    // Student Fields

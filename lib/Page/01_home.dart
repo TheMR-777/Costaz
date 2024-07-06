@@ -17,9 +17,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
   void update() => setState(() {});
   BaseButton get add_button {
     void onPressed() => Class.create_with_dialogBox(context, update);
-    final m_style = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(
-          vertical: factor + 5,
-          horizontal: factor * 2
+    final m_style = ButtonStyle(
+      shape: ButtonState.all(RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(factor - 10),
+        side: const BorderSide(color: Colors.transparent)
+      )),
+      padding: ButtonState.all(const EdgeInsets.symmetric(
+        vertical: factor + 5,
+        horizontal: factor * 2
       )));
     const my_data = Icon(FluentIcons.add, size: factor * 2);
 
