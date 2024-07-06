@@ -258,8 +258,8 @@ class SessionManager {
             ),        // Date Tile
             const Spacer(),       // Spacer
             IconButton(
-              style: ButtonStyle(
-                padding: ButtonState.all(const EdgeInsets.all(factor)),
+              style: const ButtonStyle(
+                padding: WidgetStatePropertyAll(EdgeInsets.all(factor)),
               ),
               icon: const Icon(FluentIcons.delete, size: factor + 7),
               onPressed: () => SessionManager.removeAt(context, index, refresh: refresh),
@@ -369,66 +369,60 @@ class Class {
   List<Section> sections = [];
   List<Session> sessions = [];
   Future<bool> load() async {
+    // Get the spreadsheet handle
     final my_sheet = await (await src.get_sheet_handle).spreadsheet(
       my_sheet_id.isEmpty ? default_one : my_sheet_id,
     );
 
-    // Loading Settings
-    for (final row in await my_sheet.sheets.last.values.allRows()) {
-      if (row.first == "TopRow:") {
-        my_column = row.skip(1)
-            .where((element) => element.isNotEmpty)
-            .toList();
-      }
-      else if (row.first == "Sessions:") {
-        sessions = row.skip(1)
-            .where((element) => element.isNotEmpty)
-            .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
-            .toList();
+    // Extract the sheets once
+    final sheets = await Future.wait(my_sheet.sheets.map((s) => s.values.allRows()));
+
+    // Load settings from the last sheet
+    final settings_sheet = sheets.last;
+    for (final row in settings_sheet) {
+      switch (row.first) {
+        case "TopRow:":
+          my_column = row.skip(1).where((element) => element.isNotEmpty).toList();
+          break;
+        case "Sessions:":
+          sessions = row.skip(1)
+              .where((element) => element.isNotEmpty)
+              .map((e) => Session(src.google_epoch.add(Duration(days: int.parse(e)))))
+              .toList();
+          break;
       }
     }
 
-    // If no sessions are found, add a new one
+    // Ensure default values if none found
     if (sessions.isEmpty) sessions.add(Session(DateTime.now()));
+    if (my_column.isEmpty) my_column = ["Roll Number", "Name", "Record", "Attendance"];
 
-    // If no column is found, add a default one
-    if (my_column.isEmpty) {
-      my_column = ["Roll Number", "Name", "Record", "Attendance"];
-    }
-
+    // Debug output
     print(my_column);
-    print(sessions
-        .map((e) => e.date.toString()
-        .split(" ").first)
-        .toList()
-    );
+    print(sessions.map((e) => e.date.toString().split(" ").first).toList());
 
-    // Section Loading
-    final cache_sections = <Section>[];
-    for (var i = 0; i < my_sheet.sheets.length - 1; i++) {
+    // Load sections from all but the last sheet
+    List<Section> cache_sections = [];
+    for (int i = 0; i < sheets.length - 1; i++) {
+      final sheetData = sheets[i];
       final worksheet = my_sheet.sheets[i];
-      final rows_data = await worksheet.values
-          .allRows()
-          .then((value) => value.skip(1)
-          .toList());
+      final section = Section()..title = worksheet.title;
 
-      print("");
-      print(worksheet.title);
-      final mySection = Section()..title = worksheet.title;
-
-      // Student Loading
-      for (final student_data in rows_data) {
-        final myName = student_data[0];
-        final myRoll = student_data[1];
-        final Record = List.generate(sessions.length, (index) => index < student_data.length - 2 && student_data[index + 2].isNotEmpty);
-        mySection.students.add(Student.withRecord(myName, myRoll, Record));
-        print("$Record: $student_data");
+      // Skip the header row and process student data
+      for (var studentData in sheetData.skip(1)) {
+        final myName = studentData[0];
+        final myRoll = studentData[1];
+        final record = List.generate(sessions.length, (index) =>
+        index < studentData.length - 2 && studentData[index + 2].isNotEmpty
+        );
+        section.students.add(Student.withRecord(myName, myRoll, record));
+        print("$record: $studentData");
       }
-      cache_sections.add(mySection);
+      cache_sections.add(section);
     }
     sections = cache_sections;
 
-    // Finalizing
+    // Finalize
     SessionManager.update_selected();
     i_should_fetch = false;
     return true;
@@ -542,12 +536,12 @@ class Class {
             const Text("Add Student"),      // Title Text
             OutlinedButton(
               style: ButtonStyle(
-                shape: ButtonState.all(
+                shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
                     side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
                   ),
                 ),
-                padding: ButtonState.all(const EdgeInsets.symmetric(
+                padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(
                     vertical: factor,
                     horizontal: factor * 2
                 )),
