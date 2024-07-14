@@ -486,9 +486,9 @@ class _TheDropDownState extends State<TheDropDown> {
         Button(
           onPressed: () => dialogBox4AddingDetails(),
           style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
-            backgroundColor: ButtonState.all(Colors.transparent),
-            shape: ButtonState.all(
+            padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: factor)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
               ),

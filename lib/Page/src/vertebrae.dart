@@ -434,11 +434,16 @@ class Class {
       context: context,
       builder: (context) => ContentDialog(
         title: const Text("Add a New Section"),
-        content: TextBox(
-          autofocus: true,
-          controller: newSection,
-          onSubmitted: (val) => Navigator.pop(context, true),
-          placeholder: "Section Name",
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBox(
+              autofocus: true,
+              controller: newSection,
+              onSubmitted: (val) => Navigator.pop(context, true),
+              placeholder: "Section Name",
+            ),
+          ],
         ),
         actions: [
           FilledButton(
@@ -538,6 +543,7 @@ class Class {
               style: ButtonStyle(
                 shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(factor - 10),
                     side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),
                   ),
                 ),

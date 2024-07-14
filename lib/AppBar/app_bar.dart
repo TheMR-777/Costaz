@@ -63,8 +63,8 @@ class TheHeader extends StatelessWidget {
                     ),
                     child: Button(
                       onPressed: () {},
-                      style: ButtonStyle(
-                        padding: ButtonState.all(const EdgeInsets.symmetric(
+                      style: const ButtonStyle(
+                        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
                           vertical: factor - 5,
                         )),
                       ),
@@ -85,8 +85,8 @@ class TheHeader extends StatelessWidget {
               ),
             ),
           ),
-          style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(
+          style: const ButtonStyle(
+            padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
               horizontal: factor,
               vertical: factor * 2 - 11,
             )),

@@ -29,7 +29,7 @@ class _CostazState extends State<Costaz> {
     theme: FluentThemeData(
       accentColor: TheTheme.my_accent,
       brightness: is_dark_mode ? Brightness.dark : null,
-      buttonTheme: ButtonThemeData(
+      buttonTheme: const ButtonThemeData(
         defaultButtonStyle: button_pad,
         filledButtonStyle: button_pad,
       ),
@@ -67,8 +67,8 @@ class _CostazState extends State<Costaz> {
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOutCubic,
             ) : null,
-            style: ButtonStyle(
-              padding: ButtonState.all(const EdgeInsets.all(factor)),
+            style: const ButtonStyle(
+              padding: WidgetStatePropertyAll(EdgeInsets.all(factor)),
             ),
             icon: const Icon(FluentIcons.back, size: factor - 1),
           ),

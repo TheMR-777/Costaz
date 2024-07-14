@@ -18,11 +18,11 @@ class _TheSweetHomeState extends State<TheSweetHome> {
   BaseButton get add_button {
     void onPressed() => Class.create_with_dialogBox(context, update);
     final m_style = ButtonStyle(
-      shape: ButtonState.all(RoundedRectangleBorder(
+      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(factor - 10),
         side: const BorderSide(color: Colors.transparent)
       )),
-      padding: ButtonState.all(const EdgeInsets.symmetric(
+      padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(
         vertical: factor + 5,
         horizontal: factor * 2
       )));
@@ -32,14 +32,14 @@ class _TheSweetHomeState extends State<TheSweetHome> {
         ? IconButton(
             onPressed: onPressed,
             style: m_style.copyWith(
-              shape: ButtonState.all(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   side: BorderSide(
                     color: FluentTheme.of(context).accentColor,
                   ),
                 ),
               ),
-              foregroundColor: ButtonState.all(FluentTheme.of(context).accentColor)
+              foregroundColor: WidgetStatePropertyAll(FluentTheme.of(context).accentColor)
             ),
             icon: my_data,
         )
@@ -138,11 +138,11 @@ class TheClassTile extends StatelessWidget {
           );
         },
         style: ButtonStyle(
-          padding: ButtonState.all(const EdgeInsets.symmetric(
+          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(
             horizontal: factor * 2,
             vertical: factor + 5,
           )),
-          shape: is_dark_mode ? ButtonState.all(const RoundedRectangleBorder(
+          shape: is_dark_mode ? const WidgetStatePropertyAll(RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(factor - 10)),
             side: BorderSide(color: Colors.transparent),
           )) : null,

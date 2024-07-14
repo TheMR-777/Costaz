@@ -26,14 +26,14 @@ class _DearStudentsState extends State<DearStudents> {
       vertical: factor,
       horizontal: factor + 10,
     );
-    final m_style = ButtonStyle(padding: ButtonState.all(m_space));
+    const m_style = ButtonStyle(padding: WidgetStatePropertyAll(m_space));
     final my_side = RoundedRectangleBorder(borderRadius: BorderRadius.circular(factor - 10));
 
     return !is_dark_mode ^ my_class.sections.isEmpty
         ? Button(
             onPressed: onPressed,
             style: m_style.copyWith(
-              shape: ButtonState.all(
+              shape: WidgetStatePropertyAll(
                   my_side.copyWith(side: const BorderSide(color: Colors.transparent)),
               ),
             ),
@@ -42,7 +42,7 @@ class _DearStudentsState extends State<DearStudents> {
         : IconButton(
           onPressed: onPressed,
           style: m_style.copyWith(
-            shape: ButtonState.all(
+            shape: WidgetStatePropertyAll(
               my_side.copyWith(
                 side: BorderSide(
                     color: is_dark_mode
@@ -51,7 +51,7 @@ class _DearStudentsState extends State<DearStudents> {
                 ),
               ),
             ),
-            foregroundColor: ButtonState.all(!is_dark_mode ? FluentTheme.of(context).accentColor : null),
+            foregroundColor: WidgetStatePropertyAll(!is_dark_mode ? FluentTheme.of(context).accentColor : null),
           ),
           icon: my_data,
         );
@@ -218,8 +218,8 @@ class _TheDropDownState extends State<TheDropDown> {
         IconButton(
           onPressed: () => my_class.create_student_with_dialogBox(context, update, widget.number),
           style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor)),
-            shape: ButtonState.all(
+            padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: factor)),
+            shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(factor - 10),
                 side: BorderSide(color: FluentTheme.of(context).resources.dividerStrokeColorDefault),

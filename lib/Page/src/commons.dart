@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 const factor = 15.0;
 const my_spacing = SizedBox(height: factor);
-final button_pad = ButtonStyle(padding: ButtonState.all(const EdgeInsets.symmetric(vertical: factor - 5)));
+const button_pad = ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: factor - 5)));
 const my_bar_lim = 260;
 var nav_bar_size = factor * factor;
 var current_page = 0;
@@ -103,8 +103,8 @@ class Show {
     final my_controller = FlyoutController();
 
     IconButton makeField(bool is_edit) => IconButton(
-      style: ButtonStyle(
-        padding: ButtonState.all(EdgeInsets.zero),
+      style: const ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.zero),
       ),
       onPressed: () {
         Navigator.of(context).pop();
