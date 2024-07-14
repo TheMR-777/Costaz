@@ -88,11 +88,16 @@ class Section {
       context: context,
       builder: (context) => ContentDialog(
         title: const Text("Edit Section"),
-        content: TextBox(
-          controller: name,
-          autofocus: true,
-          onSubmitted: (value) => Navigator.pop(context, true),
-          placeholder: "Section Name",
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBox(
+              controller: name,
+              autofocus: true,
+              onSubmitted: (value) => Navigator.pop(context, true),
+              placeholder: "Section Name",
+            ),
+          ],
         ),
         actions: ActionBar(context),
       ),

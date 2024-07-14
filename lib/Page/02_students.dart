@@ -152,8 +152,10 @@ class _TheDropDownState extends State<TheDropDown> {
       )),  // Attendance Record
       material.DataCell(FocusTheme(
         data: FocusThemeData(
-          glowColor: FluentTheme.of(context).accentColor.withOpacity(is_dark_mode ? 0.01 : 0.005),
-          primaryBorder: BorderSide(color: FluentTheme.of(context).accentColor),
+          primaryBorder: BorderSide(
+            width: factor / 10,
+              color: FluentTheme.of(context).accentColor.lighter
+          ),
         ),
         child: Checkbox(
           onChanged: (value) => setState(() => studentAt(index).updateAttendance(session_id: SessionManager.selected, new_val: value!)),
@@ -180,7 +182,7 @@ class _TheDropDownState extends State<TheDropDown> {
                   : null,
           ) : null
     ),
-    leading: const Icon(FluentIcons.people),                // People Icon
+    leading: const Icon(FluentIcons.people), // People Icon
     header: Show.TheContextMenu(
       context,
       onEdit: () => currentSection.update_with_dialogBox(context, update),
@@ -327,9 +329,8 @@ class AttendanceRecord extends StatelessWidget {
           ),
         ),
         child: TheClickable(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
-            padding: const EdgeInsets.only(right: factor),
             child: ProgressBar(
               value: record,
               backgroundColor: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
